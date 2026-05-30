@@ -40,4 +40,10 @@ export interface AdminProductInput {
   specs?: ProductSpec[];
   variants?: ProductVariant[];
   badges?: string[];
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }

@@ -150,6 +150,9 @@ router.get("/products/:id", async (req, res) => {
     specs: (product.specs as Array<{ labelAr: string; value: string }>) ?? [],
     reviews: reviews.map(r => ({ id: r.id, authorName: r.authorName, rating: r.rating, comment: r.comment, date: r.date })),
     variants: (product.variants as Array<{ id: string; label: string; value: string; price: number; inStock: boolean }>) ?? [],
+    metaTitle: product.metaTitle ?? null,
+    metaDescription: product.metaDescription ?? null,
+    metaKeywords: product.metaKeywords ?? null,
   });
 });
 

@@ -11,6 +11,9 @@ export const categoriesTable = pgTable("categories", {
   image: text("image"),
   productCount: integer("product_count").notNull().default(0),
   descriptionAr: text("description_ar"),
+  metaTitle: text("meta_title"),
+  metaDescription: text("meta_description"),
+  metaKeywords: text("meta_keywords"),
 });
 
 export const insertCategorySchema = createInsertSchema(categoriesTable);
@@ -57,6 +60,9 @@ export const productsTable = pgTable("products", {
   specs: jsonb("specs"),
   variants: jsonb("variants"),
   badges: jsonb("badges"),
+  metaTitle: text("meta_title"),
+  metaDescription: text("meta_description"),
+  metaKeywords: text("meta_keywords"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 

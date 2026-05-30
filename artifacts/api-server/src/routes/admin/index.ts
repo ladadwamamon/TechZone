@@ -12,6 +12,7 @@ import mediaRouter from "./media";
 import settingsRouter from "./settings";
 import analyticsRouter from "./analytics";
 import auditRouter from "./audit";
+import couponsRouter from "./coupons";
 
 const router: IRouter = Router();
 
@@ -28,5 +29,6 @@ router.use(mediaRouter);
 router.use(settingsRouter);
 router.use(analyticsRouter);
 router.use(auditRouter);
+router.use(couponsRouter);
 
 export default router;

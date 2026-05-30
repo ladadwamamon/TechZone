@@ -7,6 +7,8 @@ import blogRouter from "./blog";
 import ordersRouter from "./orders";
 import storeRouter from "./store";
 import settingsRouter from "./settings";
+import customersRouter from "./customers";
+import couponsRouter from "./coupons";
 import adminRouter from "./admin";
 
 const router: IRouter = Router();
@@ -19,6 +21,8 @@ router.use(blogRouter);
 router.use(ordersRouter);
 router.use(storeRouter);
 router.use(settingsRouter);
+router.use(customersRouter);
+router.use(couponsRouter);
 router.use(adminRouter);
 
 export default router;

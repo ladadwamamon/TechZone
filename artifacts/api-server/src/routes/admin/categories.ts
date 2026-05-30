@@ -27,6 +27,9 @@ router.post("/admin/categories", requireAuth, requirePermission("categories:writ
     icon: data.icon,
     image: data.image ?? null,
     descriptionAr: data.descriptionAr ?? null,
+    metaTitle: data.metaTitle ?? null,
+    metaDescription: data.metaDescription ?? null,
+    metaKeywords: data.metaKeywords ?? null,
   }).returning();
   await writeAudit(req, { action: "create", entityType: "category", entityId: id });
   res.status(201).json(created);
@@ -39,7 +42,7 @@ router.put("/admin/categories/:id", requireAuth, requirePermission("categories:w
   if (!existing) return res.status(404).json({ error: "غير موجود" });
 
   const values: Record<string, unknown> = {};
-  for (const key of ["slug", "nameAr", "nameEn", "icon", "image", "descriptionAr"] as const) {
+  for (const key of ["slug", "nameAr", "nameEn", "icon", "image", "descriptionAr", "metaTitle", "metaDescription", "metaKeywords"] as const) {
     if (parsed.data[key] !== undefined) values[key] = parsed.data[key];
   }
   const [updated] = await db.update(categoriesTable).set(values).where(eq(categoriesTable.id, (req.params.id as string))).returning();

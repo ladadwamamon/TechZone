@@ -52,6 +52,12 @@ tags:
     description: Admin analytics and statistics
   - name: admin-audit
     description: Admin audit log
+  - name: coupons
+    description: Public coupon validation
+  - name: customers
+    description: Customer accounts and authentication
+  - name: admin-coupons
+    description: Admin coupon management
 paths:
   /healthz:
     get:
@@ -1190,6 +1196,16 @@ paths:
         - name: limit
           in: query
           schema: { type: integer, default: 50 }
+        - name: q
+          in: query
+          description: Search by admin username or entity id
+          schema: { type: string }
+        - name: action
+          in: query
+          schema: { type: string }
+        - name: entityType
+          in: query
+          schema: { type: string }
       responses:
         "200":
           description: Audit log
@@ -1199,6 +1215,197 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/AuditLogEntry"
+
+  /coupons/validate:
+    post:
+      operationId: validateCoupon
+      tags: [coupons]
+      summary: Validate a coupon code against a subtotal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CouponValidateInput"
+      responses:
+        "200":
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CouponValidateResult"
+
+  /customers/register:
+    post:
+      operationId: customerRegister
+      tags: [customers]
+      summary: Register a new customer account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerRegisterInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+
+  /customers/login:
+    post:
+      operationId: customerLogin
+      tags: [customers]
+      summary: Customer login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerLoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+
+  /customers/logout:
+    post:
+      operationId: customerLogout
+      tags: [customers]
+      summary: Customer logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /customers/me:
+    get:
+      operationId: customerMe
+      tags: [customers]
+      summary: Current customer
+      responses:
+        "200":
+          description: Current customer
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+        "401":
+          description: Not authenticated
+    put:
+      operationId: customerUpdateProfile
+      tags: [customers]
+      summary: Update current customer profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CustomerProfileUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Customer"
+
+  /customers/orders:
+    get:
+      operationId: customerOrders
+      tags: [customers]
+      summary: Current customer order history
+      responses:
+        "200":
+          description: Orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Order"
+
+  /admin/coupons:
+    get:
+      operationId: adminListCoupons
+      tags: [admin-coupons]
+      summary: List coupons
+      responses:
+        "200":
+          description: Coupons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Coupon"
+    post:
+      operationId: adminCreateCoupon
+      tags: [admin-coupons]
+      summary: Create a coupon
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminCouponInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Coupon"
+
+  /admin/coupons/{id}:
+    put:
+      operationId: adminUpdateCoupon
+      tags: [admin-coupons]
+      summary: Update a coupon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminCouponUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Coupon"
+        "404":
+          description: Not found
+    delete:
+      operationId: adminDeleteCoupon
+      tags: [admin-coupons]
+      summary: Delete a coupon
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
 
 components:
   schemas:
@@ -1278,6 +1485,9 @@ components:
         badges:
           type: array
           items: { type: string }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+        metaKeywords:    { type: ["string", "null"] }
 
     ProductSpec:
       type: object
@@ -1340,6 +1550,9 @@ components:
         image:        { type: ["string", "null"] }
         productCount: { type: integer }
         descriptionAr: { type: ["string", "null"] }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+        metaKeywords:    { type: ["string", "null"] }
 
     Brand:
       type: object
@@ -1642,6 +1855,9 @@ components:
         badges:
           type: array
           items: { type: string }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+        metaKeywords:    { type: ["string", "null"] }
 
     AdminProductUpdate:
       type: object
@@ -1678,6 +1894,9 @@ components:
         badges:
           type: array
           items: { type: string }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+        metaKeywords:    { type: ["string", "null"] }
 
     AdminCategoryInput:
       type: object
@@ -1690,6 +1909,9 @@ components:
         icon:          { type: string }
         image:         { type: ["string", "null"] }
         descriptionAr: { type: ["string", "null"] }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+        metaKeywords:    { type: ["string", "null"] }
 
     AdminCategoryUpdate:
       type: object
@@ -1700,6 +1922,9 @@ components:
         icon:          { type: string }
         image:         { type: ["string", "null"] }
         descriptionAr: { type: ["string", "null"] }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+        metaKeywords:    { type: ["string", "null"] }
 
     AdminBrandInput:
       type: object
@@ -1907,3 +2132,101 @@ components:
         details:       {}
         ip:            { type: ["string", "null"] }
         createdAt:     { type: string }
+
+    Coupon:
+      type: object
+      required: [id, code, type, value, usedCount, isActive, createdAt]
+      properties:
+        id:            { type: string }
+        code:          { type: string }
+        type:          { type: string, enum: [percent, fixed] }
+        value:         { type: number }
+        minSubtotal:   { type: ["number", "null"] }
+        maxUses:       { type: ["integer", "null"] }
+        usedCount:     { type: integer }
+        isActive:      { type: boolean }
+        startsAt:      { type: ["string", "null"] }
+        expiresAt:     { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+        createdAt:     { type: string }
+
+    AdminCouponInput:
+      type: object
+      required: [code, type, value]
+      properties:
+        code:          { type: string }
+        type:          { type: string, enum: [percent, fixed] }
+        value:         { type: number }
+        minSubtotal:   { type: ["number", "null"] }
+        maxUses:       { type: ["integer", "null"] }
+        isActive:      { type: boolean }
+        startsAt:      { type: ["string", "null"] }
+        expiresAt:     { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+
+    AdminCouponUpdate:
+      type: object
+      properties:
+        code:          { type: string }
+        type:          { type: string, enum: [percent, fixed] }
+        value:         { type: number }
+        minSubtotal:   { type: ["number", "null"] }
+        maxUses:       { type: ["integer", "null"] }
+        isActive:      { type: boolean }
+        startsAt:      { type: ["string", "null"] }
+        expiresAt:     { type: ["string", "null"] }
+        descriptionAr: { type: ["string", "null"] }
+
+    CouponValidateInput:
+      type: object
+      required: [code, subtotal]
+      properties:
+        code:     { type: string }
+        subtotal: { type: number }
+
+    CouponValidateResult:
+      type: object
+      required: [valid, discount]
+      properties:
+        valid:    { type: boolean }
+        discount: { type: number }
+        code:     { type: ["string", "null"] }
+        message:  { type: ["string", "null"] }
+
+    Customer:
+      type: object
+      required: [id, email, fullName, isActive, createdAt]
+      properties:
+        id:          { type: string }
+        email:       { type: string }
+        fullName:    { type: string }
+        phone:       { type: ["string", "null"] }
+        city:        { type: ["string", "null"] }
+        address:     { type: ["string", "null"] }
+        isActive:    { type: boolean }
+        lastLoginAt: { type: ["string", "null"] }
+        createdAt:   { type: string }
+
+    CustomerRegisterInput:
+      type: object
+      required: [email, fullName, password]
+      properties:
+        email:    { type: string }
+        fullName: { type: string }
+        phone:    { type: ["string", "null"] }
+        password: { type: string, minLength: 8 }
+
+    CustomerLoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:    { type: string }
+        password: { type: string }
+
+    CustomerProfileUpdate:
+      type: object
+      properties:
+        fullName: { type: string }
+        phone:    { type: ["string", "null"] }
+        city:     { type: ["string", "null"] }
+        address:  { type: ["string", "null"] }

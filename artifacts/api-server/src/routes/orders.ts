@@ -4,6 +4,10 @@ import { ordersTable, newsletterSubscribersTable } from "@workspace/db";
 import { eq, and } from "drizzle-orm";
 import { CreateOrderBody, SubscribeNewsletterBody } from "@workspace/api-zod";
 import { randomUUID } from "crypto";
+import { couponsTable } from "@workspace/db";
+import { sql } from "drizzle-orm";
+import { evaluateCoupon } from "../lib/coupon";
+import { optionalCustomerId } from "../middlewares/customer-auth";
 
 const router: IRouter = Router();
 
@@ -14,19 +18,33 @@ router.post("/orders", async (req, res) => {
   const data = parsed.data;
   const subtotal = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const shipping = subtotal >= 500 ? 0 : 30;
-  const discount = data.promoCode ? subtotal * 0.1 : 0;
+
+  let discount = 0;
+  let appliedCode: string | null = null;
+  if (data.promoCode) {
+    const evaluation = await evaluateCoupon(data.promoCode, subtotal);
+    if (evaluation.valid && evaluation.coupon) {
+      discount = evaluation.discount;
+      appliedCode = evaluation.coupon.code;
+      await db.update(couponsTable)
+        .set({ usedCount: sql`${couponsTable.usedCount} + 1` })
+        .where(eq(couponsTable.id, evaluation.coupon.id));
+    }
+  }
   const total = subtotal + shipping - discount;
 
+  const customerId = await optionalCustomerId(req);
   const id = `TZ-${Date.now().toString().slice(-6)}`;
 
   await db.insert(ordersTable).values({
     id,
+    customerId: customerId ?? null,
     customerName: data.customerName,
     phone: data.phone,
     city: data.city,
     address: data.address,
     email: data.email ?? null,
-    promoCode: data.promoCode ?? null,
+    promoCode: appliedCode,
     discount: discount.toString(),
     notes: data.notes ?? null,
     paymentMethod: data.paymentMethod,
@@ -44,7 +62,7 @@ router.post("/orders", async (req, res) => {
     city: data.city,
     address: data.address,
     email: data.email ?? null,
-    promoCode: data.promoCode ?? null,
+    promoCode: appliedCode,
     discount,
     notes: data.notes ?? null,
     paymentMethod: data.paymentMethod,

@@ -17,4 +17,10 @@ export interface Category {
   productCount: number;
   /** @nullable */
   descriptionAr?: string | null;
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }

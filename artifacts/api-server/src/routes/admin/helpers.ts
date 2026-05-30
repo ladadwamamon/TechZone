@@ -29,6 +29,9 @@ export function mapAdminProduct(p: typeof productsTable.$inferSelect) {
     specs: (p.specs as Array<{ labelAr: string; value: string }>) ?? [],
     variants: (p.variants as Array<{ id: string; label: string; value: string; price: number; inStock: boolean }>) ?? [],
     badges: (p.badges as string[]) ?? [],
+    metaTitle: p.metaTitle ?? null,
+    metaDescription: p.metaDescription ?? null,
+    metaKeywords: p.metaKeywords ?? null,
     createdAt: p.createdAt.toISOString(),
   };
 }
@@ -99,6 +102,9 @@ type ProductInputShape = {
   specs?: unknown;
   variants?: unknown;
   badges?: unknown;
+  metaTitle?: string | null;
+  metaDescription?: string | null;
+  metaKeywords?: string | null;
 };
 
 export function buildProductValues(data: ProductInputShape): Record<string, unknown> {
@@ -130,5 +136,8 @@ export function buildProductValues(data: ProductInputShape): Record<string, unkn
   assign("specs", data.specs);
   assign("variants", data.variants);
   assign("badges", data.badges);
+  assign("metaTitle", data.metaTitle);
+  assign("metaDescription", data.metaDescription);
+  assign("metaKeywords", data.metaKeywords);
   return values;
 }

@@ -8,4 +8,10 @@
 
 export type AdminListAuditLogParams = {
 limit?: number;
+/**
+ * Search by admin username or entity id
+ */
+q?: string;
+action?: string;
+entityType?: string;
 };

@@ -86,6 +86,12 @@ export interface ProductDetail {
   reviews?: ProductReview[];
   variants?: ProductVariant[];
   badges?: string[];
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }
 
 export interface ProductListResponse {
@@ -112,6 +118,12 @@ export interface Category {
   productCount: number;
   /** @nullable */
   descriptionAr?: string | null;
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }
 
 export interface Brand {
@@ -412,6 +424,12 @@ export interface AdminProductInput {
   specs?: ProductSpec[];
   variants?: ProductVariant[];
   badges?: string[];
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }
 
 export interface AdminProductUpdate {
@@ -445,6 +463,12 @@ export interface AdminProductUpdate {
   specs?: ProductSpec[];
   variants?: ProductVariant[];
   badges?: string[];
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }
 
 export interface AdminCategoryInput {
@@ -457,6 +481,12 @@ export interface AdminCategoryInput {
   image?: string | null;
   /** @nullable */
   descriptionAr?: string | null;
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }
 
 export interface AdminCategoryUpdate {
@@ -468,6 +498,12 @@ export interface AdminCategoryUpdate {
   image?: string | null;
   /** @nullable */
   descriptionAr?: string | null;
+  /** @nullable */
+  metaTitle?: string | null;
+  /** @nullable */
+  metaDescription?: string | null;
+  /** @nullable */
+  metaKeywords?: string | null;
 }
 
 export interface AdminBrandInput {
@@ -672,6 +708,138 @@ export interface AuditLogEntry {
   createdAt: string;
 }
 
+export type CouponType = typeof CouponType[keyof typeof CouponType];
+
+
+export const CouponType = {
+  percent: 'percent',
+  fixed: 'fixed',
+} as const;
+
+export interface Coupon {
+  id: string;
+  code: string;
+  type: CouponType;
+  value: number;
+  /** @nullable */
+  minSubtotal?: number | null;
+  /** @nullable */
+  maxUses?: number | null;
+  usedCount: number;
+  isActive: boolean;
+  /** @nullable */
+  startsAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+  createdAt: string;
+}
+
+export type AdminCouponInputType = typeof AdminCouponInputType[keyof typeof AdminCouponInputType];
+
+
+export const AdminCouponInputType = {
+  percent: 'percent',
+  fixed: 'fixed',
+} as const;
+
+export interface AdminCouponInput {
+  code: string;
+  type: AdminCouponInputType;
+  value: number;
+  /** @nullable */
+  minSubtotal?: number | null;
+  /** @nullable */
+  maxUses?: number | null;
+  isActive?: boolean;
+  /** @nullable */
+  startsAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+}
+
+export type AdminCouponUpdateType = typeof AdminCouponUpdateType[keyof typeof AdminCouponUpdateType];
+
+
+export const AdminCouponUpdateType = {
+  percent: 'percent',
+  fixed: 'fixed',
+} as const;
+
+export interface AdminCouponUpdate {
+  code?: string;
+  type?: AdminCouponUpdateType;
+  value?: number;
+  /** @nullable */
+  minSubtotal?: number | null;
+  /** @nullable */
+  maxUses?: number | null;
+  isActive?: boolean;
+  /** @nullable */
+  startsAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+}
+
+export interface CouponValidateInput {
+  code: string;
+  subtotal: number;
+}
+
+export interface CouponValidateResult {
+  valid: boolean;
+  discount: number;
+  /** @nullable */
+  code?: string | null;
+  /** @nullable */
+  message?: string | null;
+}
+
+export interface Customer {
+  id: string;
+  email: string;
+  fullName: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  city?: string | null;
+  /** @nullable */
+  address?: string | null;
+  isActive: boolean;
+  /** @nullable */
+  lastLoginAt?: string | null;
+  createdAt: string;
+}
+
+export interface CustomerRegisterInput {
+  email: string;
+  fullName: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @minLength 8 */
+  password: string;
+}
+
+export interface CustomerLoginInput {
+  email: string;
+  password: string;
+}
+
+export interface CustomerProfileUpdate {
+  fullName?: string;
+  /** @nullable */
+  phone?: string | null;
+  /** @nullable */
+  city?: string | null;
+  /** @nullable */
+  address?: string | null;
+}
+
 export type ListProductsParams = {
 category?: string;
 brand?: string;
@@ -750,5 +918,11 @@ threshold?: number;
 
 export type AdminListAuditLogParams = {
 limit?: number;
+/**
+ * Search by admin username or entity id
+ */
+q?: string;
+action?: string;
+entityType?: string;
 };
 

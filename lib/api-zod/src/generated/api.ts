@@ -234,7 +234,10 @@ export const GetProductResponse = zod.object({
   "price": zod.number(),
   "inStock": zod.boolean()
 })).optional(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 
 
@@ -281,7 +284,10 @@ export const ListCategoriesResponseItem = zod.object({
   "icon": zod.string(),
   "image": zod.string().nullish(),
   "productCount": zod.number(),
-  "descriptionAr": zod.string().nullish()
+  "descriptionAr": zod.string().nullish(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 export const ListCategoriesResponse = zod.array(ListCategoriesResponseItem)
 
@@ -301,7 +307,10 @@ export const GetCategoryResponse = zod.object({
   "icon": zod.string(),
   "image": zod.string().nullish(),
   "productCount": zod.number(),
-  "descriptionAr": zod.string().nullish()
+  "descriptionAr": zod.string().nullish(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 
 
@@ -634,7 +643,10 @@ export const AdminCreateProductBody = zod.object({
   "price": zod.number(),
   "inStock": zod.boolean()
 })).optional(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 
 
@@ -678,7 +690,10 @@ export const AdminUpdateProductBody = zod.object({
   "price": zod.number(),
   "inStock": zod.boolean()
 })).optional(),
-  "badges": zod.array(zod.string()).optional()
+  "badges": zod.array(zod.string()).optional(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 
 export const AdminUpdateProductResponse = zod.object({
@@ -743,7 +758,10 @@ export const AdminCreateCategoryBody = zod.object({
   "nameEn": zod.string(),
   "icon": zod.string(),
   "image": zod.string().nullish(),
-  "descriptionAr": zod.string().nullish()
+  "descriptionAr": zod.string().nullish(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 
 
@@ -760,7 +778,10 @@ export const AdminUpdateCategoryBody = zod.object({
   "nameEn": zod.string().optional(),
   "icon": zod.string().optional(),
   "image": zod.string().nullish(),
-  "descriptionAr": zod.string().nullish()
+  "descriptionAr": zod.string().nullish(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 
 export const AdminUpdateCategoryResponse = zod.object({
@@ -771,7 +792,10 @@ export const AdminUpdateCategoryResponse = zod.object({
   "icon": zod.string(),
   "image": zod.string().nullish(),
   "productCount": zod.number(),
-  "descriptionAr": zod.string().nullish()
+  "descriptionAr": zod.string().nullish(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "metaKeywords": zod.string().nullish()
 })
 
 
@@ -1415,7 +1439,10 @@ export const AdminAnalyticsLowStockResponse = zod.array(AdminAnalyticsLowStockRe
 export const adminListAuditLogQueryLimitDefault = 50;
 
 export const AdminListAuditLogQueryParams = zod.object({
-  "limit": zod.coerce.number().default(adminListAuditLogQueryLimitDefault)
+  "limit": zod.coerce.number().default(adminListAuditLogQueryLimitDefault),
+  "q": zod.coerce.string().optional().describe('Search by admin username or entity id'),
+  "action": zod.coerce.string().optional(),
+  "entityType": zod.coerce.string().optional()
 })
 
 export const AdminListAuditLogResponseItem = zod.object({
@@ -1430,5 +1457,219 @@ export const AdminListAuditLogResponseItem = zod.object({
   "createdAt": zod.string()
 })
 export const AdminListAuditLogResponse = zod.array(AdminListAuditLogResponseItem)
+
+
+/**
+ * @summary Validate a coupon code against a subtotal
+ */
+export const ValidateCouponBody = zod.object({
+  "code": zod.string(),
+  "subtotal": zod.number()
+})
+
+export const ValidateCouponResponse = zod.object({
+  "valid": zod.boolean(),
+  "discount": zod.number(),
+  "code": zod.string().nullish(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary Register a new customer account
+ */
+export const customerRegisterBodyPasswordMin = 8;
+
+
+
+export const CustomerRegisterBody = zod.object({
+  "email": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "password": zod.string().min(customerRegisterBodyPasswordMin)
+})
+
+
+/**
+ * @summary Customer login
+ */
+export const CustomerLoginBody = zod.object({
+  "email": zod.string(),
+  "password": zod.string()
+})
+
+export const CustomerLoginResponse = zod.object({
+  "id": zod.string(),
+  "email": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "city": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "lastLoginAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Customer logout
+ */
+export const CustomerLogoutResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary Current customer
+ */
+export const CustomerMeResponse = zod.object({
+  "id": zod.string(),
+  "email": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "city": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "lastLoginAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Update current customer profile
+ */
+export const CustomerUpdateProfileBody = zod.object({
+  "fullName": zod.string().optional(),
+  "phone": zod.string().nullish(),
+  "city": zod.string().nullish(),
+  "address": zod.string().nullish()
+})
+
+export const CustomerUpdateProfileResponse = zod.object({
+  "id": zod.string(),
+  "email": zod.string(),
+  "fullName": zod.string(),
+  "phone": zod.string().nullish(),
+  "city": zod.string().nullish(),
+  "address": zod.string().nullish(),
+  "isActive": zod.boolean(),
+  "lastLoginAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Current customer order history
+ */
+export const CustomerOrdersResponseItem = zod.object({
+  "id": zod.string(),
+  "customerName": zod.string(),
+  "phone": zod.string(),
+  "city": zod.string(),
+  "address": zod.string(),
+  "email": zod.string().nullish(),
+  "promoCode": zod.string().nullish(),
+  "discount": zod.number().nullish(),
+  "notes": zod.string().nullish(),
+  "paymentMethod": zod.string(),
+  "items": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "price": zod.number(),
+  "quantity": zod.number(),
+  "image": zod.string()
+})),
+  "subtotal": zod.number(),
+  "shipping": zod.number(),
+  "total": zod.number(),
+  "status": zod.string(),
+  "createdAt": zod.string()
+})
+export const CustomerOrdersResponse = zod.array(CustomerOrdersResponseItem)
+
+
+/**
+ * @summary List coupons
+ */
+export const AdminListCouponsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "type": zod.enum(['percent', 'fixed']),
+  "value": zod.number(),
+  "minSubtotal": zod.number().nullish(),
+  "maxUses": zod.number().nullish(),
+  "usedCount": zod.number(),
+  "isActive": zod.boolean(),
+  "startsAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const AdminListCouponsResponse = zod.array(AdminListCouponsResponseItem)
+
+
+/**
+ * @summary Create a coupon
+ */
+export const AdminCreateCouponBody = zod.object({
+  "code": zod.string(),
+  "type": zod.enum(['percent', 'fixed']),
+  "value": zod.number(),
+  "minSubtotal": zod.number().nullish(),
+  "maxUses": zod.number().nullish(),
+  "isActive": zod.boolean().optional(),
+  "startsAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update a coupon
+ */
+export const AdminUpdateCouponParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminUpdateCouponBody = zod.object({
+  "code": zod.string().optional(),
+  "type": zod.enum(['percent', 'fixed']).optional(),
+  "value": zod.number().optional(),
+  "minSubtotal": zod.number().nullish(),
+  "maxUses": zod.number().nullish(),
+  "isActive": zod.boolean().optional(),
+  "startsAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish()
+})
+
+export const AdminUpdateCouponResponse = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "type": zod.enum(['percent', 'fixed']),
+  "value": zod.number(),
+  "minSubtotal": zod.number().nullish(),
+  "maxUses": zod.number().nullish(),
+  "usedCount": zod.number(),
+  "isActive": zod.boolean(),
+  "startsAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "descriptionAr": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a coupon
+ */
+export const AdminDeleteCouponParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminDeleteCouponResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
 
 
