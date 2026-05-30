@@ -1,3 +1,4 @@
 - [api-client-react stale types](api-client-stale-types.md) — run `typecheck:libs` after codegen; list hooks are (params, options).
 - [Site settings coupling](site-settings-coupling.md) — CMS & storefront share an untyped SettingsMap; mirror key/shape changes in both.
 - [backdrop-filter fixed trap](backdrop-filter-fixed-trap.md) — fixed overlays/drawers inside a blurred panel get confined; portal them to body.
+- [Auth form mount race](auth-form-mount-race.md) — controlled login/setup forms drop keystrokes if mounted before auth bootstrap settles; gate on auth isLoading.

@@ -27,7 +27,7 @@ const setupSchema = z.object({
 export default function Login() {
   const [isSetup, setIsSetup] = useState(false);
   const [, setLocation] = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -90,6 +90,17 @@ export default function Login() {
     });
   };
 
+  if (isAuthLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background cyber-grid relative p-4">
+        <div className="absolute inset-0 vignette pointer-events-none z-0" />
+        <div className="relative z-10 font-mono text-primary neon-text animate-pulse tracking-widest">
+          جاري التحميل...
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background cyber-grid relative p-4">
       <div className="absolute inset-0 vignette pointer-events-none z-0" />
@@ -118,7 +129,7 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>اسم المستخدم</FormLabel>
                         <FormControl>
-                          <Input {...field} className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
+                          <Input {...field} autoComplete="username" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -131,7 +142,7 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>الاسم الكامل</FormLabel>
                         <FormControl>
-                          <Input {...field} className="bg-background/50 focus-visible:ring-primary/50" />
+                          <Input {...field} autoComplete="name" className="bg-background/50 focus-visible:ring-primary/50" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -144,7 +155,7 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>البريد الإلكتروني (اختياري)</FormLabel>
                         <FormControl>
-                          <Input {...field} type="email" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
+                          <Input {...field} type="email" autoComplete="email" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -157,7 +168,7 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>كلمة المرور</FormLabel>
                         <FormControl>
-                          <Input {...field} type="password" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
+                          <Input {...field} type="password" autoComplete="new-password" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -178,7 +189,7 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>اسم المستخدم</FormLabel>
                         <FormControl>
-                          <Input {...field} className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
+                          <Input {...field} autoComplete="username" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -191,7 +202,7 @@ export default function Login() {
                       <FormItem>
                         <FormLabel>كلمة المرور</FormLabel>
                         <FormControl>
-                          <Input {...field} type="password" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
+                          <Input {...field} type="password" autoComplete="current-password" className="bg-background/50 focus-visible:ring-primary/50" dir="ltr" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
