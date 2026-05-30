@@ -1,1 +1,1 @@
-- [TechZone static image assets](techzone-assets.md) — serve images from /public (/catalog, /brands); never use /src/assets src= paths (404 in prod).
+- [api-client-react stale types](api-client-stale-types.md) — artifact typecheck reads lib's built .d.ts (project refs), not src; run `typecheck:libs` after codegen/new endpoints. Also: list hooks are (params, options).
