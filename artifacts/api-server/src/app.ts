@@ -1,10 +1,18 @@
 import express, { type Express } from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import pinoHttp from "pino-http";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
+const SESSION_SECRET = process.env.SESSION_SECRET;
+if (!SESSION_SECRET) {
+  throw new Error("SESSION_SECRET environment variable is required for admin sessions.");
+}
+
 const app: Express = express();
+
+app.set("trust proxy", 1);
 
 app.use(
   pinoHttp({
@@ -26,6 +34,7 @@ app.use(
   }),
 );
 app.use(cors());
+app.use(cookieParser(SESSION_SECRET));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

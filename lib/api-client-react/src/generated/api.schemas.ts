@@ -243,6 +243,435 @@ export interface StoreSummary {
   freeShippingThreshold?: number;
 }
 
+export interface SuccessResponse {
+  success: boolean;
+  /** @nullable */
+  message?: string | null;
+}
+
+/**
+ * Arbitrary key/value site settings map
+ */
+export interface SettingsMap { [key: string]: unknown }
+
+export interface AdminSetupInput {
+  /** @minLength 3 */
+  username: string;
+  /** @minLength 1 */
+  fullName: string;
+  /** @nullable */
+  email?: string | null;
+  /** @minLength 8 */
+  password: string;
+}
+
+export interface AdminLoginInput {
+  username: string;
+  password: string;
+}
+
+export type AdminAccountPublicRole = typeof AdminAccountPublicRole[keyof typeof AdminAccountPublicRole];
+
+
+export const AdminAccountPublicRole = {
+  super_admin: 'super_admin',
+  content_editor: 'content_editor',
+  order_manager: 'order_manager',
+} as const;
+
+export interface AdminAccountPublic {
+  id: string;
+  username: string;
+  fullName: string;
+  /** @nullable */
+  email?: string | null;
+  role: AdminAccountPublicRole;
+  isActive: boolean;
+  /** @nullable */
+  lastLoginAt?: string | null;
+  createdAt: string;
+}
+
+export interface AdminMeResponse {
+  admin: AdminAccountPublic;
+  permissions: string[];
+}
+
+export type AdminAccountInputRole = typeof AdminAccountInputRole[keyof typeof AdminAccountInputRole];
+
+
+export const AdminAccountInputRole = {
+  super_admin: 'super_admin',
+  content_editor: 'content_editor',
+  order_manager: 'order_manager',
+} as const;
+
+export interface AdminAccountInput {
+  /** @minLength 3 */
+  username: string;
+  /** @minLength 1 */
+  fullName: string;
+  /** @nullable */
+  email?: string | null;
+  /** @minLength 8 */
+  password: string;
+  role: AdminAccountInputRole;
+  isActive?: boolean;
+}
+
+export type AdminAccountUpdateRole = typeof AdminAccountUpdateRole[keyof typeof AdminAccountUpdateRole];
+
+
+export const AdminAccountUpdateRole = {
+  super_admin: 'super_admin',
+  content_editor: 'content_editor',
+  order_manager: 'order_manager',
+} as const;
+
+export interface AdminAccountUpdate {
+  fullName?: string;
+  /** @nullable */
+  email?: string | null;
+  /** @minLength 8 */
+  password?: string;
+  role?: AdminAccountUpdateRole;
+  isActive?: boolean;
+}
+
+export interface AdminProduct {
+  id: string;
+  nameAr: string;
+  nameEn: string;
+  slug: string;
+  /** @nullable */
+  sku?: string | null;
+  price: number;
+  /** @nullable */
+  originalPrice?: number | null;
+  /** @nullable */
+  discountPercent?: number | null;
+  categorySlug: string;
+  brandSlug: string;
+  image: string;
+  /** @nullable */
+  image2?: string | null;
+  stock: number;
+  rating: number;
+  reviewCount: number;
+  /** @nullable */
+  warranty?: string | null;
+  isNew?: boolean;
+  isBestSeller?: boolean;
+  isExclusive?: boolean;
+  isFlashDeal?: boolean;
+  isFeatured?: boolean;
+  /** @nullable */
+  descriptionAr?: string | null;
+  specs?: ProductSpec[];
+  variants?: ProductVariant[];
+  badges?: string[];
+  createdAt: string;
+}
+
+export interface AdminProductListResponse {
+  products: AdminProduct[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export interface AdminProductInput {
+  id?: string;
+  nameAr: string;
+  nameEn: string;
+  slug: string;
+  /** @nullable */
+  sku?: string | null;
+  price: number;
+  /** @nullable */
+  originalPrice?: number | null;
+  /** @nullable */
+  discountPercent?: number | null;
+  categorySlug: string;
+  brandSlug: string;
+  image: string;
+  /** @nullable */
+  image2?: string | null;
+  stock?: number;
+  rating?: number;
+  reviewCount?: number;
+  /** @nullable */
+  warranty?: string | null;
+  isNew?: boolean;
+  isBestSeller?: boolean;
+  isExclusive?: boolean;
+  isFlashDeal?: boolean;
+  isFeatured?: boolean;
+  /** @nullable */
+  descriptionAr?: string | null;
+  specs?: ProductSpec[];
+  variants?: ProductVariant[];
+  badges?: string[];
+}
+
+export interface AdminProductUpdate {
+  nameAr?: string;
+  nameEn?: string;
+  slug?: string;
+  /** @nullable */
+  sku?: string | null;
+  price?: number;
+  /** @nullable */
+  originalPrice?: number | null;
+  /** @nullable */
+  discountPercent?: number | null;
+  categorySlug?: string;
+  brandSlug?: string;
+  image?: string;
+  /** @nullable */
+  image2?: string | null;
+  stock?: number;
+  rating?: number;
+  reviewCount?: number;
+  /** @nullable */
+  warranty?: string | null;
+  isNew?: boolean;
+  isBestSeller?: boolean;
+  isExclusive?: boolean;
+  isFlashDeal?: boolean;
+  isFeatured?: boolean;
+  /** @nullable */
+  descriptionAr?: string | null;
+  specs?: ProductSpec[];
+  variants?: ProductVariant[];
+  badges?: string[];
+}
+
+export interface AdminCategoryInput {
+  id?: string;
+  slug: string;
+  nameAr: string;
+  nameEn: string;
+  icon: string;
+  /** @nullable */
+  image?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+}
+
+export interface AdminCategoryUpdate {
+  slug?: string;
+  nameAr?: string;
+  nameEn?: string;
+  icon?: string;
+  /** @nullable */
+  image?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+}
+
+export interface AdminBrandInput {
+  id?: string;
+  slug: string;
+  nameEn: string;
+  logo: string;
+  /** @nullable */
+  website?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+}
+
+export interface AdminBrandUpdate {
+  slug?: string;
+  nameEn?: string;
+  logo?: string;
+  /** @nullable */
+  website?: string | null;
+  /** @nullable */
+  descriptionAr?: string | null;
+}
+
+export interface AdminReview {
+  id: string;
+  productId: string;
+  authorName: string;
+  rating: number;
+  comment: string;
+  date: string;
+}
+
+export interface AdminReviewInput {
+  productId: string;
+  authorName: string;
+  /**
+     * @minimum 1
+     * @maximum 5
+     */
+  rating: number;
+  comment: string;
+  /** @nullable */
+  date?: string | null;
+}
+
+export interface AdminBlogPost {
+  id: string;
+  slug: string;
+  titleAr: string;
+  excerpt: string;
+  contentAr: string;
+  coverImage: string;
+  date: string;
+  readingMinutes: number;
+  categoryAr: string;
+  isFeatured?: boolean;
+  authorName: string;
+  /** @nullable */
+  authorAvatar?: string | null;
+  createdAt: string;
+}
+
+export interface AdminBlogPostInput {
+  id?: string;
+  slug: string;
+  titleAr: string;
+  excerpt: string;
+  contentAr: string;
+  coverImage: string;
+  date: string;
+  readingMinutes?: number;
+  categoryAr: string;
+  isFeatured?: boolean;
+  authorName?: string;
+  /** @nullable */
+  authorAvatar?: string | null;
+}
+
+export interface AdminBlogPostUpdate {
+  slug?: string;
+  titleAr?: string;
+  excerpt?: string;
+  contentAr?: string;
+  coverImage?: string;
+  date?: string;
+  readingMinutes?: number;
+  categoryAr?: string;
+  isFeatured?: boolean;
+  authorName?: string;
+  /** @nullable */
+  authorAvatar?: string | null;
+}
+
+export interface AdminOrderListResponse {
+  orders: Order[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
+export type OrderStatusInputStatus = typeof OrderStatusInputStatus[keyof typeof OrderStatusInputStatus];
+
+
+export const OrderStatusInputStatus = {
+  pending: 'pending',
+  confirmed: 'confirmed',
+  shipped: 'shipped',
+  out_for_delivery: 'out_for_delivery',
+  delivered: 'delivered',
+  cancelled: 'cancelled',
+} as const;
+
+export interface OrderStatusInput {
+  status: OrderStatusInputStatus;
+}
+
+export interface NewsletterSubscriber {
+  id: string;
+  email: string;
+  createdAt: string;
+}
+
+export interface Media {
+  id: string;
+  url: string;
+  filename: string;
+  /** @nullable */
+  mimeType?: string | null;
+  /** @nullable */
+  sizeBytes?: number | null;
+  /** @nullable */
+  altText?: string | null;
+  folder: string;
+  /** @nullable */
+  uploadedBy?: string | null;
+  createdAt: string;
+}
+
+export interface MediaInput {
+  url: string;
+  filename: string;
+  /** @nullable */
+  mimeType?: string | null;
+  /** @nullable */
+  sizeBytes?: number | null;
+  /** @nullable */
+  altText?: string | null;
+  folder?: string;
+}
+
+export interface MediaUpdate {
+  url?: string;
+  filename?: string;
+  /** @nullable */
+  altText?: string | null;
+  folder?: string;
+}
+
+export interface StatusCount {
+  status: string;
+  count: number;
+}
+
+export interface AnalyticsOverview {
+  totalRevenue: number;
+  totalOrders: number;
+  ordersByStatus: StatusCount[];
+  totalProducts: number;
+  totalSubscribers: number;
+  lowStockCount: number;
+  recentOrders?: Order[];
+}
+
+export interface SalesPoint {
+  date: string;
+  orders: number;
+  revenue: number;
+}
+
+export interface TopProduct {
+  productId: string;
+  nameAr: string;
+  quantitySold: number;
+  revenue: number;
+  /** @nullable */
+  image?: string | null;
+}
+
+export interface AuditLogEntry {
+  id: string;
+  /** @nullable */
+  adminId?: string | null;
+  /** @nullable */
+  adminUsername?: string | null;
+  action: string;
+  entityType: string;
+  /** @nullable */
+  entityId?: string | null;
+  details?: unknown;
+  /** @nullable */
+  ip?: string | null;
+  createdAt: string;
+}
+
 export type ListProductsParams = {
 category?: string;
 brand?: string;
@@ -282,5 +711,44 @@ limit?: number;
 export type TrackOrderParams = {
 orderId: string;
 phone: string;
+};
+
+export type AdminListProductsParams = {
+search?: string;
+category?: string;
+brand?: string;
+page?: number;
+limit?: number;
+};
+
+export type AdminListReviewsParams = {
+productId?: string;
+};
+
+export type AdminListOrdersParams = {
+status?: string;
+search?: string;
+page?: number;
+limit?: number;
+};
+
+export type AdminListMediaParams = {
+folder?: string;
+};
+
+export type AdminAnalyticsSalesOverTimeParams = {
+days?: number;
+};
+
+export type AdminAnalyticsTopProductsParams = {
+limit?: number;
+};
+
+export type AdminAnalyticsLowStockParams = {
+threshold?: number;
+};
+
+export type AdminListAuditLogParams = {
+limit?: number;
 };
 
