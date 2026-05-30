@@ -20,6 +20,7 @@ import {
   Mail, 
   Image as ImageIcon, 
   Users, 
+  UserRound,
   Settings, 
   Activity
 } from "lucide-react";
@@ -37,6 +38,7 @@ export function Sidebar() {
     { href: "/reviews", label: "التقييمات", icon: MessageSquare, perm: "reviews:write" },
     { href: "/blog", label: "المدونة", icon: FileText, perm: "blog:write" },
     { href: "/media", label: "الوسائط", icon: ImageIcon, perm: "media:write" },
+    { href: "/customers", label: "العملاء", icon: UserRound, perm: "orders:write" },
     { href: "/newsletter", label: "النشرة الإخبارية", icon: Mail, perm: "newsletter:read" },
     { href: "/accounts", label: "الحسابات", icon: Users, perm: "admins:manage" },
     { href: "/settings", label: "الإعدادات", icon: Settings, perm: "settings:write" },

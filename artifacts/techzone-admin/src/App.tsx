@@ -15,6 +15,7 @@ import Reviews from "@/pages/Reviews";
 import Blog from "@/pages/Blog";
 import Media from "@/pages/Media";
 import Newsletter from "@/pages/Newsletter";
+import Customers from "@/pages/Customers";
 import Accounts from "@/pages/Accounts";
 import Settings from "@/pages/Settings";
 import Audit from "@/pages/Audit";
@@ -65,6 +66,9 @@ function Router() {
       </Route>
       <Route path="/newsletter">
         {(params) => <ProtectedRoute component={Newsletter} perm="newsletter:read" {...params} />}
+      </Route>
+      <Route path="/customers">
+        {(params) => <ProtectedRoute component={Customers} perm="orders:write" {...params} />}
       </Route>
       <Route path="/accounts">
         {(params) => <ProtectedRoute component={Accounts} perm="admins:manage" {...params} />}
