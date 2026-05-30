@@ -1,26 +1,81 @@
-import { Link } from "wouter";
-import { ShoppingCart, Heart, Search, Menu, User, Monitor, X, Terminal } from "lucide-react";
+import { Link, useLocation } from "wouter";
+import {
+  ShoppingCart,
+  Heart,
+  Search,
+  Menu,
+  User,
+  Monitor,
+  X,
+  Terminal,
+  ChevronDown,
+  Zap,
+  Cpu,
+  Tag,
+  Newspaper,
+  PackageSearch,
+} from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useListCategories } from "@workspace/api-client-react";
+import { CATEGORY_GROUPS, CATEGORY_NAMES_AR, getCategoryIcon } from "@/lib/categoryMeta";
+
+interface CategoryLite {
+  id: string;
+  slug: string;
+  nameAr: string;
+  productCount: number;
+}
+
+const QUICK_LINKS = [
+  { href: "/deals", label: "عروض الحرق", icon: Zap, tone: "text-destructive" },
+  { href: "/pc-builder", label: "تجميعة PC", icon: Cpu, tone: "text-secondary" },
+  { href: "/brands", label: "الماركات", icon: Tag, tone: "text-foreground" },
+  { href: "/blog", label: "المدونة", icon: Newspaper, tone: "text-foreground" },
+  { href: "/track-order", label: "تتبع الطلب", icon: PackageSearch, tone: "text-foreground" },
+];
 
 export function Navbar() {
   const cartItemsCount = useCartStore((state) => state.getTotalItems());
   const wishlistItemsCount = useWishlistStore((state) => state.productIds.length);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [megaOpen, setMegaOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [, navigate] = useLocation();
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { data: categories } = useListCategories();
+  const catMap = new Map<string, CategoryLite>();
+  (categories as CategoryLite[] | undefined)?.forEach((c) => catMap.set(c.slug, c));
+
+  const openMega = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setMegaOpen(true);
+  };
+  const closeMega = () => {
+    closeTimer.current = setTimeout(() => setMegaOpen(false), 120);
+  };
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchValue.trim();
+    navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
+    setIsMobileMenuOpen(false);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full glass-panel border-b border-primary/20 neon-border">
+      {/* Top bar */}
       <div className="container mx-auto px-4 h-16 flex items-center justify-between gap-4">
-        {/* Mobile Menu Toggle */}
         <button
           className="md:hidden p-2 -ml-2 text-primary hover:text-primary transition-colors animate-pulse-glow"
           onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="القائمة"
         >
           <Menu size={24} />
         </button>
 
-        {/* Logo */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group">
           <Monitor className="text-primary h-8 w-8 group-hover:animate-flicker" />
           <span className="text-xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="TECHZONE">
@@ -28,51 +83,31 @@ export function Navbar() {
           </span>
         </Link>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-6 text-sm font-bold font-mono">
-          <Link href="/categories" className="text-foreground hover:text-primary transition-colors hover:neon-text uppercase tracking-widest relative group">
-            الأقسام
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
-          </Link>
-          <Link href="/deals" className="text-secondary hover:text-secondary transition-colors neon-text-magenta uppercase tracking-widest relative group">
-            عروض فلاش
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-secondary transition-all group-hover:w-full"></span>
-          </Link>
-          <Link href="/pc-builder" className="text-primary font-bold hover:text-primary/80 transition-colors flex items-center gap-1 uppercase tracking-widest clip-tab bg-primary/10 px-3 py-1 border border-primary/30 glow-hover">
-            <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            تجميعة PC
-          </Link>
-          <Link href="/brands" className="text-foreground hover:text-primary transition-colors hover:neon-text uppercase tracking-widest relative group">
-            الماركات
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
-          </Link>
-          <Link href="/blog" className="text-foreground hover:text-primary transition-colors hover:neon-text uppercase tracking-widest relative group">
-            المدونة
-            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
-          </Link>
-        </nav>
-
         {/* Search */}
-        <div className="hidden lg:flex flex-1 max-w-md relative clip-corner-sm group">
+        <form onSubmit={submitSearch} className="hidden lg:flex flex-1 max-w-md relative clip-corner-sm group">
           <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-primary">
             <Terminal size={16} />
             <span className="ml-1 font-mono text-primary animate-pulse">{">"}</span>
           </div>
           <input
             type="search"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
             placeholder="ابحث في قاعدة البيانات..."
             className="w-full h-10 bg-background/50 border border-primary/30 pl-4 pr-12 text-sm font-mono text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-primary/30"
           />
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50 group-hover:text-primary transition-colors" size={18} />
-        </div>
+          <button type="submit" aria-label="بحث" className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50 group-hover:text-primary transition-colors">
+            <Search size={18} />
+          </button>
+        </form>
 
         {/* Actions */}
         <div className="flex items-center gap-3 shrink-0">
-          <Link href="/search" className="lg:hidden p-2 text-primary hover:text-primary/80 transition-colors">
+          <Link href="/search" className="lg:hidden p-2 text-primary hover:text-primary/80 transition-colors" aria-label="بحث">
             <Search size={20} />
           </Link>
-          
-          <Link href="/wishlist" className="p-2 text-foreground hover:text-secondary transition-colors relative group">
+
+          <Link href="/wishlist" className="p-2 text-foreground hover:text-secondary transition-colors relative group" aria-label="المفضلة">
             <Heart size={20} className="group-hover:fill-secondary/20 group-hover:text-secondary" />
             {wishlistItemsCount > 0 && (
               <span className="absolute top-0 right-0 w-4 h-4 bg-secondary text-secondary-foreground text-[10px] font-mono font-bold rounded-sm clip-corner-sm flex items-center justify-center animate-pulse-glow">
@@ -81,7 +116,7 @@ export function Navbar() {
             )}
           </Link>
 
-          <Link href="/cart" className="p-2 text-foreground hover:text-primary transition-colors relative group">
+          <Link href="/cart" className="p-2 text-foreground hover:text-primary transition-colors relative group" aria-label="السلة">
             <ShoppingCart size={20} className="group-hover:text-primary" />
             {cartItemsCount > 0 && (
               <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-mono font-bold rounded-sm clip-corner-sm flex items-center justify-center animate-pulse-glow">
@@ -91,10 +126,107 @@ export function Navbar() {
           </Link>
 
           <div className="hidden sm:block w-px h-6 bg-primary/20 mx-1" />
-          
-          <button className="hidden sm:flex p-2 text-foreground hover:text-primary transition-colors">
+
+          <button className="hidden sm:flex p-2 text-foreground hover:text-primary transition-colors" aria-label="الحساب">
             <User size={20} />
           </button>
+        </div>
+      </div>
+
+      {/* Bottom nav row (desktop) */}
+      <div className="hidden md:block border-t border-primary/10 bg-background/40">
+        <div className="container mx-auto px-4 h-11 flex items-center gap-1 font-mono text-sm">
+          {/* All categories trigger */}
+          <div className="relative h-full" onMouseEnter={openMega} onMouseLeave={closeMega}>
+            <button
+              className={`h-full flex items-center gap-2 px-4 font-bold uppercase tracking-widest border-x border-primary/20 transition-colors ${
+                megaOpen ? "bg-primary text-background" : "text-primary hover:bg-primary/10"
+              }`}
+              onClick={() => setMegaOpen((v) => !v)}
+              aria-expanded={megaOpen}
+            >
+              <Menu size={16} />
+              كل الأقسام
+              <ChevronDown size={14} className={`transition-transform ${megaOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            <AnimatePresence>
+              {megaOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full right-0 mt-px w-[min(92vw,1100px)] glass-panel border border-primary/30 neon-border shadow-2xl z-50"
+                >
+                  <div className="grid grid-cols-2 lg:grid-cols-5 gap-px bg-primary/10">
+                    {CATEGORY_GROUPS.map((group) => (
+                      <div key={group.code} className="bg-background/95 p-4 flex flex-col gap-3">
+                        <div className="flex items-center justify-between border-b border-primary/15 pb-2">
+                          <h3 className="font-bold text-sm text-foreground">{group.title}</h3>
+                          <span className="font-mono text-[10px] text-primary/40">{group.code}</span>
+                        </div>
+                        <ul className="flex flex-col gap-1">
+                          {group.slugs.map((slug) => {
+                            const Icon = getCategoryIcon(slug);
+                            const cat = catMap.get(slug);
+                            const count = cat?.productCount ?? 0;
+                            return (
+                              <li key={slug}>
+                                <Link
+                                  href={`/categories/${slug}`}
+                                  onClick={() => setMegaOpen(false)}
+                                  className="group flex items-center gap-2 px-2 py-1.5 hover:bg-primary/10 transition-colors clip-corner-sm"
+                                >
+                                  <span className="w-7 h-7 flex items-center justify-center text-primary/70 group-hover:text-primary border border-primary/20 group-hover:border-primary/50 transition-colors shrink-0">
+                                    <Icon size={15} />
+                                  </span>
+                                  <span className="text-xs text-foreground/90 group-hover:text-primary transition-colors flex-1">
+                                    {cat?.nameAr ?? CATEGORY_NAMES_AR[slug] ?? slug}
+                                  </span>
+                                  {count > 0 && (
+                                    <span className="font-mono text-[10px] text-muted-foreground/60">{count}</span>
+                                  )}
+                                </Link>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex items-center justify-between px-4 py-2 border-t border-primary/15 bg-background/95">
+                    <span className="font-mono text-[10px] text-primary/50">// {catMap.size} MODULES_ONLINE</span>
+                    <Link href="/categories" onClick={() => setMegaOpen(false)} className="font-mono text-xs text-primary hover:neon-text">
+                      [ عرض كل الأقسام ]
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Quick links */}
+          <nav className="flex items-center gap-1 px-2">
+            {QUICK_LINKS.map((link) => {
+              const Icon = link.icon;
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 uppercase tracking-wider text-xs font-bold hover:bg-white/5 transition-colors ${link.tone} hover:text-primary`}
+                >
+                  <Icon size={14} />
+                  {link.label}
+                </Link>
+              );
+            })}
+          </nav>
+
+          <div className="mr-auto flex items-center gap-2 font-mono text-[10px] text-lime/70">
+            <span className="w-1.5 h-1.5 rounded-full bg-lime animate-pulse-glow" />
+            SYSTEM_ONLINE
+          </div>
         </div>
       </div>
 
@@ -114,25 +246,71 @@ export function Navbar() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed top-0 right-0 h-full w-[80vw] max-w-sm glass-panel border-l border-primary/20 z-50 md:hidden flex flex-col font-mono"
+              className="fixed top-0 right-0 h-full w-[85vw] max-w-sm glass-panel border-l border-primary/20 z-50 md:hidden flex flex-col font-mono overflow-y-auto"
             >
-              <div className="p-4 border-b border-primary/20 flex items-center justify-between">
+              <div className="p-4 border-b border-primary/20 flex items-center justify-between sticky top-0 bg-background/95 z-10">
                 <span className="text-xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="TECHZONE">
                   TECHZONE
                 </span>
-                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-primary hover:text-secondary transition-colors">
+                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-primary hover:text-secondary transition-colors" aria-label="إغلاق">
                   <X size={24} />
                 </button>
               </div>
-              <div className="p-4 flex flex-col gap-4 text-lg font-bold">
-                <Link href="/" className="hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{"> "}الرئيسية</Link>
-                <Link href="/categories" className="hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{"> "}الأقسام</Link>
-                <Link href="/deals" className="text-secondary hover:neon-text-magenta transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{"> "}عروض فلاش</Link>
-                <Link href="/pc-builder" className="text-primary hover:neon-text transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{"> "}تجميعة PC</Link>
-                <Link href="/brands" className="hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{"> "}الماركات</Link>
-                <Link href="/blog" className="hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{"> "}المدونة</Link>
-                <Link href="/track-order" className="hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>{"> "}تتبع الطلب</Link>
+
+              <form onSubmit={submitSearch} className="p-4 border-b border-primary/15">
+                <div className="relative">
+                  <input
+                    type="search"
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                    placeholder="ابحث..."
+                    className="w-full h-10 bg-background/50 border border-primary/30 px-3 text-sm text-primary focus:outline-none focus:border-primary"
+                  />
+                  <button type="submit" aria-label="بحث" className="absolute left-2 top-1/2 -translate-y-1/2 text-primary/60">
+                    <Search size={18} />
+                  </button>
+                </div>
+              </form>
+
+              <div className="p-4 flex flex-col gap-2 text-sm font-bold border-b border-primary/15">
+                {QUICK_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    className={`${link.tone} hover:text-primary transition-colors py-1`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    {"> "}
+                    {link.label}
+                  </Link>
+                ))}
               </div>
+
+              <div className="p-4 flex flex-col gap-4">
+                {CATEGORY_GROUPS.map((group) => (
+                  <div key={group.code}>
+                    <h3 className="text-xs uppercase tracking-widest text-primary/60 mb-2">{group.title}</h3>
+                    <div className="grid grid-cols-2 gap-1">
+                      {group.slugs.map((slug) => {
+                        const Icon = getCategoryIcon(slug);
+                        const cat = catMap.get(slug);
+                        return (
+                          <Link
+                            key={slug}
+                            href={`/categories/${slug}`}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="flex items-center gap-2 px-2 py-2 text-xs text-foreground/80 hover:text-primary hover:bg-primary/10 transition-colors"
+                          >
+                            <Icon size={14} className="text-primary/60 shrink-0" />
+                            <span className="truncate">{cat?.nameAr ?? CATEGORY_NAMES_AR[slug] ?? slug}</span>
+                          </Link>
+                        );
+                      })}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
               <div className="mt-auto p-4 border-t border-primary/20 text-xs text-primary/50">
                 // SYSTEM_STATUS: ONLINE
               </div>

@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "wu0eUKYQ2ApPEya56aHXm"
@@ -18,3 +17,453 @@ id = "8imQMqjypHI7LlXLLgN4e"
 uri = "file://artifacts/techzone/src/assets/images/hero-3.png"
 type = "image"
 title = "Esports gaming peripherals"
+
+[[outputs]]
+id = "_5w2jtuZLY7XY7rzXHw8P"
+uri = "file://attached_assets/stock_images/keyboards_1.jpg"
+type = "image"
+title = "mechanical gaming keyboard with RGB backlight on dark desk"
+
+[[outputs]]
+id = "OFBLCuqXxH6Hq0aczTu4C"
+uri = "file://attached_assets/stock_images/keyboards_2.jpg"
+type = "image"
+title = "mechanical gaming keyboard with RGB backlight on dark desk"
+
+[[outputs]]
+id = "bk7tPUrwSBWTkkGV6lZjw"
+uri = "file://attached_assets/stock_images/keyboards_3.jpg"
+type = "image"
+title = "mechanical gaming keyboard with RGB backlight on dark desk"
+
+[[outputs]]
+id = "XUjK44klZn8TNWHxRGDwh"
+uri = "file://attached_assets/stock_images/mice_1.jpg"
+type = "image"
+title = "gaming mouse with RGB lighting on dark surface"
+
+[[outputs]]
+id = "r9dVC0fFVto_wmH5soMP9"
+uri = "file://attached_assets/stock_images/mice_2.jpg"
+type = "image"
+title = "gaming mouse with RGB lighting on dark surface"
+
+[[outputs]]
+id = "boWfH76xPCL6JIYhQlH4R"
+uri = "file://attached_assets/stock_images/mice_3.jpg"
+type = "image"
+title = "gaming mouse with RGB lighting on dark surface"
+
+[[outputs]]
+id = "I686O-B7JXm4UR3quzv8R"
+uri = "file://attached_assets/stock_images/mousepads_1.jpg"
+type = "image"
+title = "large gaming mouse pad desk mat with RGB edge"
+
+[[outputs]]
+id = "vXBVjWMTgXrP1fOhw6Uzf"
+uri = "file://attached_assets/stock_images/mousepads_2.jpg"
+type = "image"
+title = "large gaming mouse pad desk mat with RGB edge"
+
+[[outputs]]
+id = "ocRkH04p5vlFuKm964iec"
+uri = "file://attached_assets/stock_images/mousepads_3.jpg"
+type = "image"
+title = "large gaming mouse pad desk mat with RGB edge"
+
+[[outputs]]
+id = "3toxt-q4f76-o_xIEaP0e"
+uri = "file://attached_assets/stock_images/headsets_1.jpg"
+type = "image"
+title = "gaming headset headphones with microphone dark background"
+
+[[outputs]]
+id = "hHA5C5M5E7fXnU3JpH7Lr"
+uri = "file://attached_assets/stock_images/headsets_2.jpg"
+type = "image"
+title = "gaming headset headphones with microphone dark background"
+
+[[outputs]]
+id = "_8PM6lfEYbSsUMvXejFKP"
+uri = "file://attached_assets/stock_images/headsets_3.jpg"
+type = "image"
+title = "gaming headset headphones with microphone dark background"
+
+[[outputs]]
+id = "xz1S4kDdBpUlMBZSmcvAV"
+uri = "file://attached_assets/stock_images/microphones_1.jpg"
+type = "image"
+title = "condenser streaming microphone on desk"
+
+[[outputs]]
+id = "yeJyhw34Q0tllp-dq43qw"
+uri = "file://attached_assets/stock_images/microphones_2.jpg"
+type = "image"
+title = "condenser streaming microphone on desk"
+
+[[outputs]]
+id = "XrzjrfQ4OSb8YES17N5bH"
+uri = "file://attached_assets/stock_images/microphones_3.jpg"
+type = "image"
+title = "condenser streaming microphone on desk"
+
+[[outputs]]
+id = "lnazFX-Qtv7t5iBitH_DH"
+uri = "file://attached_assets/stock_images/controllers_1.jpg"
+type = "image"
+title = "video game controller gamepad dark background"
+
+[[outputs]]
+id = "GZsPBUitfPeBh1MwaYUco"
+uri = "file://attached_assets/stock_images/controllers_2.jpg"
+type = "image"
+title = "video game controller gamepad dark background"
+
+[[outputs]]
+id = "OKA_oFd9MGFQQuBjPO9ty"
+uri = "file://attached_assets/stock_images/controllers_3.jpg"
+type = "image"
+title = "video game controller gamepad dark background"
+
+[[outputs]]
+id = "QGPZVRpwqPKOBSW-87jYI"
+uri = "file://attached_assets/stock_images/gaming-chairs_1.jpg"
+type = "image"
+title = "ergonomic gaming chair racing style"
+
+[[outputs]]
+id = "50SsEICHg64UmRmqcD9OL"
+uri = "file://attached_assets/stock_images/gaming-chairs_2.jpg"
+type = "image"
+title = "ergonomic gaming chair racing style"
+
+[[outputs]]
+id = "PKYFkTPYy4kYnJzf53zGf"
+uri = "file://attached_assets/stock_images/gaming-chairs_3.jpg"
+type = "image"
+title = "ergonomic gaming chair racing style"
+
+[[outputs]]
+id = "pglT2gAf-EVwBy0MoAN3K"
+uri = "file://attached_assets/stock_images/laptop-stands_1.jpg"
+type = "image"
+title = "aluminum laptop stand on desk"
+
+[[outputs]]
+id = "G3gc8wz2xqxFUIc2ISsPa"
+uri = "file://attached_assets/stock_images/laptop-stands_2.jpg"
+type = "image"
+title = "aluminum laptop stand on desk"
+
+[[outputs]]
+id = "M95MZwetyKXNivyX6GXsK"
+uri = "file://attached_assets/stock_images/laptop-stands_3.jpg"
+type = "image"
+title = "aluminum laptop stand on desk"
+
+[[outputs]]
+id = "zjDHn2gdUsT3DiZuqUrX7"
+uri = "file://attached_assets/stock_images/playstation_1.jpg"
+type = "image"
+title = "playstation 5 game console with controller"
+
+[[outputs]]
+id = "91x1ijCHFH5m3w08CaBVm"
+uri = "file://attached_assets/stock_images/playstation_2.jpg"
+type = "image"
+title = "playstation 5 game console with controller"
+
+[[outputs]]
+id = "yY7piwZwwM9EtsVGkRi_Y"
+uri = "file://attached_assets/stock_images/playstation_3.jpg"
+type = "image"
+title = "playstation 5 game console with controller"
+
+[[outputs]]
+id = "QGdKlkzJEoyjfnmS6b49u"
+uri = "file://attached_assets/stock_images/xbox_1.jpg"
+type = "image"
+title = "xbox game console with controller dark"
+
+[[outputs]]
+id = "qVKHK9seyRQJXktWvy_Fc"
+uri = "file://attached_assets/stock_images/xbox_2.jpg"
+type = "image"
+title = "xbox game console with controller dark"
+
+[[outputs]]
+id = "9ELRsAK80UdNsSqTgDiO7"
+uri = "file://attached_assets/stock_images/xbox_3.jpg"
+type = "image"
+title = "xbox game console with controller dark"
+
+[[outputs]]
+id = "JlT4qZ6Ago8kxwGJKI1FN"
+uri = "file://attached_assets/stock_images/nintendo_1.jpg"
+type = "image"
+title = "nintendo switch handheld game console"
+
+[[outputs]]
+id = "TSIeYjmVixJi5k4tRAVaf"
+uri = "file://attached_assets/stock_images/nintendo_2.jpg"
+type = "image"
+title = "nintendo switch handheld game console"
+
+[[outputs]]
+id = "mvj-Mw7oTsSeFp2XEx8X-"
+uri = "file://attached_assets/stock_images/nintendo_3.jpg"
+type = "image"
+title = "nintendo switch handheld game console"
+
+[[outputs]]
+id = "qpNCaB95xbcTGU-nCUZXR"
+uri = "file://attached_assets/stock_images/console-accessories_1.jpg"
+type = "image"
+title = "game controller charging dock station"
+
+[[outputs]]
+id = "dlyWcziSa--rpdXL7U5VQ"
+uri = "file://attached_assets/stock_images/console-accessories_2.jpg"
+type = "image"
+title = "game controller charging dock station"
+
+[[outputs]]
+id = "tPo9EIMP5d_AQTABXtyPj"
+uri = "file://attached_assets/stock_images/console-accessories_3.jpg"
+type = "image"
+title = "game controller charging dock station"
+
+[[outputs]]
+id = "9FLG54BgxZuGaEViVQt4Q"
+uri = "file://attached_assets/stock_images/processors_1.jpg"
+type = "image"
+title = "computer cpu processor chip macro"
+
+[[outputs]]
+id = "eJekFwj4gKljIgmv1l6d_"
+uri = "file://attached_assets/stock_images/processors_2.jpg"
+type = "image"
+title = "computer cpu processor chip macro"
+
+[[outputs]]
+id = "jBzFFdvoVWmuRDhuG0JtT"
+uri = "file://attached_assets/stock_images/processors_3.jpg"
+type = "image"
+title = "computer cpu processor chip macro"
+
+[[outputs]]
+id = "TI7JaRf5lCRakz17_Alxu"
+uri = "file://attached_assets/stock_images/graphics-cards_1.jpg"
+type = "image"
+title = "graphics card gpu with fans dark"
+
+[[outputs]]
+id = "szafPHYr6x7HEtz6YN-eu"
+uri = "file://attached_assets/stock_images/graphics-cards_2.jpg"
+type = "image"
+title = "graphics card gpu with fans dark"
+
+[[outputs]]
+id = "xSFMKOiAgu8UKk7lu6oDC"
+uri = "file://attached_assets/stock_images/graphics-cards_3.jpg"
+type = "image"
+title = "graphics card gpu with fans dark"
+
+[[outputs]]
+id = "JxxFB0F3y1HUvnX_6k2zq"
+uri = "file://attached_assets/stock_images/ram_1.jpg"
+type = "image"
+title = "ddr ram memory module with rgb"
+
+[[outputs]]
+id = "mBmMEsPFB95Llxv4aJJoi"
+uri = "file://attached_assets/stock_images/ram_2.jpg"
+type = "image"
+title = "ddr ram memory module with rgb"
+
+[[outputs]]
+id = "WETisaqlIC6v699t7BTNP"
+uri = "file://attached_assets/stock_images/ram_3.jpg"
+type = "image"
+title = "ddr ram memory module with rgb"
+
+[[outputs]]
+id = "ISSqmdZiFlBv3zl8zA7SE"
+uri = "file://attached_assets/stock_images/storage_1.jpg"
+type = "image"
+title = "nvme ssd solid state drive"
+
+[[outputs]]
+id = "EWR9iqOtuPvVegB_k_r5T"
+uri = "file://attached_assets/stock_images/storage_2.jpg"
+type = "image"
+title = "nvme ssd solid state drive"
+
+[[outputs]]
+id = "_2Xj85tG28MDvdT5rNidS"
+uri = "file://attached_assets/stock_images/storage_3.jpg"
+type = "image"
+title = "nvme ssd solid state drive"
+
+[[outputs]]
+id = "c7mu17qyEPo906YhqE5bI"
+uri = "file://attached_assets/stock_images/motherboards_1.jpg"
+type = "image"
+title = "computer motherboard close up"
+
+[[outputs]]
+id = "TPWMX59150FirsDJfvHkR"
+uri = "file://attached_assets/stock_images/motherboards_2.jpg"
+type = "image"
+title = "computer motherboard close up"
+
+[[outputs]]
+id = "jwgYPFpJCRSy2EvlU17mB"
+uri = "file://attached_assets/stock_images/motherboards_3.jpg"
+type = "image"
+title = "computer motherboard close up"
+
+[[outputs]]
+id = "VBW6D-DyjEZXpiwAEQdab"
+uri = "file://attached_assets/stock_images/cooling_1.jpg"
+type = "image"
+title = "cpu liquid cooler aio with rgb fans"
+
+[[outputs]]
+id = "p298-7OzILT4e6Q6KjdUG"
+uri = "file://attached_assets/stock_images/cooling_2.jpg"
+type = "image"
+title = "cpu liquid cooler aio with rgb fans"
+
+[[outputs]]
+id = "tDbbc_gwPFC2m9Wy83ikF"
+uri = "file://attached_assets/stock_images/cooling_3.jpg"
+type = "image"
+title = "cpu liquid cooler aio with rgb fans"
+
+[[outputs]]
+id = "ZypuVpdaux4hVIAF1DqtZ"
+uri = "file://attached_assets/stock_images/power-supply_1.jpg"
+type = "image"
+title = "computer power supply unit psu"
+
+[[outputs]]
+id = "N6cLbToKlzCGyu9JUwmn1"
+uri = "file://attached_assets/stock_images/power-supply_2.jpg"
+type = "image"
+title = "computer power supply unit psu"
+
+[[outputs]]
+id = "p4FoS7tKBFlAc922XmzXP"
+uri = "file://attached_assets/stock_images/power-supply_3.jpg"
+type = "image"
+title = "computer power supply unit psu"
+
+[[outputs]]
+id = "8Y-f64acsJNCldNJU7dhN"
+uri = "file://attached_assets/stock_images/pc-cases_1.jpg"
+type = "image"
+title = "gaming pc case tower with rgb lighting glass"
+
+[[outputs]]
+id = "lTuJbp2SnRpnTlwpPyjFy"
+uri = "file://attached_assets/stock_images/pc-cases_2.jpg"
+type = "image"
+title = "gaming pc case tower with rgb lighting glass"
+
+[[outputs]]
+id = "Gw-k15oU6RL44xa8F1Epp"
+uri = "file://attached_assets/stock_images/pc-cases_3.jpg"
+type = "image"
+title = "gaming pc case tower with rgb lighting glass"
+
+[[outputs]]
+id = "Ng-_Xx675oIlHt2EDE_7J"
+uri = "file://attached_assets/stock_images/monitors_1.jpg"
+type = "image"
+title = "ultrawide gaming monitor on desk"
+
+[[outputs]]
+id = "QfqNkStw8kA0pXgsYlmxK"
+uri = "file://attached_assets/stock_images/monitors_2.jpg"
+type = "image"
+title = "ultrawide gaming monitor on desk"
+
+[[outputs]]
+id = "5MrGuL0EPiRgt9I9yHqyQ"
+uri = "file://attached_assets/stock_images/monitors_3.jpg"
+type = "image"
+title = "ultrawide gaming monitor on desk"
+
+[[outputs]]
+id = "8jd2vfB8_BOVK84Ej6g6H"
+uri = "file://attached_assets/stock_images/laptops_1.jpg"
+type = "image"
+title = "gaming laptop with rgb keyboard"
+
+[[outputs]]
+id = "nwjbq5DEGu7tD6WxU0aEm"
+uri = "file://attached_assets/stock_images/laptops_2.jpg"
+type = "image"
+title = "gaming laptop with rgb keyboard"
+
+[[outputs]]
+id = "5tcJxVH7oUf1gcl8L6uoF"
+uri = "file://attached_assets/stock_images/laptops_3.jpg"
+type = "image"
+title = "gaming laptop with rgb keyboard"
+
+[[outputs]]
+id = "mRMcnJ8dDVUJeCUPgAHc0"
+uri = "file://attached_assets/stock_images/prebuilt-pc_1.jpg"
+type = "image"
+title = "custom gaming desktop pc with rgb lighting"
+
+[[outputs]]
+id = "TxO4NPQCnUOxhHxK8ZblY"
+uri = "file://attached_assets/stock_images/prebuilt-pc_2.jpg"
+type = "image"
+title = "custom gaming desktop pc with rgb lighting"
+
+[[outputs]]
+id = "o4aJX-VzI3h4gnAeR3gv3"
+uri = "file://attached_assets/stock_images/prebuilt-pc_3.jpg"
+type = "image"
+title = "custom gaming desktop pc with rgb lighting"
+
+[[outputs]]
+id = "Xq1EHRUSI82fGvkjzjMLC"
+uri = "file://attached_assets/stock_images/gift-cards_1.jpg"
+type = "image"
+title = "abstract neon gift card voucher"
+
+[[outputs]]
+id = "MZ20syNcCrWzV-K1XQn81"
+uri = "file://attached_assets/stock_images/gift-cards_2.jpg"
+type = "image"
+title = "abstract neon gift card voucher"
+
+[[outputs]]
+id = "iHpdekeHU6DIj8McSFgRE"
+uri = "file://attached_assets/stock_images/gift-cards_3.jpg"
+type = "image"
+title = "abstract neon gift card voucher"
+
+[[outputs]]
+id = "yzOl2TtX1OAwSC22krO2j"
+uri = "file://attached_assets/stock_images/accessories_1.jpg"
+type = "image"
+title = "usb hub cables and tech accessories on desk"
+
+[[outputs]]
+id = "8C-w0WQMKvcIOGG0_gKD0"
+uri = "file://attached_assets/stock_images/accessories_2.jpg"
+type = "image"
+title = "usb hub cables and tech accessories on desk"
+
+[[outputs]]
+id = "slNxqRt_SXIgmzmQ1GScl"
+uri = "file://attached_assets/stock_images/accessories_3.jpg"
+type = "image"
+title = "usb hub cables and tech accessories on desk"

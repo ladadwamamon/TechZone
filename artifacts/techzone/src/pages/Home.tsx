@@ -1,6 +1,8 @@
 import { Layout } from "@/components/Layout";
 import { useGetFeaturedProducts, useGetBestSellers, useGetFlashDeals, useListCategories, useListBrands } from "@workspace/api-client-react";
 import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
+import { HeroSlider } from "@/components/HeroSlider";
+import { getCategoryIcon } from "@/lib/categoryMeta";
 import { Link } from "wouter";
 import { ArrowLeft, Zap, Flame, Monitor, Cpu, Star, ShieldCheck } from "lucide-react";
 import { motion } from "framer-motion";
@@ -56,70 +58,8 @@ export default function Home() {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative min-h-[600px] md:min-h-[700px] flex items-center py-10 md:py-0">
-        <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center justify-center gap-12 md:gap-6">
-          <div className="flex-1 text-center md:text-right mt-10 md:mt-0">
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="mb-4 inline-flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-lime animate-pulse-glow"></span>
-                <span className="font-mono text-lime text-xs tracking-widest uppercase">// SYSTEM_ONLINE</span>
-              </div>
-              
-              <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
-                ارتقِ بمستوى <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary neon-text glitch" data-text="اللعب الخاص بك">
-                  اللعب الخاص بك
-                </span>
-              </h1>
-              
-              <div className="glass-panel border-l-2 border-l-primary p-4 mb-8 max-w-xl mx-auto md:mx-0 inline-block text-right">
-                <p className="text-muted-foreground text-base md:text-lg">
-                  أقوى أجهزة الكمبيوتر، الشاشات، وملحقات الألعاب من أفضل الماركات العالمية في مكان واحد. 
-                  <span className="text-primary font-mono ml-2">_READY</span>
-                </p>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
-                <Link href="/categories" className="clip-corner bg-primary/10 border border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-4 font-bold text-lg transition-all glow-hover flex items-center justify-center gap-2 relative overflow-hidden group">
-                  <span className="relative z-10 flex items-center gap-2">تسوق الآن <ArrowLeft size={20} className="group-hover:-translate-x-1 transition-transform" /></span>
-                  <div className="absolute inset-0 bg-primary/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300"></div>
-                </Link>
-                <Link href="/pc-builder" className="clip-corner bg-secondary/10 border border-secondary text-secondary hover:bg-secondary hover:text-secondary-foreground px-8 py-4 font-bold text-lg transition-all glow-hover-magenta flex items-center justify-center gap-2 relative overflow-hidden group">
-                  <span className="relative z-10 flex items-center gap-2">ابنِ جهازك <Cpu size={20} className="group-hover:rotate-180 transition-transform duration-500" /></span>
-                  <div className="absolute inset-0 bg-secondary/20 translate-y-[100%] group-hover:translate-y-0 transition-transform duration-300"></div>
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-          
-          <div className="flex-1 hidden md:flex relative justify-center items-center">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative z-10 w-full h-full flex items-center justify-center hud-corners p-8"
-            >
-              {/* Decorative elements behind image */}
-              <div className="absolute w-[80%] h-[80%] bg-primary/10 rounded-full blur-[80px] animate-pulse-glow"></div>
-              
-              <img 
-                src="/src/assets/images/hero-1.png" 
-                alt="Gaming Setup" 
-                className="relative z-10 max-w-[110%] drop-shadow-[0_0_50px_rgba(0,255,255,0.4)] animate-[float_6s_ease-in-out_infinite]"
-              />
-              
-              {/* Floating tech badges */}
-              <div className="absolute top-10 right-10 glass-panel border border-primary/50 px-3 py-1 font-mono text-xs text-primary animate-flicker">RTX_4090_ENABLED</div>
-              <div className="absolute bottom-20 left-10 glass-panel border border-secondary/50 px-3 py-1 font-mono text-xs text-secondary animate-pulse">240HZ_REFRESH</div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Slider */}
+      <HeroSlider />
 
       {/* Featured Categories */}
       <section className="py-20 relative">
@@ -142,7 +82,9 @@ export default function Home() {
               Array.from({ length: 6 }).map((_, i) => (
                 <div key={i} className="aspect-square glass-panel clip-corner rounded-none animate-pulse"></div>
               ))
-            ) : categories?.slice(0, 6).map((category, index) => (
+            ) : categories?.slice(0, 6).map((category, index) => {
+              const CatIcon = getCategoryIcon(category.slug);
+              return (
               <Link key={category.id} href={`/categories/${category.slug}`}>
                 <motion.div 
                   initial={{ opacity: 0, y: 20 }}
@@ -154,7 +96,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   
                   <div className="w-16 h-16 clip-corner bg-primary/10 border border-primary/30 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-primary-foreground group-hover:shadow-[0_0_20px_rgba(0,255,255,0.5)] transition-all relative z-10">
-                    <Monitor size={28} />
+                    <CatIcon size={28} />
                   </div>
                   <div className="text-center relative z-10">
                     <h3 className="font-bold text-sm md:text-base group-hover:text-primary group-hover:neon-text transition-all">{category.nameAr}</h3>
@@ -162,7 +104,8 @@ export default function Home() {
                   </div>
                 </motion.div>
               </Link>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
