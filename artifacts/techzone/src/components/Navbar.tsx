@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useListCategories } from "@workspace/api-client-react";
 import { CATEGORY_GROUPS, CATEGORY_NAMES_AR, getCategoryIcon } from "@/lib/categoryMeta";
@@ -163,8 +164,8 @@ export function Navbar() {
                     {CATEGORY_GROUPS.map((group) => (
                       <div key={group.code} className="bg-background/95 p-4 flex flex-col gap-3">
                         <div className="flex items-center justify-between border-b border-primary/15 pb-2">
-                          <h3 className="font-bold text-sm text-foreground">{group.title}</h3>
-                          <span className="font-mono text-[10px] text-primary/40">{group.code}</span>
+                          <h3 className="font-bold text-base text-foreground">{group.title}</h3>
+                          <span className="font-mono text-xs text-primary/40">{group.code}</span>
                         </div>
                         <ul className="flex flex-col gap-1">
                           {group.slugs.map((slug) => {
@@ -176,16 +177,16 @@ export function Navbar() {
                                 <Link
                                   href={`/categories/${slug}`}
                                   onClick={() => setMegaOpen(false)}
-                                  className="group flex items-center gap-2 px-2 py-1.5 hover:bg-primary/10 transition-colors clip-corner-sm"
+                                  className="group flex items-center gap-2.5 px-2 py-2 hover:bg-primary/10 transition-colors clip-corner-sm"
                                 >
-                                  <span className="w-7 h-7 flex items-center justify-center text-primary/70 group-hover:text-primary border border-primary/20 group-hover:border-primary/50 transition-colors shrink-0">
-                                    <Icon size={15} />
+                                  <span className="w-9 h-9 flex items-center justify-center text-primary/70 group-hover:text-primary border border-primary/20 group-hover:border-primary/50 transition-colors shrink-0">
+                                    <Icon size={18} />
                                   </span>
-                                  <span className="text-xs text-foreground/90 group-hover:text-primary transition-colors flex-1">
+                                  <span className="text-sm text-foreground/90 group-hover:text-primary transition-colors flex-1">
                                     {cat?.nameAr ?? CATEGORY_NAMES_AR[slug] ?? slug}
                                   </span>
                                   {count > 0 && (
-                                    <span className="font-mono text-[10px] text-muted-foreground/60">{count}</span>
+                                    <span className="font-mono text-xs text-muted-foreground/60">{count}</span>
                                   )}
                                 </Link>
                               </li>
@@ -230,8 +231,9 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
-      <AnimatePresence>
+      {/* Mobile Menu Overlay — portaled to body to escape the header's backdrop-filter containing block */}
+      {createPortal(
+        <AnimatePresence>
         {isMobileMenuOpen && (
           <>
             <motion.div
@@ -317,7 +319,9 @@ export function Navbar() {
             </motion.div>
           </>
         )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body,
+      )}
     </header>
   );
 }

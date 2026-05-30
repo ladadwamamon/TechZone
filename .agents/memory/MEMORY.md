@@ -1,2 +1,3 @@
-- [api-client-react stale types](api-client-stale-types.md) — artifact typecheck reads lib's built .d.ts (project refs), not src; run `typecheck:libs` after codegen/new endpoints. Also: list hooks are (params, options).
-- [Site settings coupling](site-settings-coupling.md) — admin CMS & storefront share an untyped SettingsMap; key/shape changes must be mirrored in both + keep safe defaults.
+- [api-client-react stale types](api-client-stale-types.md) — run `typecheck:libs` after codegen; list hooks are (params, options).
+- [Site settings coupling](site-settings-coupling.md) — CMS & storefront share an untyped SettingsMap; mirror key/shape changes in both.
+- [backdrop-filter fixed trap](backdrop-filter-fixed-trap.md) — fixed overlays/drawers inside a blurred panel get confined; portal them to body.
