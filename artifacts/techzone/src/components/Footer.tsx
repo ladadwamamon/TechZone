@@ -1,7 +1,13 @@
 import { Link } from "wouter";
-import { Facebook, Twitter, Instagram, Youtube, Monitor, Terminal } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, Monitor, Terminal, Phone, Mail, MapPin } from "lucide-react";
+import { useSiteSettings, getSocialLinks } from "@/lib/settings";
+
+const DEFAULT_SOCIAL_ICONS = [Facebook, Twitter, Instagram, Youtube];
 
 export function Footer() {
+  const { social, contact } = useSiteSettings();
+  const socialLinks = getSocialLinks(social);
+
   return (
     <footer className="glass-panel border-t border-primary/20 pt-16 pb-8 mt-auto relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 neon-divider"></div>
@@ -21,19 +27,50 @@ export function Footer() {
               <span className="text-secondary neon-text-magenta animate-pulse text-xs">{"//"} SYSTEM_INITIALIZED</span>
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
-                <Facebook size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
-                <Twitter size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
-                <Instagram size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
-                <Youtube size={18} />
-              </a>
+              {socialLinks.length > 0 ? (
+                socialLinks.map(({ key, url, icon: Icon }) => (
+                  <a
+                    key={key}
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={key}
+                    className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover"
+                  >
+                    <Icon size={18} />
+                  </a>
+                ))
+              ) : (
+                DEFAULT_SOCIAL_ICONS.map((Icon, i) => (
+                  <a key={i} href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
+                    <Icon size={18} />
+                  </a>
+                ))
+              )}
             </div>
+
+            {(contact.phone || contact.email || contact.address) && (
+              <ul className="mt-6 space-y-2 text-sm text-primary/70">
+                {contact.phone && (
+                  <li className="flex items-center gap-2">
+                    <Phone size={14} className="text-primary shrink-0" />
+                    <a href={`tel:${contact.phone}`} dir="ltr" className="hover:text-primary transition-colors">{contact.phone}</a>
+                  </li>
+                )}
+                {contact.email && (
+                  <li className="flex items-center gap-2">
+                    <Mail size={14} className="text-primary shrink-0" />
+                    <a href={`mailto:${contact.email}`} dir="ltr" className="hover:text-primary transition-colors">{contact.email}</a>
+                  </li>
+                )}
+                {contact.address && (
+                  <li className="flex items-center gap-2">
+                    <MapPin size={14} className="text-primary shrink-0" />
+                    <span>{contact.address}</span>
+                  </li>
+                )}
+              </ul>
+            )}
           </div>
 
           {/* Quick Links */}

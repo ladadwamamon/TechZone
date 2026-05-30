@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronRight, ChevronLeft } from "lucide-react";
+import type { HeroSetting } from "@/lib/settings";
 
 type Accent = "primary" | "secondary" | "lime" | "destructive";
 
@@ -106,19 +107,37 @@ const TONE: Record<Accent, { text: string; border: string; bg: string; ring: str
 
 const DURATION = 6500;
 
-export function HeroSlider() {
+export function HeroSlider({ heroOverride }: { heroOverride?: HeroSetting }) {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [direction, setDirection] = useState(1);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // When the CMS hero is configured (title set), it replaces the first slide.
+  const slides = useMemo<Slide[]>(() => {
+    if (!heroOverride || !heroOverride.title.trim()) return SLIDES;
+    const base = SLIDES[0];
+    return [
+      {
+        ...base,
+        title: heroOverride.title,
+        accent: "",
+        sub: heroOverride.subtitle.trim() || base.sub,
+        href: heroOverride.ctaLink.trim() || base.href,
+        cta: heroOverride.ctaText.trim() || base.cta,
+        image: heroOverride.image.trim() || base.image,
+      },
+      ...SLIDES.slice(1),
+    ];
+  }, [heroOverride]);
+
   const go = useCallback((next: number, dir: number) => {
     setDirection(dir);
     setCurrent((prev) => {
-      const total = SLIDES.length;
+      const total = slides.length;
       return ((next % total) + total) % total;
     });
-  }, []);
+  }, [slides.length]);
 
   const next = useCallback(() => go(current + 1, 1), [current, go]);
   const prev = useCallback(() => go(current - 1, -1), [current, go]);
@@ -131,7 +150,7 @@ export function HeroSlider() {
     };
   }, [current, paused, go]);
 
-  const slide = SLIDES[current];
+  const slide = slides[current];
   const tone = TONE[slide.tone];
 
   return (
@@ -199,12 +218,14 @@ export function HeroSlider() {
 
                   <h1 className="text-5xl sm:text-6xl md:text-7xl font-black leading-[1.05] mb-6">
                     <span className="block text-foreground">{slide.title}</span>
-                    <span
-                      className={`block ${tone.text} neon-text glitch`}
-                      data-text={slide.accent}
-                    >
-                      {slide.accent}
-                    </span>
+                    {slide.accent && (
+                      <span
+                        className={`block ${tone.text} neon-text glitch`}
+                        data-text={slide.accent}
+                      >
+                        {slide.accent}
+                      </span>
+                    )}
                   </h1>
 
                   <p className="text-base md:text-lg text-muted-foreground max-w-xl mb-8 leading-relaxed">
@@ -231,7 +252,7 @@ export function HeroSlider() {
 
         {/* Vertical progress rail */}
         <div className="absolute top-1/2 -translate-y-1/2 right-4 md:right-8 z-30 hidden sm:flex flex-col gap-4">
-          {SLIDES.map((s, i) => {
+          {slides.map((s, i) => {
             const active = i === current;
             const itone = TONE[s.tone];
             return (
@@ -282,7 +303,7 @@ export function HeroSlider() {
           </button>
           <div className="ml-2 font-mono text-xs text-muted-foreground">
             <span className={tone.text}>{String(current + 1).padStart(2, "0")}</span>
-            {` / ${String(SLIDES.length).padStart(2, "0")}`}
+            {` / ${String(slides.length).padStart(2, "0")}`}
           </div>
         </div>
       </div>

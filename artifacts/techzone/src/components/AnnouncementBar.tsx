@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "wouter";
+import { useSiteSettings, DEFAULT_ANNOUNCEMENT_TEXT } from "@/lib/settings";
 
 export function AnnouncementBar() {
+  const { announcement } = useSiteSettings();
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -17,9 +20,18 @@ export function AnnouncementBar() {
     localStorage.setItem("techzone-announcement-dismissed", "true");
   };
 
+  const text = announcement.text.trim() || DEFAULT_ANNOUNCEMENT_TEXT;
+  const show = isVisible && announcement.enabled;
+
+  const marquee = (
+    <div className="animate-marquee inline-block text-sm font-mono font-bold tracking-widest neon-text-magenta">
+      {text}
+    </div>
+  );
+
   return (
     <AnimatePresence>
-      {isVisible && (
+      {show && (
         <motion.div
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
@@ -29,9 +41,13 @@ export function AnnouncementBar() {
           <div className="container mx-auto px-4 py-1.5 flex items-center justify-between relative">
             <div className="flex-1 overflow-hidden whitespace-nowrap relative flex items-center gap-4">
               <span className="text-xs font-mono font-bold shrink-0 animate-pulse text-secondary">{"[ SYSTEM_ALERT ]"}</span>
-              <div className="animate-marquee inline-block text-sm font-mono font-bold tracking-widest neon-text-magenta">
-                شحن مجاني للطلبات فوق 500 شيكل | استخدم كود GAMING10 للحصول على خصم 10%
-              </div>
+              {announcement.link.trim() ? (
+                <Link href={announcement.link} className="overflow-hidden">
+                  {marquee}
+                </Link>
+              ) : (
+                marquee
+              )}
             </div>
             <button
               onClick={handleDismiss}

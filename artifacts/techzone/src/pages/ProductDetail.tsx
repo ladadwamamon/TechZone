@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
+import { useSiteSettings } from "@/lib/settings";
 import { toast } from "sonner";
 
 export default function ProductDetail() {
@@ -14,6 +15,7 @@ export default function ProductDetail() {
   const [, setLocation] = useLocation();
   const { data: product, isLoading } = useGetProduct(id || "");
   const { data: relatedProducts, isLoading: relatedLoading } = useGetRelatedProducts(id || "");
+  const { social, contact } = useSiteSettings();
   
   const [activeImage, setActiveImage] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
@@ -75,10 +77,12 @@ export default function ProductDetail() {
     }
   };
 
+  const whatsappNumber = (social.whatsapp || contact.phone).replace(/[^\d]/g, "");
+
   const handleWhatsApp = () => {
-    if (!product) return;
+    if (!product || !whatsappNumber) return;
     const msg = `مرحباً، أريد الاستفسار عن المنتج: ${product.nameAr} - الرابط: ${window.location.href}`;
-    window.open(`https://wa.me/1234567890?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   if (isLoading || !product) {
@@ -281,13 +285,15 @@ export default function ProductDetail() {
                   اشتري الآن
                 </button>
 
-                <button 
-                  onClick={handleWhatsApp}
-                  className="flex-1 bg-lime text-lime-foreground hover:bg-lime/90 clip-corner font-bold py-3 px-6 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(158,255,0,0.3)] hover:shadow-[0_0_25px_rgba(158,255,0,0.6)] uppercase tracking-wide font-mono text-black"
-                >
-                  <MessageCircle size={20} />
-                  استفسر عبر واتساب
-                </button>
+                {whatsappNumber && (
+                  <button 
+                    onClick={handleWhatsApp}
+                    className="flex-1 bg-lime text-lime-foreground hover:bg-lime/90 clip-corner font-bold py-3 px-6 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(158,255,0,0.3)] hover:shadow-[0_0_25px_rgba(158,255,0,0.6)] uppercase tracking-wide font-mono text-black"
+                  >
+                    <MessageCircle size={20} />
+                    استفسر عبر واتساب
+                  </button>
+                )}
               </div>
             </div>
 

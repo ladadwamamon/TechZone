@@ -1,1 +1,2 @@
 - [api-client-react stale types](api-client-stale-types.md) — artifact typecheck reads lib's built .d.ts (project refs), not src; run `typecheck:libs` after codegen/new endpoints. Also: list hooks are (params, options).
+- [Site settings coupling](site-settings-coupling.md) — admin CMS & storefront share an untyped SettingsMap; key/shape changes must be mirrored in both + keep safe defaults.

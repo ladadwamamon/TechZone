@@ -4,9 +4,12 @@ import { ProductCard, ProductCardSkeleton } from "@/components/ProductCard";
 import { HeroSlider } from "@/components/HeroSlider";
 import { getCategoryIcon } from "@/lib/categoryMeta";
 import { Link } from "wouter";
-import { ArrowLeft, Zap, Flame, Monitor, Cpu, Star, ShieldCheck } from "lucide-react";
+import { ArrowLeft, Zap, Flame, Monitor, Star } from "lucide-react";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useSiteSettings, getFeatureIcon } from "@/lib/settings";
+
+const FEATURE_COLORS = ["text-primary", "text-secondary", "text-lime"];
 
 // Countdown Timer Component (HUD Style)
 function Countdown({ endsAt }: { endsAt: string }) {
@@ -55,11 +58,12 @@ export default function Home() {
   const { data: flashDeals, isLoading: flashDealsLoading } = useGetFlashDeals();
   const { data: categories, isLoading: categoriesLoading } = useListCategories();
   const { data: brands, isLoading: brandsLoading } = useListBrands();
+  const { hero, features } = useSiteSettings();
 
   return (
     <Layout>
       {/* Hero Slider */}
-      <HeroSlider />
+      <HeroSlider heroOverride={hero} />
 
       {/* Featured Categories */}
       <section className="py-20 relative">
@@ -179,27 +183,24 @@ export default function Home() {
       </section>
 
       {/* Trust & Features */}
-      <section className="py-12 relative border-y border-white/10 bg-black/40 backdrop-blur-md">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x sm:divide-x-reverse divide-white/10">
-            <div className="flex flex-col items-center text-center p-4">
-              <ShieldCheck size={40} className="text-primary mb-4" />
-              <h3 className="font-bold text-lg mb-2">ضمان حقيقي</h3>
-              <p className="text-sm text-muted-foreground font-mono">تغطية شاملة لجميع المنتجات</p>
-            </div>
-            <div className="flex flex-col items-center text-center p-4">
-              <Zap size={40} className="text-secondary mb-4" />
-              <h3 className="font-bold text-lg mb-2">شحن فائق السرعة</h3>
-              <p className="text-sm text-muted-foreground font-mono">توصيل لجميع مناطق المملكة</p>
-            </div>
-            <div className="flex flex-col items-center text-center p-4">
-              <Monitor size={40} className="text-lime mb-4" />
-              <h3 className="font-bold text-lg mb-2">دعم فني متخصص</h3>
-              <p className="text-sm text-muted-foreground font-mono">فريق خبراء لخدمتك 24/7</p>
+      {features.length > 0 && (
+        <section className="py-12 relative border-y border-white/10 bg-black/40 backdrop-blur-md">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 divide-y sm:divide-y-0 sm:divide-x sm:divide-x-reverse divide-white/10">
+              {features.map((feature, i) => {
+                const FeatureIcon = getFeatureIcon(feature.icon);
+                return (
+                  <div key={i} className="flex flex-col items-center text-center p-4">
+                    <FeatureIcon size={40} className={`${FEATURE_COLORS[i % FEATURE_COLORS.length]} mb-4`} />
+                    <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
+                    <p className="text-sm text-muted-foreground font-mono">{feature.description}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* PC Builder CTA */}
       <section className="py-24 relative overflow-hidden">
