@@ -39,79 +39,91 @@
   --color-destructive-foreground: hsl(var(--destructive-foreground));
   --color-destructive-border: var(--destructive-border);
 
+  --color-lime: hsl(var(--lime));
+  --color-lime-foreground: hsl(var(--lime-foreground));
+
   --font-sans: var(--app-font-sans);
-  
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
+  --font-mono: var(--app-font-mono);
+
+  --radius-sm: calc(var(--radius) - 1px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 2px);
   --radius-xl: calc(var(--radius) + 4px);
 }
 
+/* ============================================================
+   NEON GRID OS — Cyberpunk design tokens
+   Primary: Electric Cyan #00E5FF · Secondary: Hot Magenta #FF2E97
+   Accent: Neon Lime #9EFF00 · Base: Deep Void #07070C
+   ============================================================ */
 :root {
-  --background: 220 30% 6%;
-  --foreground: 210 20% 98%;
+  --background: 240 26% 4%;
+  --foreground: 190 30% 96%;
 
-  --card: 220 25% 9%;
-  --card-foreground: 210 20% 98%;
-  --card-border: 220 30% 15%;
+  --card: 235 28% 7%;
+  --card-foreground: 190 30% 96%;
+  --card-border: 200 50% 18%;
 
-  --popover: 220 25% 9%;
-  --popover-foreground: 210 20% 98%;
-  --popover-border: 220 30% 15%;
+  --popover: 235 30% 6%;
+  --popover-foreground: 190 30% 96%;
+  --popover-border: 200 50% 18%;
 
-  --primary: 185 80% 50%; /* Neon Cyan */
-  --primary-foreground: 220 30% 6%;
+  --primary: 186 100% 50%; /* Electric Cyan */
+  --primary-foreground: 240 26% 4%;
 
-  --secondary: 275 80% 60%; /* Neon Purple */
-  --secondary-foreground: 210 20% 98%;
+  --secondary: 330 100% 59%; /* Hot Magenta */
+  --secondary-foreground: 240 26% 4%;
 
-  --muted: 220 25% 15%;
-  --muted-foreground: 215 20% 65%;
+  --muted: 232 22% 12%;
+  --muted-foreground: 205 16% 62%;
 
-  --accent: 220 25% 15%;
-  --accent-foreground: 210 20% 98%;
+  --accent: 232 24% 14%;
+  --accent-foreground: 190 30% 96%;
 
-  --destructive: 0 80% 60%;
-  --destructive-foreground: 210 20% 98%;
+  --destructive: 350 95% 58%;
+  --destructive-foreground: 0 0% 100%;
 
-  --border: 220 30% 15%;
-  --input: 220 30% 15%;
-  --ring: 185 80% 50%;
+  --lime: 83 100% 50%; /* Neon Lime — success / in-stock */
+  --lime-foreground: 240 26% 4%;
 
-  --app-font-sans: 'Cairo', sans-serif;
-  --radius: 0.5rem;
+  --border: 220 30% 16%;
+  --input: 222 28% 14%;
+  --ring: 186 100% 50%;
+
+  /* Raw values for glows / gradients */
+  --cyan: #00e5ff;
+  --magenta: #ff2e97;
+  --lime-raw: #9eff00;
+
+  --app-font-sans: 'Cairo', 'Tajawal', sans-serif;
+  --app-font-mono: 'Share Tech Mono', 'Cairo', monospace;
+  --radius: 0.25rem;
 }
 
 .dark {
-  --background: 220 30% 6%;
-  --foreground: 210 20% 98%;
-
-  --card: 220 25% 9%;
-  --card-foreground: 210 20% 98%;
-  --card-border: 220 30% 15%;
-
-  --popover: 220 25% 9%;
-  --popover-foreground: 210 20% 98%;
-  --popover-border: 220 30% 15%;
-
-  --primary: 185 80% 50%;
-  --primary-foreground: 220 30% 6%;
-
-  --secondary: 275 80% 60%;
-  --secondary-foreground: 210 20% 98%;
-
-  --muted: 220 25% 15%;
-  --muted-foreground: 215 20% 65%;
-
-  --accent: 220 25% 15%;
-  --accent-foreground: 210 20% 98%;
-
-  --destructive: 0 80% 60%;
-  --destructive-foreground: 210 20% 98%;
-
-  --border: 220 30% 15%;
-  --input: 220 30% 15%;
-  --ring: 185 80% 50%;
+  --background: 240 26% 4%;
+  --foreground: 190 30% 96%;
+  --card: 235 28% 7%;
+  --card-foreground: 190 30% 96%;
+  --card-border: 200 50% 18%;
+  --popover: 235 30% 6%;
+  --popover-foreground: 190 30% 96%;
+  --popover-border: 200 50% 18%;
+  --primary: 186 100% 50%;
+  --primary-foreground: 240 26% 4%;
+  --secondary: 330 100% 59%;
+  --secondary-foreground: 240 26% 4%;
+  --muted: 232 22% 12%;
+  --muted-foreground: 205 16% 62%;
+  --accent: 232 24% 14%;
+  --accent-foreground: 190 30% 96%;
+  --destructive: 350 95% 58%;
+  --destructive-foreground: 0 0% 100%;
+  --lime: 83 100% 50%;
+  --lime-foreground: 240 26% 4%;
+  --border: 220 30% 16%;
+  --input: 222 28% 14%;
+  --ring: 186 100% 50%;
 }
 
 @layer base {
@@ -121,24 +133,290 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    background-color: hsl(var(--background));
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+
+  /* Neon scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(hsl(var(--primary)), hsl(var(--secondary)));
+    border-radius: 0;
   }
 }
 
+/* ============================================================
+   TYPOGRAPHY HELPERS
+   ============================================================ */
+.font-mono,
+.mono {
+  font-family: var(--app-font-mono);
+  letter-spacing: 0.04em;
+}
+
 .neon-text {
-  text-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  text-shadow: 0 0 6px hsl(var(--primary) / 0.7), 0 0 18px hsl(var(--primary) / 0.45);
+}
+.neon-text-magenta {
+  text-shadow: 0 0 6px hsl(var(--secondary) / 0.7), 0 0 18px hsl(var(--secondary) / 0.45);
+}
+.neon-text-lime {
+  text-shadow: 0 0 6px hsl(var(--lime) / 0.7), 0 0 18px hsl(var(--lime) / 0.45);
 }
 
+/* ============================================================
+   NEON BORDERS / GLOW
+   ============================================================ */
 .neon-border {
-  box-shadow: 0 0 10px hsl(var(--primary) / 0.2), inset 0 0 10px hsl(var(--primary) / 0.2);
+  box-shadow: 0 0 10px hsl(var(--primary) / 0.25), inset 0 0 10px hsl(var(--primary) / 0.12);
+}
+.neon-border-magenta {
+  box-shadow: 0 0 10px hsl(var(--secondary) / 0.25), inset 0 0 10px hsl(var(--secondary) / 0.12);
+}
+.glow-hover {
+  transition: box-shadow 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
+}
+.glow-hover:hover {
+  box-shadow: 0 0 22px hsl(var(--primary) / 0.45), inset 0 0 16px hsl(var(--primary) / 0.15);
+  border-color: hsl(var(--primary) / 0.7);
+}
+.glow-hover-magenta:hover {
+  box-shadow: 0 0 22px hsl(var(--secondary) / 0.45), inset 0 0 16px hsl(var(--secondary) / 0.15);
+  border-color: hsl(var(--secondary) / 0.7);
 }
 
-.neon-border-purple {
-  box-shadow: 0 0 10px hsl(var(--secondary) / 0.2), inset 0 0 10px hsl(var(--secondary) / 0.2);
-}
-
+/* ============================================================
+   GLASS PANEL
+   ============================================================ */
 .glass-panel {
-  background: rgba(15, 20, 30, 0.6);
+  background: hsl(235 30% 7% / 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid hsl(var(--primary) / 0.12);
+}
+
+/* ============================================================
+   CLIPPED / ANGULAR CORNERS (HUD chips & buttons)
+   ============================================================ */
+.clip-corner {
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+.clip-corner-sm {
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+.clip-corner-lg {
+  clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 22px 100%, 0 calc(100% - 22px));
+}
+/* mirror for RTL-friendly alternate cut */
+.clip-tab {
+  clip-path: polygon(14px 0, 100% 0, 100% 100%, 0 100%, 0 14px);
+}
+
+/* ============================================================
+   HUD CORNER BRACKETS  [  ]
+   wrap any element with .hud-frame; brackets drawn via pseudo els
+   ============================================================ */
+.hud-frame {
+  position: relative;
+}
+.hud-frame::before,
+.hud-frame::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  pointer-events: none;
+  z-index: 2;
+}
+.hud-frame::before {
+  top: 6px;
+  right: 6px;
+  border-top: 2px solid hsl(var(--primary) / 0.8);
+  border-right: 2px solid hsl(var(--primary) / 0.8);
+}
+.hud-frame::after {
+  bottom: 6px;
+  left: 6px;
+  border-bottom: 2px solid hsl(var(--primary) / 0.8);
+  border-left: 2px solid hsl(var(--primary) / 0.8);
+}
+.hud-frame-magenta::before {
+  border-top-color: hsl(var(--secondary) / 0.8);
+  border-right-color: hsl(var(--secondary) / 0.8);
+}
+.hud-frame-magenta::after {
+  border-bottom-color: hsl(var(--secondary) / 0.8);
+  border-left-color: hsl(var(--secondary) / 0.8);
+}
+
+/* full 4-corner brackets */
+.hud-corners {
+  position: relative;
+}
+.hud-corners::before,
+.hud-corners::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  border: 2px solid transparent;
+}
+.hud-corners::before {
+  border-image: linear-gradient(135deg, hsl(var(--primary)) 0 18%, transparent 18% 82%, hsl(var(--secondary)) 82% 100%) 1;
+}
+
+/* ============================================================
+   BACKDROP GRID + SCANLINES + GRAIN
+   used by the global <CyberBackground/>
+   ============================================================ */
+.cyber-grid {
+  background-image:
+    linear-gradient(hsl(var(--primary) / 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--primary) / 0.06) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-position: center;
+  animation: grid-pan 24s linear infinite;
+}
+.cyber-grid-perspective {
+  background-image:
+    linear-gradient(hsl(var(--primary) / 0.10) 1px, transparent 1px),
+    linear-gradient(90deg, hsl(var(--secondary) / 0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(420px) rotateX(62deg);
+  transform-origin: center bottom;
+  animation: grid-flow 8s linear infinite;
+}
+.scanlines {
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    hsl(0 0% 0% / 0.18) 3px,
+    transparent 4px
+  );
+}
+.vignette {
+  background: radial-gradient(ellipse at center, transparent 40%, hsl(var(--background)) 100%);
+}
+
+/* ============================================================
+   GLITCH TEXT  (apply .glitch and set data-text on element)
+   ============================================================ */
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.85;
+}
+.glitch::before {
+  color: hsl(var(--primary));
+  animation: glitch-x 3.2s infinite linear alternate-reverse;
+  clip-path: inset(0 0 55% 0);
+}
+.glitch::after {
+  color: hsl(var(--secondary));
+  animation: glitch-x 2.4s infinite linear alternate-reverse;
+  clip-path: inset(55% 0 0 0);
+}
+
+/* holographic sweep on hover (product cards) */
+.holo-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.holo-sweep::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, hsl(var(--primary) / 0.18) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+  pointer-events: none;
+}
+.holo-sweep:hover::after {
+  transform: translateX(120%);
+}
+
+/* animated gradient border line */
+.neon-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, hsl(var(--primary)), hsl(var(--secondary)), transparent);
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes grid-pan {
+  0% { background-position: 0 0; }
+  100% { background-position: 44px 44px; }
+}
+@keyframes grid-flow {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 60px; }
+}
+@keyframes glitch-x {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(2px, -1px); }
+  60% { transform: translate(-1px, -1px); }
+  80% { transform: translate(1px, 1px); }
+  100% { transform: translate(0); }
+}
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 22s linear infinite;
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px hsl(var(--primary) / 0.4); }
+  50% { box-shadow: 0 0 22px hsl(var(--primary) / 0.7); }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2.4s ease-in-out infinite;
+}
+@keyframes flicker {
+  0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+  20%, 24%, 55% { opacity: 0.55; }
+}
+.animate-flicker {
+  animation: flicker 4s linear infinite;
+}
+
+/* ============================================================
+   ACCESSIBILITY — respect reduced motion
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .cyber-grid,
+  .cyber-grid-perspective,
+  .animate-marquee,
+  .animate-pulse-glow,
+  .animate-flicker,
+  .glitch::before,
+  .glitch::after {
+    animation: none !important;
+  }
+  .holo-sweep::after {
+    transition: none;
+  }
 }

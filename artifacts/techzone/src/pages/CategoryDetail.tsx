@@ -23,20 +23,21 @@ export default function CategoryDetail() {
 
   return (
     <Layout>
-      <div className="bg-card border-b border-white/5 py-8">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground mb-4">
-            <Link href="/" className="hover:text-primary transition-colors">الرئيسية</Link>
-            <ChevronLeft size={14} />
-            <Link href="/categories" className="hover:text-primary transition-colors">الأقسام</Link>
-            <ChevronLeft size={14} />
-            <span className="text-foreground">{category?.nameAr || "جاري التحميل..."}</span>
+      <div className="border-b border-primary/20 py-8 relative overflow-hidden glass-panel">
+        <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex items-center gap-2 text-sm text-primary font-mono mb-4">
+            <Link href="/" className="hover:text-secondary transition-colors uppercase">ROOT</Link>
+            <span>/</span>
+            <Link href="/categories" className="hover:text-secondary transition-colors uppercase">CATEGORIES</Link>
+            <span>/</span>
+            <span className="text-foreground truncate uppercase">{category?.slug || "LOADING..."}</span>
           </div>
           
           {categoryLoading ? (
-            <div className="h-10 w-48 bg-white/10 rounded animate-pulse"></div>
+            <div className="h-10 w-48 bg-primary/20 clip-corner animate-pulse"></div>
           ) : (
-            <h1 className="text-3xl md:text-4xl font-black neon-text text-primary">{category?.nameAr}</h1>
+            <h1 className="text-3xl md:text-5xl font-black neon-text text-primary glitch uppercase" data-text={category?.nameAr}>{category?.nameAr}</h1>
           )}
         </div>
       </div>
@@ -46,52 +47,52 @@ export default function CategoryDetail() {
           
           {/* Filters Sidebar - Desktop */}
           <aside className={`w-full lg:w-64 shrink-0 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-card border border-white/5 rounded-xl p-6 sticky top-24">
-              <div className="flex items-center justify-between mb-6">
-                <h3 className="font-bold text-lg flex items-center gap-2">
-                  <SlidersHorizontal size={18} className="text-primary" /> الفلاتر
+            <div className="glass-panel clip-corner hud-frame p-6 sticky top-24">
+              <div className="flex items-center justify-between mb-6 border-b border-primary/30 pb-4">
+                <h3 className="font-bold text-lg flex items-center gap-2 text-primary neon-text font-mono uppercase">
+                  <SlidersHorizontal size={18} /> // FILTERS
                 </h3>
                 <button 
-                  className="lg:hidden text-muted-foreground"
+                  className="lg:hidden text-muted-foreground hover:text-destructive font-mono text-sm uppercase"
                   onClick={() => setShowFilters(false)}
                 >
-                  إغلاق
+                  [ CLOSE ]
                 </button>
               </div>
 
               {/* Price Filter */}
               <div className="mb-8">
-                <h4 className="font-semibold mb-4 text-sm">نطاق السعر</h4>
+                <h4 className="font-semibold mb-4 text-sm font-mono text-foreground uppercase">{">"} PRICE_RANGE</h4>
                 <div className="space-y-4">
                   <div className="flex gap-2">
                     <input 
                       type="number" 
-                      placeholder="من" 
-                      className="w-full bg-background border border-white/10 rounded px-2 py-1 text-sm focus:border-primary focus:outline-none"
+                      placeholder="MIN" 
+                      className="w-full bg-background/50 border border-primary/30 clip-corner-sm px-3 py-2 text-sm font-mono focus:border-primary focus:outline-none transition-colors"
                     />
                     <input 
                       type="number" 
-                      placeholder="إلى" 
-                      className="w-full bg-background border border-white/10 rounded px-2 py-1 text-sm focus:border-primary focus:outline-none"
+                      placeholder="MAX" 
+                      className="w-full bg-background/50 border border-primary/30 clip-corner-sm px-3 py-2 text-sm font-mono focus:border-primary focus:outline-none transition-colors"
                     />
                   </div>
-                  <button className="w-full bg-white/5 hover:bg-primary/20 hover:text-primary border border-white/10 rounded py-1 text-sm transition-colors">
-                    تطبيق السعر
+                  <button className="w-full bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground border border-primary clip-corner py-2 text-sm font-bold font-mono transition-all uppercase tracking-widest glow-hover">
+                    Apply_Range
                   </button>
                 </div>
               </div>
 
               {/* In Stock */}
-              <div className="mb-8">
-                <label className="flex items-center gap-2 cursor-pointer group">
+              <div className="mb-8 p-4 border border-lime/30 bg-lime/5 clip-corner-sm">
+                <label className="flex items-center gap-3 cursor-pointer group">
                   <div className="relative flex items-center justify-center">
                     <input type="checkbox" className="peer sr-only" />
-                    <div className="w-5 h-5 border-2 border-white/20 rounded peer-checked:bg-primary peer-checked:border-primary transition-colors"></div>
+                    <div className="w-5 h-5 border-2 border-lime/50 rounded-none peer-checked:bg-lime peer-checked:border-lime transition-colors"></div>
                     <svg className="absolute w-3 h-3 text-background opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
-                  <span className="text-sm group-hover:text-primary transition-colors">متوفر في المخزن فقط</span>
+                  <span className="text-sm font-mono text-lime group-hover:text-lime-foreground transition-colors uppercase">[ IN_STOCK_ONLY ]</span>
                 </label>
               </div>
 
@@ -101,39 +102,39 @@ export default function CategoryDetail() {
           {/* Main Content */}
           <div className="flex-1">
             {/* Toolbar */}
-            <div className="bg-card border border-white/5 rounded-xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+            <div className="glass-panel clip-corner border-primary/20 p-4 mb-6 flex flex-wrap items-center justify-between gap-4">
               <button 
-                className="lg:hidden flex items-center gap-2 border border-white/10 rounded px-4 py-2 text-sm"
+                className="lg:hidden flex items-center gap-2 border border-primary/40 rounded-none clip-corner-sm px-4 py-2 text-sm font-mono text-primary hover:bg-primary/20 transition-colors uppercase"
                 onClick={() => setShowFilters(!showFilters)}
               >
-                <SlidersHorizontal size={16} /> فلاتر
+                <SlidersHorizontal size={16} /> [ FILTERS ]
               </button>
 
-              <div className="text-sm text-muted-foreground">
-                عرض {productsData?.products.length || 0} من {productsData?.total || 0} منتج
+              <div className="text-sm font-mono text-primary uppercase">
+                SYS.MATCH: {productsData?.products.length || 0} / {productsData?.total || 0}
               </div>
 
               <div className="flex items-center gap-4 ml-auto">
                 <select 
-                  className="bg-background border border-white/10 rounded px-3 py-2 text-sm focus:border-primary focus:outline-none"
+                  className="bg-card glass-panel clip-corner-sm border border-primary/30 px-3 py-2 text-sm focus:border-primary focus:outline-none font-mono text-foreground appearance-none uppercase"
                   value={sort}
                   onChange={(e) => setSort(e.target.value)}
                 >
-                  <option value="newest">الأحدث</option>
-                  <option value="price_asc">السعر: من الأقل للأعلى</option>
-                  <option value="price_desc">السعر: من الأعلى للأقل</option>
-                  <option value="rating">الأعلى تقييماً</option>
+                  <option value="newest">SORT: NEWEST</option>
+                  <option value="price_asc">SORT: PRICE ASC</option>
+                  <option value="price_desc">SORT: PRICE DESC</option>
+                  <option value="rating">SORT: TOP RATED</option>
                 </select>
 
-                <div className="hidden sm:flex items-center bg-background border border-white/10 rounded overflow-hidden">
+                <div className="hidden sm:flex items-center glass-panel clip-corner-sm border border-primary/30 overflow-hidden">
                   <button 
-                    className={`p-2 ${viewMode === 'grid' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`p-2 transition-colors ${viewMode === 'grid' ? 'bg-primary text-primary-foreground' : 'text-primary hover:bg-primary/20'}`}
                     onClick={() => setViewMode('grid')}
                   >
                     <LayoutGrid size={18} />
                   </button>
                   <button 
-                    className={`p-2 ${viewMode === 'list' ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-foreground'}`}
+                    className={`p-2 transition-colors ${viewMode === 'list' ? 'bg-primary text-primary-foreground' : 'text-primary hover:bg-primary/20'}`}
                     onClick={() => setViewMode('list')}
                   >
                     <List size={18} />
@@ -150,17 +151,17 @@ export default function CategoryDetail() {
                 ))}
               </div>
             ) : productsData?.products.length === 0 ? (
-              <div className="bg-card border border-white/5 rounded-xl p-12 text-center flex flex-col items-center">
-                <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center text-muted-foreground mb-4">
+              <div className="glass-panel clip-corner hud-frame p-12 text-center flex flex-col items-center">
+                <div className="w-24 h-24 bg-primary/10 clip-corner flex items-center justify-center text-primary mb-4 neon-border">
                   <Monitor size={48} />
                 </div>
-                <h3 className="text-xl font-bold mb-2">لا توجد منتجات</h3>
-                <p className="text-muted-foreground mb-6">لم يتم العثور على منتجات تطابق معايير البحث الخاصة بك.</p>
+                <h3 className="text-xl font-bold mb-2 font-mono uppercase neon-text">{">"} NO_RESULTS_FOUND</h3>
+                <p className="text-muted-foreground mb-6 font-mono text-sm">// لم يتم العثور على منتجات تطابق معايير البحث الخاصة بك.</p>
                 <button 
                   onClick={() => { setSort("newest"); }}
-                  className="bg-primary text-primary-foreground px-6 py-2 rounded-md font-bold"
+                  className="bg-primary text-primary-foreground hover:bg-primary/90 clip-corner font-bold py-3 px-6 transition-all glow-hover uppercase tracking-wide font-mono text-sm"
                 >
-                  إعادة ضبط الفلاتر
+                  [ RESET_FILTERS ]
                 </button>
               </div>
             ) : (

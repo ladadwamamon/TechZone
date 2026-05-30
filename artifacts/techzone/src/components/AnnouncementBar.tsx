@@ -24,17 +24,18 @@ export function AnnouncementBar() {
           initial={{ height: 0, opacity: 0 }}
           animate={{ height: "auto", opacity: 1 }}
           exit={{ height: 0, opacity: 0 }}
-          className="bg-primary text-primary-foreground overflow-hidden"
+          className="bg-secondary/20 border-b border-secondary neon-border-magenta overflow-hidden text-secondary"
         >
-          <div className="container mx-auto px-4 py-2 flex items-center justify-between relative">
-            <div className="flex-1 overflow-hidden whitespace-nowrap relative">
-              <div className="animate-marquee inline-block text-sm font-semibold tracking-wide">
+          <div className="container mx-auto px-4 py-1.5 flex items-center justify-between relative">
+            <div className="flex-1 overflow-hidden whitespace-nowrap relative flex items-center gap-4">
+              <span className="text-xs font-mono font-bold shrink-0 animate-pulse text-secondary">{"[ SYSTEM_ALERT ]"}</span>
+              <div className="animate-marquee inline-block text-sm font-mono font-bold tracking-widest neon-text-magenta">
                 شحن مجاني للطلبات فوق 500 شيكل | استخدم كود GAMING10 للحصول على خصم 10%
               </div>
             </div>
             <button
               onClick={handleDismiss}
-              className="ml-4 p-1 hover:bg-black/10 rounded-full transition-colors shrink-0"
+              className="ml-4 p-1 text-secondary hover:text-white hover:bg-secondary/20 clip-corner-sm transition-colors shrink-0"
               aria-label="إغلاق الإعلان"
             >
               <X size={16} />

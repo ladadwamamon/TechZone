@@ -4,6 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { CartDrawer } from "@/components/CartDrawer";
+import { CyberBackground } from "@/components/CyberBackground";
 
 // Pages
 import Home from "@/pages/Home";
@@ -11,6 +12,8 @@ import Categories from "@/pages/Categories";
 import CategoryDetail from "@/pages/CategoryDetail";
 import ProductDetail from "@/pages/ProductDetail";
 import Cart from "@/pages/Cart";
+import Checkout from "@/pages/Checkout";
+import OrderSuccess from "@/pages/OrderSuccess";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -41,8 +44,8 @@ function Router() {
       <Route path="/brands/:slug" component={() => <Placeholder name="الماركة" />} />
       <Route path="/blog" component={() => <Placeholder name="المدونة" />} />
       <Route path="/blog/:slug" component={() => <Placeholder name="المقال" />} />
-      <Route path="/checkout" component={() => <Placeholder name="الدفع" />} />
-      <Route path="/order-success" component={() => <Placeholder name="تأكيد الطلب" />} />
+      <Route path="/checkout" component={Checkout} />
+      <Route path="/order-success" component={OrderSuccess} />
       <Route path="/track-order" component={() => <Placeholder name="تتبع الطلب" />} />
       <Route path="/wishlist" component={() => <Placeholder name="المفضلة" />} />
       <Route path="/pc-builder" component={() => <Placeholder name="تجميعة PC" />} />
@@ -60,6 +63,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
+          <CyberBackground />
           <Router />
           <ScrollToTop />
           <CartDrawer />

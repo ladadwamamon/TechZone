@@ -1,8 +1,8 @@
 import { Layout } from "@/components/Layout";
 import { useGetProduct, useGetRelatedProducts, useGetRecentlyViewedProducts } from "@workspace/api-client-react";
 import { ProductCard } from "@/components/ProductCard";
-import { Link, useParams } from "wouter";
-import { ChevronLeft, ShoppingCart, Heart, Share2, Shield, Truck, RotateCcw, MessageCircle } from "lucide-react";
+import { Link, useParams, useLocation } from "wouter";
+import { ShoppingCart, Heart, Shield, Truck, RotateCcw, MessageCircle, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useCartStore, useWishlistStore } from "@/lib/store";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
+  const [, setLocation] = useLocation();
   const { data: product, isLoading } = useGetProduct(id || "");
   const { data: relatedProducts, isLoading: relatedLoading } = useGetRelatedProducts(id || "");
   
@@ -54,6 +55,18 @@ export default function ProductDetail() {
     window.dispatchEvent(new Event('open-cart'));
   };
 
+  const handleBuyNow = () => {
+    if (!product) return;
+    addItem({
+      productId: product.id,
+      nameAr: product.nameAr,
+      price: product.price,
+      quantity,
+      image: product.images[0],
+    });
+    setLocation('/checkout');
+  };
+
   const handleToggleWishlist = () => {
     if (!product) return;
     toggleWishlist(product.id);
@@ -72,22 +85,22 @@ export default function ProductDetail() {
     return (
       <Layout>
         <div className="container mx-auto px-4 py-8 animate-pulse">
-          <div className="h-4 w-64 bg-white/10 rounded mb-8"></div>
+          <div className="h-4 w-64 bg-primary/20 clip-corner mb-8"></div>
           <div className="flex flex-col lg:flex-row gap-8">
             <div className="lg:w-1/2 space-y-4">
-              <div className="aspect-square bg-white/5 rounded-xl"></div>
+              <div className="aspect-square glass-panel clip-corner-lg border-primary/20"></div>
               <div className="flex gap-4">
-                {[1, 2, 3, 4].map(i => <div key={i} className="w-20 h-20 bg-white/5 rounded-md"></div>)}
+                {[1, 2, 3, 4].map(i => <div key={i} className="w-20 h-20 glass-panel clip-corner border-primary/10"></div>)}
               </div>
             </div>
             <div className="lg:w-1/2 space-y-6">
-              <div className="h-8 w-3/4 bg-white/10 rounded"></div>
-              <div className="h-6 w-1/4 bg-white/10 rounded"></div>
-              <div className="h-12 w-1/3 bg-white/10 rounded"></div>
+              <div className="h-8 w-3/4 bg-primary/20 clip-corner"></div>
+              <div className="h-6 w-1/4 bg-primary/20 clip-corner"></div>
+              <div className="h-12 w-1/3 bg-primary/20 clip-corner"></div>
               <div className="space-y-2">
-                <div className="h-4 w-full bg-white/10 rounded"></div>
-                <div className="h-4 w-full bg-white/10 rounded"></div>
-                <div className="h-4 w-2/3 bg-white/10 rounded"></div>
+                <div className="h-4 w-full bg-white/5 clip-corner-sm"></div>
+                <div className="h-4 w-full bg-white/5 clip-corner-sm"></div>
+                <div className="h-4 w-2/3 bg-white/5 clip-corner-sm"></div>
               </div>
             </div>
           </div>
@@ -99,18 +112,19 @@ export default function ProductDetail() {
   return (
     <Layout>
       {/* Breadcrumb */}
-      <div className="bg-card border-b border-white/5 py-4">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Link href="/" className="hover:text-primary transition-colors">الرئيسية</Link>
-            <ChevronLeft size={14} />
-            <Link href="/categories" className="hover:text-primary transition-colors">الأقسام</Link>
-            <ChevronLeft size={14} />
-            <Link href={`/categories/${product.categorySlug}`} className="hover:text-primary transition-colors">
-              {product.categoryNameAr || product.categorySlug}
+      <div className="border-b border-primary/20 py-4 relative overflow-hidden glass-panel">
+        <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex items-center gap-2 text-xs md:text-sm text-primary font-mono uppercase">
+            <Link href="/" className="hover:text-secondary transition-colors">ROOT</Link>
+            <span>/</span>
+            <Link href="/categories" className="hover:text-secondary transition-colors">CAT</Link>
+            <span>/</span>
+            <Link href={`/categories/${product.categorySlug}`} className="hover:text-secondary transition-colors">
+              {product.categorySlug}
             </Link>
-            <ChevronLeft size={14} />
-            <span className="text-foreground truncate max-w-[200px] md:max-w-md">{product.nameAr}</span>
+            <span>/</span>
+            <span className="text-foreground truncate max-w-[150px] md:max-w-md">{product.sku || product.id.slice(0, 8)}</span>
           </div>
         </div>
       </div>
@@ -120,17 +134,18 @@ export default function ProductDetail() {
           
           {/* Image Gallery */}
           <div className="lg:w-1/2">
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 aspect-square flex items-center justify-center relative mb-4 group overflow-hidden glass-panel">
+            <div className="glass-panel hud-corners clip-corner-lg p-8 aspect-square flex items-center justify-center relative mb-4 group overflow-hidden border-primary/30">
+              <div className="absolute inset-0 bg-primary/5 pointer-events-none holo-sweep" />
               {/* Badges */}
-              <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+              <div className="absolute top-4 right-4 z-10 flex flex-col gap-2 font-mono">
                 {product.discountPercent && (
-                  <span className="bg-destructive text-white text-sm font-bold px-3 py-1 rounded shadow-lg">
-                    خصم {product.discountPercent}%
+                  <span className="bg-destructive text-white text-xs font-bold px-3 py-1 clip-corner shadow-[0_0_10px_rgba(245,41,63,0.5)] tracking-wider">
+                    -{product.discountPercent}%
                   </span>
                 )}
                 {product.isNew && (
-                  <span className="bg-primary text-primary-foreground text-sm font-bold px-3 py-1 rounded shadow-lg">
-                    جديد
+                  <span className="bg-primary text-primary-foreground text-xs font-bold px-3 py-1 clip-corner shadow-[0_0_10px_rgba(0,229,255,0.5)] tracking-wider">
+                    [ NEW_ENTRY ]
                   </span>
                 )}
               </div>
@@ -138,7 +153,7 @@ export default function ProductDetail() {
               <img 
                 src={activeImage || product.images[0]} 
                 alt={product.nameAr} 
-                className="max-w-full max-h-full object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-110"
+                className="max-w-full max-h-full object-contain mix-blend-screen transition-transform duration-300 group-hover:scale-110 z-10 relative"
               />
             </div>
             
@@ -148,7 +163,7 @@ export default function ProductDetail() {
                   <button 
                     key={idx}
                     onClick={() => setActiveImage(img)}
-                    className={`shrink-0 w-20 h-20 rounded-lg p-2 flex items-center justify-center border-2 transition-all ${activeImage === img ? 'border-primary bg-primary/10' : 'border-white/10 bg-white/5 hover:border-primary/50'}`}
+                    className={`shrink-0 w-20 h-20 clip-corner p-2 flex items-center justify-center border-2 transition-all ${activeImage === img ? 'border-primary bg-primary/20 neon-border' : 'border-primary/20 bg-background/50 hover:border-secondary/50'}`}
                   >
                     <img src={img} alt="" className="max-w-full max-h-full object-contain mix-blend-screen" />
                   </button>
@@ -160,124 +175,143 @@ export default function ProductDetail() {
           {/* Product Info */}
           <div className="lg:w-1/2 flex flex-col">
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-2">
-                <Link href={`/brands/${product.brandSlug}`} className="text-muted-foreground hover:text-primary text-sm font-bold transition-colors">
-                  {product.brandNameEn || product.brandSlug}
+              <div className="flex items-center justify-between mb-4 font-mono">
+                <Link href={`/brands/${product.brandSlug}`} className="text-secondary hover:text-primary text-sm font-bold transition-colors uppercase neon-text-magenta hover:neon-text">
+                  // MFG: {product.brandNameEn || product.brandSlug}
                 </Link>
-                <span className="text-xs text-muted-foreground">SKU: {product.sku || 'N/A'}</span>
+                <span className="text-xs text-primary/70 bg-primary/10 px-2 py-1 clip-corner-sm border border-primary/20 uppercase tracking-widest">
+                  [ SKU: {product.sku || 'N/A'} ]
+                </span>
               </div>
-              <h1 className="text-3xl lg:text-4xl font-black text-foreground mb-4 leading-tight">{product.nameAr}</h1>
               
-              <div className="flex items-center gap-4 mb-6">
-                <div className="flex items-center text-yellow-500">
+              <h1 className="text-3xl lg:text-4xl font-black text-foreground mb-4 leading-tight glitch uppercase" data-text={product.nameAr}>{product.nameAr}</h1>
+              
+              <div className="flex items-center gap-4 mb-6 font-mono text-sm uppercase">
+                <div className="flex items-center text-primary">
                   {Array.from({ length: 5 }).map((_, i) => (
-                    <svg key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'fill-current' : 'text-white/20 fill-current'}`} viewBox="0 0 20 20">
+                    <svg key={i} className={`w-5 h-5 ${i < Math.floor(product.rating) ? 'fill-current' : 'text-primary/20 fill-current'}`} viewBox="0 0 20 20">
                       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                     </svg>
                   ))}
                   <span className="ml-2 font-bold text-foreground text-sm">{product.rating}</span>
                 </div>
-                <span className="text-muted-foreground text-sm">({product.reviewCount} تقييم)</span>
+                <span className="text-primary/60 text-xs">({product.reviewCount} REVIEWS)</span>
                 
-                <div className="w-px h-4 bg-white/20 mx-2"></div>
+                <div className="w-px h-4 bg-primary/30 mx-2"></div>
                 
                 {product.stock > 0 ? (
-                  <span className="text-green-400 text-sm font-bold flex items-center gap-1">متوفر ({product.stock})</span>
+                  <span className="text-lime text-sm font-bold flex items-center gap-1 neon-text-lime tracking-widest">[ STATUS: متوفر // QTY: {product.stock} ]</span>
                 ) : (
-                  <span className="text-destructive text-sm font-bold">نفدت الكمية</span>
+                  <span className="text-destructive text-sm font-bold bg-destructive/10 border border-destructive px-2 py-1 clip-corner-sm tracking-widest">[ STATUS: OFFLINE ]</span>
                 )}
               </div>
 
-              <div className="text-4xl font-black text-primary neon-text mb-2">
-                {formatPrice(product.price)}
-              </div>
-              {product.originalPrice && (
-                <div className="text-lg text-muted-foreground line-through decoration-destructive/50 mb-6">
-                  {formatPrice(product.originalPrice)}
+              <div className="flex items-end gap-4 mb-6">
+                <div className="text-4xl font-black text-primary font-mono neon-text">
+                  {formatPrice(product.price)}
                 </div>
-              )}
+                {product.originalPrice && (
+                  <div className="text-lg text-muted-foreground font-mono line-through decoration-destructive/80 mb-1">
+                    {formatPrice(product.originalPrice)}
+                  </div>
+                )}
+              </div>
             </div>
 
-            <p className="text-muted-foreground leading-relaxed mb-8">
+            <p className="text-muted-foreground leading-relaxed mb-8 font-mono text-sm border-r-2 border-primary/30 pr-4 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4">
               {product.descriptionAr}
             </p>
 
             {/* Quick Specs */}
             {product.specs && product.specs.length > 0 && (
-              <div className="mb-8 grid grid-cols-2 gap-y-2 text-sm">
+              <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 gap-3 font-mono text-sm bg-background/50 p-4 border border-primary/20 clip-corner">
                 {product.specs.slice(0, 4).map((spec, idx) => (
-                  <div key={idx} className="flex flex-col border-b border-white/5 pb-2">
-                    <span className="text-muted-foreground">{spec.labelAr}</span>
-                    <span className="font-bold text-foreground">{spec.value}</span>
+                  <div key={idx} className="flex flex-col border-b border-primary/10 pb-2">
+                    <span className="text-primary/70 uppercase text-[10px] tracking-widest">[{spec.labelAr}]</span>
+                    <span className="font-bold text-foreground truncate">{spec.value}</span>
                   </div>
                 ))}
               </div>
             )}
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
-              <div className="flex items-center bg-background border border-white/10 rounded-md">
+            {/* Actions */}
+            <div className="flex flex-col gap-4 mb-8">
+              <div className="flex gap-4">
+                <div className="flex items-center glass-panel clip-corner border-primary/30 w-32 shrink-0">
+                  <button 
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    className="flex-1 py-3 text-primary hover:text-secondary hover:bg-primary/10 transition-colors font-mono font-bold"
+                  >-</button>
+                  <input 
+                    type="number" 
+                    value={quantity}
+                    readOnly
+                    className="w-12 text-center bg-transparent border-none focus:ring-0 font-mono font-bold text-primary"
+                  />
+                  <button 
+                    onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                    className="flex-1 py-3 text-primary hover:text-secondary hover:bg-primary/10 transition-colors font-mono font-bold"
+                  >+</button>
+                </div>
+                
                 <button 
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-3 text-muted-foreground hover:text-foreground transition-colors"
-                >-</button>
-                <input 
-                  type="number" 
-                  value={quantity}
-                  readOnly
-                  className="w-12 text-center bg-transparent border-none focus:ring-0 font-bold"
-                />
+                  onClick={handleAddToCart}
+                  disabled={product.stock === 0}
+                  className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 clip-corner font-bold py-3 px-6 transition-all flex items-center justify-center gap-2 glow-hover disabled:opacity-50 disabled:shadow-none uppercase tracking-wide font-mono"
+                >
+                  <ShoppingCart size={20} />
+                  أضف للسلة
+                </button>
+                
                 <button 
-                  onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
-                  className="px-4 py-3 text-muted-foreground hover:text-foreground transition-colors"
-                >+</button>
+                  onClick={handleToggleWishlist}
+                  className={`w-14 shrink-0 clip-corner transition-all flex items-center justify-center border ${isWished ? 'bg-secondary/20 border-secondary text-secondary neon-border-magenta' : 'glass-panel border-primary/30 text-primary hover:border-secondary hover:text-secondary'}`}
+                >
+                  <Heart size={20} className={isWished ? "fill-current" : ""} />
+                </button>
               </div>
-              
-              <button 
-                onClick={handleAddToCart}
-                disabled={product.stock === 0}
-                className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 rounded-md font-bold py-3 px-6 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(0,255,255,0.3)] disabled:opacity-50 disabled:shadow-none"
-              >
-                <ShoppingCart size={20} />
-                أضف للسلة
-              </button>
-              
-              <button 
-                onClick={handleToggleWishlist}
-                className={`px-4 py-3 rounded-md border transition-colors flex items-center justify-center ${isWished ? 'bg-destructive/10 border-destructive text-destructive' : 'bg-background border-white/10 text-muted-foreground hover:border-primary/50 hover:text-primary'}`}
-              >
-                <Heart size={20} className={isWished ? "fill-current" : ""} />
-              </button>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button 
+                  onClick={handleBuyNow}
+                  disabled={product.stock === 0}
+                  className="flex-1 bg-secondary text-secondary-foreground hover:bg-secondary/90 clip-corner font-bold py-3 px-6 transition-all flex items-center justify-center gap-2 glow-hover-magenta disabled:opacity-50 disabled:shadow-none uppercase tracking-wide font-mono"
+                >
+                  <Zap size={20} />
+                  اشتري الآن
+                </button>
+
+                <button 
+                  onClick={handleWhatsApp}
+                  className="flex-1 bg-lime text-lime-foreground hover:bg-lime/90 clip-corner font-bold py-3 px-6 transition-all flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(158,255,0,0.3)] hover:shadow-[0_0_25px_rgba(158,255,0,0.6)] uppercase tracking-wide font-mono text-black"
+                >
+                  <MessageCircle size={20} />
+                  استفسر عبر واتساب
+                </button>
+              </div>
             </div>
 
-            <button 
-              onClick={handleWhatsApp}
-              className="w-full bg-[#25D366] hover:bg-[#128C7E] text-white rounded-md font-bold py-3 px-6 transition-all flex items-center justify-center gap-2 mb-8"
-            >
-              <MessageCircle size={20} />
-              استفسر عبر واتساب
-            </button>
-
             {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-white/5 pt-8">
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Shield className="text-primary" size={24} />
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-primary/20 pt-8 font-mono">
+              <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                <Shield className="text-secondary" size={20} />
                 <div>
-                  <div className="font-bold text-foreground">ضمان محلي</div>
-                  <div>{product.warranty || 'سنة واحدة'}</div>
+                  <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ WARRANTY ]</div>
+                  <div className="text-foreground font-bold">{product.warranty || 'سنة واحدة'}</div>
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <Truck className="text-primary" size={24} />
+              <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                <Truck className="text-secondary" size={20} />
                 <div>
-                  <div className="font-bold text-foreground">شحن سريع</div>
-                  <div>لجميع المدن</div>
+                  <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ SHIPPING ]</div>
+                  <div className="text-foreground font-bold">شحن سريع</div>
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-sm text-muted-foreground">
-                <RotateCcw className="text-primary" size={24} />
+              <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                <RotateCcw className="text-secondary" size={20} />
                 <div>
-                  <div className="font-bold text-foreground">إرجاع سهل</div>
-                  <div>خلال 14 يوم</div>
+                  <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ RETURNS ]</div>
+                  <div className="text-foreground font-bold">خلال 14 يوم</div>
                 </div>
               </div>
             </div>
@@ -286,36 +320,40 @@ export default function ProductDetail() {
         </div>
 
         {/* Detailed Specs & Reviews Tabs */}
-        <div className="bg-card border border-white/5 rounded-2xl overflow-hidden mb-16">
-          <div className="flex border-b border-white/5 overflow-x-auto scrollbar-hide">
-            <button className="px-8 py-4 font-bold text-primary border-b-2 border-primary bg-primary/5 whitespace-nowrap">
-              المواصفات التقنية
+        <div className="glass-panel border-primary/30 clip-corner-lg overflow-hidden mb-16 relative">
+          <div className="absolute top-0 left-0 w-full h-[1px] neon-divider" />
+          <div className="flex border-b border-primary/20 overflow-x-auto scrollbar-hide font-mono">
+            <button className="px-8 py-4 font-bold text-primary border-b-2 border-primary bg-primary/10 whitespace-nowrap uppercase tracking-widest text-sm">
+              // TECH_SPECS
             </button>
-            <button className="px-8 py-4 font-bold text-muted-foreground hover:text-foreground hover:bg-white/5 transition-colors whitespace-nowrap">
-              مراجعات العملاء ({product.reviewCount})
+            <button className="px-8 py-4 font-bold text-muted-foreground hover:text-secondary hover:bg-secondary/5 transition-colors whitespace-nowrap uppercase tracking-widest text-sm">
+              // USER_REVIEWS ({product.reviewCount})
             </button>
           </div>
           <div className="p-8">
-            <h3 className="text-xl font-bold mb-6">المواصفات التفصيلية</h3>
+            <h3 className="text-xl font-bold mb-6 font-mono text-primary neon-text uppercase tracking-widest">{">>"} HARDWARE_DETAILS</h3>
             {product.specs && product.specs.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-2 font-mono text-sm">
                 {product.specs.map((spec, idx) => (
-                  <div key={idx} className={`flex py-3 border-b border-white/5 ${idx % 2 === 0 ? 'bg-white/[0.02] px-4 rounded -mx-4' : ''}`}>
-                    <span className="w-1/3 text-muted-foreground">{spec.labelAr}</span>
+                  <div key={idx} className="flex py-3 border-b border-primary/10 hover:bg-primary/5 px-2 transition-colors">
+                    <span className="w-1/3 text-primary/70 uppercase text-[10px] tracking-widest flex items-center">[{spec.labelAr}]</span>
                     <span className="w-2/3 font-medium text-foreground">{spec.value}</span>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-muted-foreground">لا توجد مواصفات تقنية تفصيلية متاحة لهذا المنتج.</p>
+              <p className="text-muted-foreground font-mono">SYSTEM_MSG: No hardware specifications found.</p>
             )}
           </div>
         </div>
 
         {/* Related Products */}
         {!relatedLoading && relatedProducts && relatedProducts.length > 0 && (
-          <div className="mb-16">
-            <h2 className="text-2xl font-black mb-8 border-r-4 border-primary pr-4">منتجات ذات صلة</h2>
+          <div className="mb-16 relative">
+            <h2 className="text-2xl font-black mb-8 border-r-4 border-primary pr-4 neon-text flex items-center gap-4">
+              وحدات ذات صلة
+              <span className="font-mono text-sm text-primary/50 tracking-widest">_RELATED_MODULES</span>
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {relatedProducts.slice(0, 4).map(prod => (
                 <ProductCard key={prod.id} product={prod} />
@@ -326,8 +364,11 @@ export default function ProductDetail() {
 
         {/* Recently Viewed */}
         {recentlyViewed && recentlyViewed.length > 0 && (
-          <div>
-            <h2 className="text-2xl font-black mb-8 border-r-4 border-secondary pr-4">شاهدت مؤخراً</h2>
+          <div className="relative">
+            <h2 className="text-2xl font-black mb-8 border-r-4 border-secondary pr-4 neon-text-magenta flex items-center gap-4">
+              سجل التصفح
+              <span className="font-mono text-sm text-secondary/50 tracking-widest">_RECENT_LOG</span>
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {recentlyViewed.slice(0, 4).map(prod => (
                 <ProductCard key={prod.id} product={prod} />

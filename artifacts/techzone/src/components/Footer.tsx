@@ -1,33 +1,36 @@
 import { Link } from "wouter";
-import { Facebook, Twitter, Instagram, Youtube, Monitor } from "lucide-react";
+import { Facebook, Twitter, Instagram, Youtube, Monitor, Terminal } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="bg-card border-t border-white/5 pt-16 pb-8 mt-auto">
-      <div className="container mx-auto px-4">
+    <footer className="glass-panel border-t border-primary/20 pt-16 pb-8 mt-auto relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-1 neon-divider"></div>
+      <div className="container mx-auto px-4 font-mono">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Brand */}
           <div>
-            <Link href="/" className="flex items-center gap-2 mb-6">
-              <Monitor className="text-primary h-8 w-8" />
-              <span className="text-2xl font-black tracking-wider text-foreground neon-text uppercase">
-                TechZone
+            <Link href="/" className="flex items-center gap-2 mb-6 group">
+              <Monitor className="text-primary h-8 w-8 group-hover:animate-flicker" />
+              <span className="text-2xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="TECHZONE">
+                TECHZONE
               </span>
             </Link>
-            <p className="text-muted-foreground text-sm leading-relaxed mb-6">
+            <p className="text-primary/70 text-sm leading-relaxed mb-6">
               متجر TechZone هو وجهتك الأولى لكل ما يخص عالم الجيمنج والإلكترونيات. نوفر لك أفضل القطع وأحدث التجميعات بأسعار تنافسية.
+              <br /><br />
+              <span className="text-secondary neon-text-magenta animate-pulse text-xs">{"//"} SYSTEM_INITIALIZED</span>
             </p>
             <div className="flex items-center gap-4">
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
                 <Facebook size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
                 <Twitter size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
                 <Instagram size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
+              <a href="#" className="w-10 h-10 clip-corner bg-background/50 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary/20 hover:neon-border transition-all glow-hover">
                 <Youtube size={18} />
               </a>
             </div>
@@ -35,58 +38,65 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-bold text-foreground mb-6 relative inline-block">
-              روابط سريعة
-              <span className="absolute -bottom-2 right-0 w-1/2 h-0.5 bg-primary"></span>
+            <h3 className="text-lg font-bold text-primary mb-6 relative inline-block">
+              {">"} روابط_سريعة
+              <span className="absolute -bottom-2 right-0 w-full h-[1px] bg-primary/30"></span>
+              <span className="absolute -bottom-2 right-0 w-1/3 h-[2px] bg-primary shadow-[0_0_8px_var(--cyan)]"></span>
             </h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><Link href="/about" className="hover:text-primary transition-colors">من نحن</Link></li>
-              <li><Link href="/contact" className="hover:text-primary transition-colors">اتصل بنا</Link></li>
-              <li><Link href="/faq" className="hover:text-primary transition-colors">الأسئلة الشائعة</Link></li>
-              <li><Link href="/blog" className="hover:text-primary transition-colors">المدونة</Link></li>
-              <li><Link href="/track-order" className="hover:text-primary transition-colors">تتبع طلبك</Link></li>
+            <ul className="space-y-3 text-sm text-foreground">
+              <li><Link href="/about" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>من نحن<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/contact" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>اتصل بنا<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/faq" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>الأسئلة الشائعة<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/blog" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>المدونة<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/track-order" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>تتبع طلبك<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
             </ul>
           </div>
 
           {/* Categories */}
           <div>
-            <h3 className="text-lg font-bold text-foreground mb-6 relative inline-block">
-              الأقسام
-              <span className="absolute -bottom-2 right-0 w-1/2 h-0.5 bg-primary"></span>
+            <h3 className="text-lg font-bold text-primary mb-6 relative inline-block">
+              {">"} الأقسام
+              <span className="absolute -bottom-2 right-0 w-full h-[1px] bg-primary/30"></span>
+              <span className="absolute -bottom-2 right-0 w-1/3 h-[2px] bg-primary shadow-[0_0_8px_var(--cyan)]"></span>
             </h3>
-            <ul className="space-y-3 text-sm text-muted-foreground">
-              <li><Link href="/categories/components" className="hover:text-primary transition-colors">قطع الكمبيوتر</Link></li>
-              <li><Link href="/categories/laptops" className="hover:text-primary transition-colors">لابتوبات جيمنج</Link></li>
-              <li><Link href="/categories/peripherals" className="hover:text-primary transition-colors">إكسسوارات وملحقات</Link></li>
-              <li><Link href="/categories/monitors" className="hover:text-primary transition-colors">شاشات</Link></li>
-              <li><Link href="/categories/consoles" className="hover:text-primary transition-colors">أجهزة كونسول</Link></li>
+            <ul className="space-y-3 text-sm text-foreground">
+              <li><Link href="/categories/components" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>قطع الكمبيوتر<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/categories/laptops" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>لابتوبات جيمنج<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/categories/peripherals" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>إكسسوارات وملحقات<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/categories/monitors" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>شاشات<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/categories/consoles" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>أجهزة كونسول<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
             </ul>
           </div>
 
           {/* Newsletter */}
           <div>
-            <h3 className="text-lg font-bold text-foreground mb-6 relative inline-block">
-              النشرة البريدية
-              <span className="absolute -bottom-2 right-0 w-1/2 h-0.5 bg-primary"></span>
+            <h3 className="text-lg font-bold text-primary mb-6 relative inline-block">
+              {">"} النشرة_البريدية
+              <span className="absolute -bottom-2 right-0 w-full h-[1px] bg-primary/30"></span>
+              <span className="absolute -bottom-2 right-0 w-1/3 h-[2px] bg-primary shadow-[0_0_8px_var(--cyan)]"></span>
             </h3>
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="text-sm text-primary/70 mb-4">
               اشترك في نشرتنا البريدية للحصول على أحدث العروض والخصومات.
             </p>
             <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
-              <input
-                type="email"
-                placeholder="البريد الإلكتروني"
-                className="bg-white/5 border border-white/10 rounded-md px-4 py-2 text-sm flex-1 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary"
-              />
-              <button type="submit" className="bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-bold hover:bg-primary/90 transition-colors">
+              <div className="relative flex-1 clip-corner-sm">
+                <Terminal className="absolute right-2 top-1/2 -translate-y-1/2 text-primary" size={14} />
+                <input
+                  type="email"
+                  placeholder="البريد الإلكتروني"
+                  className="w-full bg-background/50 border border-primary/30 px-8 py-2 text-sm text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-primary/30 transition-all font-mono"
+                />
+              </div>
+              <button type="submit" className="bg-primary/10 border border-primary text-primary px-4 py-2 clip-corner-sm text-sm font-bold hover:bg-primary hover:text-background hover:shadow-[0_0_15px_var(--cyan)] transition-all glow-hover">
                 اشترك
               </button>
             </form>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} TechZone. جميع الحقوق محفوظة.</p>
+        <div className="pt-8 border-t border-primary/20 text-center text-sm text-primary/50 flex flex-col md:flex-row items-center justify-between">
+          <p>© {new Date().getFullYear()} TECHZONE_OS. ALL_RIGHTS_RESERVED.</p>
+          <p className="mt-2 md:mt-0 animate-pulse">{"//"} SYSTEM_STATUS: ONLINE</p>
         </div>
       </div>
     </footer>

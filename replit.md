@@ -1,6 +1,6 @@
-# [Project name]
+# TechZone — متجر الإلكترونيات والجيمنج
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+An Arabic (RTL) gaming & electronics e-commerce storefront with a cyberpunk "NEON GRID OS" visual identity. Customers browse products, categories and brands, add to cart, and place orders.
 
 ## Run & Operate
 
@@ -30,11 +30,16 @@ _Populate as you build — non-obvious choices a reader couldn't infer from the 
 
 ## Product
 
-_Describe the high-level user-facing capabilities of this app once they exist._
+- Web storefront `artifacts/techzone` (react-vite, port 25339, previewPath `/`), Arabic RTL, served against `artifacts/api-server`.
+- Implemented pages: Home, Categories, CategoryDetail, ProductDetail, Cart, Checkout, OrderSuccess, 404. Many secondary routes (deals, search, brands, blog, wishlist, pc-builder, track-order, about, contact, faq) are still placeholders in `src/App.tsx`.
+- Visual identity: cyberpunk "NEON GRID OS". The design system lives in `artifacts/techzone/src/index.css` (tokens + neon/HUD utilities). The global animated backdrop is `src/components/CyberBackground.tsx`, rendered once at App level — pages stay transparent so it shows through.
+- Product detail is addressed by DB id (`/products/:id`, e.g. `prod-8`), not slug.
 
 ## User preferences
 
-_Populate as you build — explicit user instructions worth remembering across sessions._
+- Communicate in Arabic.
+- Visual direction is bold/unusual cyberpunk neon — go beyond safe templates. Competitor cobrashop.ps is a reference for the business model only, NOT for design.
+- No emojis in the UI.
 
 ## Gotchas
 

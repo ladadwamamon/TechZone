@@ -1,0 +1,1 @@
+- [TechZone product routing](techzone-routing.md) — product detail uses /products/:id by DB id (e.g. prod-8), NOT slug; slug URLs 404 by design.
