@@ -10,7 +10,7 @@ export default function Search() {
   const searchParams = new URLSearchParams(searchString);
   const q = searchParams.get("q") || "";
   
-  const [location, setLocation] = useLocation();
+  const [, setLocation] = useLocation();
   const [searchInput, setSearchInput] = useState(q);
   const [category, setCategory] = useState(searchParams.get("category") || "");
   const [brand, setBrand] = useState(searchParams.get("brand") || "");
@@ -54,7 +54,17 @@ export default function Search() {
     setLocation(`/search?${params.toString()}`);
   };
 
-  // Trigger handleFilterChange when filter values change, but only if they differ from URL
+  // Rehydrate local state from the URL (e.g. browser back/forward or external navigation)
+  useEffect(() => {
+    setSearchInput(searchParams.get("q") || "");
+    setCategory(searchParams.get("category") || "");
+    setBrand(searchParams.get("brand") || "");
+    setSort(searchParams.get("sort") || "newest");
+    setInStock(searchParams.get("inStock") === "true");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchString]);
+
+  // Push filter changes back to the URL, but only if they differ from it
   useEffect(() => {
     if (category !== (searchParams.get("category") || "") ||
         brand !== (searchParams.get("brand") || "") ||
@@ -62,6 +72,7 @@ export default function Search() {
         inStock !== (searchParams.get("inStock") === "true")) {
       handleFilterChange();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [category, brand, sort, inStock]);
 
   return (
@@ -198,6 +209,7 @@ export default function Search() {
                     setCategory("");
                     setBrand("");
                     setSearchInput("");
+                    setSort("newest");
                     setInStock(false);
                     setLocation("/search");
                   }}

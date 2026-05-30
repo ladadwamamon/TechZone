@@ -227,7 +227,7 @@ export default function Home() {
           <div className="flex-1 relative w-full flex justify-center">
             <div className="absolute w-[300px] h-[300px] bg-secondary/20 rounded-full blur-[100px] -z-10 animate-pulse-glow"></div>
             <div className="hud-frame-magenta p-4 relative z-10">
-              <img src="/src/assets/images/hero-2.png" alt="PC Build" className="w-full max-w-lg mx-auto border border-secondary/30 shadow-2xl mix-blend-screen" />
+              <img src="/catalog/prebuilt-pc-1.jpg" alt="PC Build" className="w-full max-w-lg mx-auto border border-secondary/30 shadow-2xl" />
             </div>
           </div>
         </div>

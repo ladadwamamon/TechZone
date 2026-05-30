@@ -14,19 +14,21 @@ import ProductDetail from "@/pages/ProductDetail";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import OrderSuccess from "@/pages/OrderSuccess";
+import Deals from "@/pages/Deals";
+import Search from "@/pages/Search";
+import Brands from "@/pages/Brands";
+import BrandDetail from "@/pages/BrandDetail";
+import Blog from "@/pages/Blog";
+import BlogPostPage from "@/pages/BlogPostPage";
+import TrackOrder from "@/pages/TrackOrder";
+import Wishlist from "@/pages/Wishlist";
+import PcBuilder from "@/pages/PcBuilder";
+import About from "@/pages/About";
+import Contact from "@/pages/Contact";
+import Faq from "@/pages/Faq";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
-
-// Placeholder components for pages not yet implemented
-const Placeholder = ({ name }: { name: string }) => (
-  <div className="min-h-screen w-full flex items-center justify-center bg-background text-foreground">
-    <div className="text-center">
-      <h1 className="text-2xl font-bold mb-2">صفحة {name}</h1>
-      <p className="text-muted-foreground">جاري بناء هذه الصفحة...</p>
-    </div>
-  </div>
-);
 
 function Router() {
   return (
@@ -36,23 +38,21 @@ function Router() {
       <Route path="/categories/:slug" component={CategoryDetail} />
       <Route path="/products/:id" component={ProductDetail} />
       <Route path="/cart" component={Cart} />
-      
-      {/* Placeholders for remaining pages */}
-      <Route path="/deals" component={() => <Placeholder name="عروض فلاش" />} />
-      <Route path="/search" component={() => <Placeholder name="البحث" />} />
-      <Route path="/brands" component={() => <Placeholder name="الماركات" />} />
-      <Route path="/brands/:slug" component={() => <Placeholder name="الماركة" />} />
-      <Route path="/blog" component={() => <Placeholder name="المدونة" />} />
-      <Route path="/blog/:slug" component={() => <Placeholder name="المقال" />} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/order-success" component={OrderSuccess} />
-      <Route path="/track-order" component={() => <Placeholder name="تتبع الطلب" />} />
-      <Route path="/wishlist" component={() => <Placeholder name="المفضلة" />} />
-      <Route path="/pc-builder" component={() => <Placeholder name="تجميعة PC" />} />
-      <Route path="/about" component={() => <Placeholder name="من نحن" />} />
-      <Route path="/contact" component={() => <Placeholder name="اتصل بنا" />} />
-      <Route path="/faq" component={() => <Placeholder name="الأسئلة الشائعة" />} />
-      
+      <Route path="/deals" component={Deals} />
+      <Route path="/search" component={Search} />
+      <Route path="/brands" component={Brands} />
+      <Route path="/brands/:slug" component={BrandDetail} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPostPage} />
+      <Route path="/track-order" component={TrackOrder} />
+      <Route path="/wishlist" component={Wishlist} />
+      <Route path="/pc-builder" component={PcBuilder} />
+      <Route path="/about" component={About} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/faq" component={Faq} />
+
       <Route component={NotFound} />
     </Switch>
   );
