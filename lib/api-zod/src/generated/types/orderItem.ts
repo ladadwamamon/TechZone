@@ -12,4 +12,6 @@ export interface OrderItem {
   price: number;
   quantity: number;
   image: string;
+  /** @nullable */
+  productType?: string | null;
 }

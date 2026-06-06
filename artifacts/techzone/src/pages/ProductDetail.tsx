@@ -25,6 +25,7 @@ export default function ProductDetail() {
   const { productIds, toggleWishlist, isInWishlist } = useWishlistStore();
   
   const isWished = product ? isInWishlist(product.id) : false;
+  const isDigital = product?.productType === "digital";
 
   useEffect(() => {
     if (product && product.images && product.images.length > 0) {
@@ -35,14 +36,14 @@ export default function ProductDetail() {
   // Handle recently viewed
   useEffect(() => {
     if (id) {
-      const recent = JSON.parse(localStorage.getItem("techzone-recent") || "[]");
+      const recent = JSON.parse(localStorage.getItem("nexus-recent") || "[]");
       const updated = [id, ...recent.filter((rId: string) => rId !== id)].slice(0, 8);
-      localStorage.setItem("techzone-recent", JSON.stringify(updated));
+      localStorage.setItem("nexus-recent", JSON.stringify(updated));
     }
   }, [id]);
 
   const { data: recentlyViewed } = useGetRecentlyViewedProducts({
-    ids: JSON.parse(localStorage.getItem("techzone-recent") || "[]").join(",")
+    ids: JSON.parse(localStorage.getItem("nexus-recent") || "[]").join(",")
   });
 
   const handleAddToCart = () => {
@@ -53,6 +54,7 @@ export default function ProductDetail() {
       price: product.price,
       quantity,
       image: product.images[0],
+      productType: product.productType,
     });
     toast.success("تمت الإضافة إلى السلة", { description: product.nameAr });
     window.dispatchEvent(new Event('open-cart'));
@@ -66,6 +68,7 @@ export default function ProductDetail() {
       price: product.price,
       quantity,
       image: product.images[0],
+      productType: product.productType,
     });
     setLocation('/checkout');
   };
@@ -312,30 +315,64 @@ export default function ProductDetail() {
               </div>
             </div>
 
+            {/* Digital delivery instructions */}
+            {isDigital && product.digitalInstructionsAr && (
+              <div className="mb-8 glass-panel border-lime/30 clip-corner p-4 font-mono text-sm">
+                <div className="font-bold text-lime text-[10px] uppercase tracking-widest mb-2 neon-text-lime">[ تعليمات الاستخدام ]</div>
+                <div className="text-muted-foreground leading-relaxed whitespace-pre-line">{product.digitalInstructionsAr}</div>
+              </div>
+            )}
+
             {/* Features */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-primary/20 pt-8 font-mono">
-              <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
-                <Shield className="text-secondary" size={20} />
-                <div>
-                  <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ WARRANTY ]</div>
-                  <div className="text-foreground font-bold">{product.warranty || 'سنة واحدة'}</div>
+            {isDigital ? (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-primary/20 pt-8 font-mono">
+                <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                  <Zap className="text-lime" size={20} />
+                  <div>
+                    <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ DELIVERY ]</div>
+                    <div className="text-foreground font-bold">تسليم فوري</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                  <Shield className="text-secondary" size={20} />
+                  <div>
+                    <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ {product.deliveryType === 'account' ? 'ACCOUNT' : 'CODE'} ]</div>
+                    <div className="text-foreground font-bold">{product.deliveryType === 'account' ? 'حساب رقمي' : 'كود رقمي'}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                  <MessageCircle className="text-secondary" size={20} />
+                  <div>
+                    <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ {product.region ? 'REGION' : 'SUPPORT' } ]</div>
+                    <div className="text-foreground font-bold">{product.region || 'دعم على مدار الساعة'}</div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
-                <Truck className="text-secondary" size={20} />
-                <div>
-                  <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ SHIPPING ]</div>
-                  <div className="text-foreground font-bold">شحن سريع</div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-primary/20 pt-8 font-mono">
+                <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                  <Shield className="text-secondary" size={20} />
+                  <div>
+                    <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ WARRANTY ]</div>
+                    <div className="text-foreground font-bold">{product.warranty || 'سنة واحدة'}</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                  <Truck className="text-secondary" size={20} />
+                  <div>
+                    <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ SHIPPING ]</div>
+                    <div className="text-foreground font-bold">شحن سريع</div>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
+                  <RotateCcw className="text-secondary" size={20} />
+                  <div>
+                    <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ RETURNS ]</div>
+                    <div className="text-foreground font-bold">خلال 14 يوم</div>
+                  </div>
                 </div>
               </div>
-              <div className="flex items-center gap-3 text-sm glass-panel p-3 clip-corner-sm border-primary/10">
-                <RotateCcw className="text-secondary" size={20} />
-                <div>
-                  <div className="font-bold text-primary text-[10px] uppercase tracking-widest">[ RETURNS ]</div>
-                  <div className="text-foreground font-bold">خلال 14 يوم</div>
-                </div>
-              </div>
-            </div>
+            )}
             
           </div>
         </div>

@@ -55,6 +55,9 @@ export const ListProductsResponse = zod.object({
   "isNew": zod.boolean().optional(),
   "isBestSeller": zod.boolean().optional(),
   "isExclusive": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
   "badges": zod.array(zod.string()).optional()
 })),
   "total": zod.number(),
@@ -86,6 +89,9 @@ export const GetFeaturedProductsResponseItem = zod.object({
   "isNew": zod.boolean().optional(),
   "isBestSeller": zod.boolean().optional(),
   "isExclusive": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
   "badges": zod.array(zod.string()).optional()
 })
 export const GetFeaturedProductsResponse = zod.array(GetFeaturedProductsResponseItem)
@@ -120,6 +126,9 @@ export const GetBestSellersResponseItem = zod.object({
   "isNew": zod.boolean().optional(),
   "isBestSeller": zod.boolean().optional(),
   "isExclusive": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
   "badges": zod.array(zod.string()).optional()
 })
 export const GetBestSellersResponse = zod.array(GetBestSellersResponseItem)
@@ -149,6 +158,9 @@ export const GetFlashDealsResponse = zod.object({
   "isNew": zod.boolean().optional(),
   "isBestSeller": zod.boolean().optional(),
   "isExclusive": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
   "badges": zod.array(zod.string()).optional()
 })),
   "endsAt": zod.string().describe('ISO date string when flash deals end')
@@ -182,6 +194,9 @@ export const GetRecentlyViewedProductsResponseItem = zod.object({
   "isNew": zod.boolean().optional(),
   "isBestSeller": zod.boolean().optional(),
   "isExclusive": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
   "badges": zod.array(zod.string()).optional()
 })
 export const GetRecentlyViewedProductsResponse = zod.array(GetRecentlyViewedProductsResponseItem)
@@ -215,6 +230,11 @@ export const GetProductResponse = zod.object({
   "isNew": zod.boolean().optional(),
   "isBestSeller": zod.boolean().optional(),
   "isExclusive": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
+  "deliveryType": zod.string().nullish(),
+  "digitalInstructionsAr": zod.string().nullish(),
   "descriptionAr": zod.string(),
   "specs": zod.array(zod.object({
   "labelAr": zod.string(),
@@ -268,6 +288,9 @@ export const GetRelatedProductsResponseItem = zod.object({
   "isNew": zod.boolean().optional(),
   "isBestSeller": zod.boolean().optional(),
   "isExclusive": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
   "badges": zod.array(zod.string()).optional()
 })
 export const GetRelatedProductsResponse = zod.array(GetRelatedProductsResponseItem)
@@ -423,7 +446,8 @@ export const CreateOrderBody = zod.object({
   "nameAr": zod.string(),
   "price": zod.number(),
   "quantity": zod.number(),
-  "image": zod.string()
+  "image": zod.string(),
+  "productType": zod.string().nullish()
 }))
 })
 
@@ -585,6 +609,11 @@ export const AdminListProductsResponse = zod.object({
   "isExclusive": zod.boolean().optional(),
   "isFlashDeal": zod.boolean().optional(),
   "isFeatured": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
+  "deliveryType": zod.string().nullish(),
+  "digitalInstructionsAr": zod.string().nullish(),
   "descriptionAr": zod.string().nullish(),
   "specs": zod.array(zod.object({
   "labelAr": zod.string(),
@@ -631,6 +660,11 @@ export const AdminCreateProductBody = zod.object({
   "isExclusive": zod.boolean().optional(),
   "isFlashDeal": zod.boolean().optional(),
   "isFeatured": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
+  "deliveryType": zod.string().nullish(),
+  "digitalInstructionsAr": zod.string().nullish(),
   "descriptionAr": zod.string().nullish(),
   "specs": zod.array(zod.object({
   "labelAr": zod.string(),
@@ -678,6 +712,11 @@ export const AdminUpdateProductBody = zod.object({
   "isExclusive": zod.boolean().optional(),
   "isFlashDeal": zod.boolean().optional(),
   "isFeatured": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
+  "deliveryType": zod.string().nullish(),
+  "digitalInstructionsAr": zod.string().nullish(),
   "descriptionAr": zod.string().nullish(),
   "specs": zod.array(zod.object({
   "labelAr": zod.string(),
@@ -718,6 +757,11 @@ export const AdminUpdateProductResponse = zod.object({
   "isExclusive": zod.boolean().optional(),
   "isFlashDeal": zod.boolean().optional(),
   "isFeatured": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
+  "deliveryType": zod.string().nullish(),
+  "digitalInstructionsAr": zod.string().nullish(),
   "descriptionAr": zod.string().nullish(),
   "specs": zod.array(zod.object({
   "labelAr": zod.string(),
@@ -1032,12 +1076,18 @@ export const AdminListOrdersResponse = zod.object({
   "nameAr": zod.string(),
   "price": zod.number(),
   "quantity": zod.number(),
-  "image": zod.string()
+  "image": zod.string(),
+  "productType": zod.string().nullish()
 })),
   "subtotal": zod.number(),
   "shipping": zod.number(),
   "total": zod.number(),
   "status": zod.string(),
+  "deliveredCodes": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "secret": zod.string()
+})).optional(),
   "createdAt": zod.string()
 })),
   "total": zod.number(),
@@ -1069,12 +1119,18 @@ export const AdminGetOrderResponse = zod.object({
   "nameAr": zod.string(),
   "price": zod.number(),
   "quantity": zod.number(),
-  "image": zod.string()
+  "image": zod.string(),
+  "productType": zod.string().nullish()
 })),
   "subtotal": zod.number(),
   "shipping": zod.number(),
   "total": zod.number(),
   "status": zod.string(),
+  "deliveredCodes": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "secret": zod.string()
+})).optional(),
   "createdAt": zod.string()
 })
 
@@ -1106,12 +1162,18 @@ export const AdminUpdateOrderStatusResponse = zod.object({
   "nameAr": zod.string(),
   "price": zod.number(),
   "quantity": zod.number(),
-  "image": zod.string()
+  "image": zod.string(),
+  "productType": zod.string().nullish()
 })),
   "subtotal": zod.number(),
   "shipping": zod.number(),
   "total": zod.number(),
   "status": zod.string(),
+  "deliveredCodes": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "secret": zod.string()
+})).optional(),
   "createdAt": zod.string()
 })
 
@@ -1337,12 +1399,18 @@ export const AdminAnalyticsOverviewResponse = zod.object({
   "nameAr": zod.string(),
   "price": zod.number(),
   "quantity": zod.number(),
-  "image": zod.string()
+  "image": zod.string(),
+  "productType": zod.string().nullish()
 })),
   "subtotal": zod.number(),
   "shipping": zod.number(),
   "total": zod.number(),
   "status": zod.string(),
+  "deliveredCodes": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "secret": zod.string()
+})).optional(),
   "createdAt": zod.string()
 })).optional()
 })
@@ -1415,6 +1483,11 @@ export const AdminAnalyticsLowStockResponseItem = zod.object({
   "isExclusive": zod.boolean().optional(),
   "isFlashDeal": zod.boolean().optional(),
   "isFeatured": zod.boolean().optional(),
+  "productType": zod.enum(['physical', 'digital']).optional(),
+  "platform": zod.string().nullish(),
+  "region": zod.string().nullish(),
+  "deliveryType": zod.string().nullish(),
+  "digitalInstructionsAr": zod.string().nullish(),
   "descriptionAr": zod.string().nullish(),
   "specs": zod.array(zod.object({
   "labelAr": zod.string(),
@@ -1578,12 +1651,18 @@ export const CustomerOrdersResponseItem = zod.object({
   "nameAr": zod.string(),
   "price": zod.number(),
   "quantity": zod.number(),
-  "image": zod.string()
+  "image": zod.string(),
+  "productType": zod.string().nullish()
 })),
   "subtotal": zod.number(),
   "shipping": zod.number(),
   "total": zod.number(),
   "status": zod.string(),
+  "deliveredCodes": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "secret": zod.string()
+})).optional(),
   "createdAt": zod.string()
 })
 export const CustomerOrdersResponse = zod.array(CustomerOrdersResponseItem)
@@ -1674,232 +1753,302 @@ export const AdminDeleteCouponResponse = zod.object({
 
 
 /**
- * @summary List gift cards
+ * @summary List digital codes for a product
  */
-export const AdminListGiftCardsResponseItem = zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "amount": zod.number(),
-  "balance": zod.number(),
-  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']),
-  "customerId": zod.string().nullish(),
-  "redeemedAt": zod.string().nullish(),
-  "expiresAt": zod.string().nullish(),
-  "createdAt": zod.string()
-})
-export const AdminListGiftCardsResponse = zod.array(AdminListGiftCardsResponseItem)
-
-
-/**
- * @summary Create a gift card
- */
-export const AdminCreateGiftCardBody = zod.object({
-  "id": zod.string().optional(),
-  "code": zod.string(),
-  "amount": zod.number(),
-  "balance": zod.number().optional(),
-  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']).optional(),
-  "expiresAt": zod.string().nullish()
-})
-
-
-/**
- * @summary Update a gift card
- */
-export const AdminUpdateGiftCardParams = zod.object({
+export const AdminListDigitalCodesParams = zod.object({
   "id": zod.coerce.string()
 })
 
-export const AdminUpdateGiftCardBody = zod.object({
-  "code": zod.string().optional(),
-  "amount": zod.number().optional(),
-  "balance": zod.number().optional(),
-  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']).optional(),
-  "expiresAt": zod.string().nullish()
+export const AdminListDigitalCodesResponseItem = zod.object({
+  "id": zod.string(),
+  "productId": zod.string(),
+  "secret": zod.string(),
+  "status": zod.enum(['available', 'sold']),
+  "orderId": zod.string().nullish(),
+  "soldAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const AdminListDigitalCodesResponse = zod.array(AdminListDigitalCodesResponseItem)
+
+
+/**
+ * @summary Bulk add digital codes to a product
+ */
+export const AdminAddDigitalCodesParams = zod.object({
+  "id": zod.coerce.string()
 })
 
-export const AdminUpdateGiftCardResponse = zod.object({
-  "id": zod.string(),
-  "code": zod.string(),
-  "amount": zod.number(),
-  "balance": zod.number(),
-  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']),
-  "customerId": zod.string().nullish(),
-  "redeemedAt": zod.string().nullish(),
-  "expiresAt": zod.string().nullish(),
-  "createdAt": zod.string()
+export const AdminAddDigitalCodesBody = zod.object({
+  "secrets": zod.array(zod.string())
 })
 
 
 /**
- * @summary Delete a gift card
+ * @summary Get digital code stock stats for a product
  */
-export const AdminDeleteGiftCardParams = zod.object({
+export const AdminDigitalCodeStatsParams = zod.object({
   "id": zod.coerce.string()
 })
 
-export const AdminDeleteGiftCardResponse = zod.object({
+export const AdminDigitalCodeStatsResponse = zod.object({
+  "productId": zod.string(),
+  "available": zod.number(),
+  "sold": zod.number(),
+  "total": zod.number(),
+  "added": zod.number().optional()
+})
+
+
+/**
+ * @summary Delete an unsold digital code
+ */
+export const AdminDeleteDigitalCodeParams = zod.object({
+  "codeId": zod.coerce.string()
+})
+
+export const AdminDeleteDigitalCodeResponse = zod.object({
   "success": zod.boolean(),
   "message": zod.string().nullish()
 })
 
 
 /**
- * @summary List subscription plans
+ * @summary Allocate digital codes for pending digital items in an order
  */
-export const AdminListSubscriptionPlansResponseItem = zod.object({
-  "id": zod.string(),
-  "nameAr": zod.string(),
-  "nameEn": zod.string(),
-  "slug": zod.string(),
-  "descriptionAr": zod.string().nullish(),
-  "descriptionEn": zod.string().nullish(),
-  "price": zod.number(),
-  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
-  "features": zod.array(zod.string()).optional(),
-  "isActive": zod.boolean(),
-  "createdAt": zod.string()
-})
-export const AdminListSubscriptionPlansResponse = zod.array(AdminListSubscriptionPlansResponseItem)
-
-
-/**
- * @summary Create a subscription plan
- */
-export const AdminCreateSubscriptionPlanBody = zod.object({
-  "id": zod.string().optional(),
-  "nameAr": zod.string(),
-  "nameEn": zod.string(),
-  "slug": zod.string(),
-  "descriptionAr": zod.string().nullish(),
-  "descriptionEn": zod.string().nullish(),
-  "price": zod.number(),
-  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
-  "features": zod.array(zod.string()).optional(),
-  "isActive": zod.boolean().optional()
-})
-
-
-/**
- * @summary Update a subscription plan
- */
-export const AdminUpdateSubscriptionPlanParams = zod.object({
+export const AdminFulfillOrderParams = zod.object({
   "id": zod.coerce.string()
 })
 
-export const AdminUpdateSubscriptionPlanBody = zod.object({
-  "nameAr": zod.string().optional(),
-  "nameEn": zod.string().optional(),
+export const AdminFulfillOrderResponse = zod.object({
+  "id": zod.string(),
+  "customerName": zod.string(),
+  "phone": zod.string(),
+  "city": zod.string(),
+  "address": zod.string(),
+  "email": zod.string().nullish(),
+  "promoCode": zod.string().nullish(),
+  "discount": zod.number().nullish(),
+  "notes": zod.string().nullish(),
+  "paymentMethod": zod.string(),
+  "items": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "price": zod.number(),
+  "quantity": zod.number(),
+  "image": zod.string(),
+  "productType": zod.string().nullish()
+})),
+  "subtotal": zod.number(),
+  "shipping": zod.number(),
+  "total": zod.number(),
+  "status": zod.string(),
+  "deliveredCodes": zod.array(zod.object({
+  "productId": zod.string(),
+  "nameAr": zod.string(),
+  "secret": zod.string()
+})).optional(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary List navigation items
+ */
+export const AdminListNavItemsResponseItem = zod.object({
+  "id": zod.string(),
+  "label": zod.string(),
+  "href": zod.string(),
+  "location": zod.enum(['header', 'footer']),
+  "parentId": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isVisible": zod.boolean(),
+  "opensNewTab": zod.boolean()
+})
+export const AdminListNavItemsResponse = zod.array(AdminListNavItemsResponseItem)
+
+
+/**
+ * @summary Create a navigation item
+ */
+export const AdminCreateNavItemBody = zod.object({
+  "label": zod.string(),
+  "href": zod.string(),
+  "location": zod.enum(['header', 'footer']).optional(),
+  "parentId": zod.string().nullish(),
+  "sortOrder": zod.number().optional(),
+  "isVisible": zod.boolean().optional(),
+  "opensNewTab": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Reorder navigation items
+ */
+export const AdminReorderNavItemsBody = zod.object({
+  "items": zod.array(zod.object({
+  "id": zod.string(),
+  "sortOrder": zod.number(),
+  "parentId": zod.string().nullish()
+}))
+})
+
+export const AdminReorderNavItemsResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update a navigation item
+ */
+export const AdminUpdateNavItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminUpdateNavItemBody = zod.object({
+  "label": zod.string().optional(),
+  "href": zod.string().optional(),
+  "location": zod.enum(['header', 'footer']).optional(),
+  "parentId": zod.string().nullish(),
+  "sortOrder": zod.number().optional(),
+  "isVisible": zod.boolean().optional(),
+  "opensNewTab": zod.boolean().optional()
+})
+
+export const AdminUpdateNavItemResponse = zod.object({
+  "id": zod.string(),
+  "label": zod.string(),
+  "href": zod.string(),
+  "location": zod.enum(['header', 'footer']),
+  "parentId": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isVisible": zod.boolean(),
+  "opensNewTab": zod.boolean()
+})
+
+
+/**
+ * @summary Delete a navigation item
+ */
+export const AdminDeleteNavItemParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminDeleteNavItemResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary List custom pages
+ */
+export const AdminListPagesResponseItem = zod.object({
+  "id": zod.string(),
+  "slug": zod.string(),
+  "titleAr": zod.string(),
+  "contentHtml": zod.string(),
+  "isPublished": zod.boolean(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
+})
+export const AdminListPagesResponse = zod.array(AdminListPagesResponseItem)
+
+
+/**
+ * @summary Create a custom page
+ */
+export const AdminCreatePageBody = zod.object({
+  "slug": zod.string(),
+  "titleAr": zod.string(),
+  "contentHtml": zod.string().optional(),
+  "isPublished": zod.boolean().optional(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update a custom page
+ */
+export const AdminUpdatePageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminUpdatePageBody = zod.object({
   "slug": zod.string().optional(),
-  "descriptionAr": zod.string().nullish(),
-  "descriptionEn": zod.string().nullish(),
-  "price": zod.number().optional(),
-  "period": zod.enum(['monthly', 'quarterly', 'yearly']).optional(),
-  "features": zod.array(zod.string()).optional(),
-  "isActive": zod.boolean().optional()
+  "titleAr": zod.string().optional(),
+  "contentHtml": zod.string().optional(),
+  "isPublished": zod.boolean().optional(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish()
 })
 
-export const AdminUpdateSubscriptionPlanResponse = zod.object({
+export const AdminUpdatePageResponse = zod.object({
   "id": zod.string(),
-  "nameAr": zod.string(),
-  "nameEn": zod.string(),
   "slug": zod.string(),
-  "descriptionAr": zod.string().nullish(),
-  "descriptionEn": zod.string().nullish(),
-  "price": zod.number(),
-  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
-  "features": zod.array(zod.string()).optional(),
-  "isActive": zod.boolean(),
-  "createdAt": zod.string()
+  "titleAr": zod.string(),
+  "contentHtml": zod.string(),
+  "isPublished": zod.boolean(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
 })
 
 
 /**
- * @summary Delete a subscription plan
+ * @summary Delete a custom page
  */
-export const AdminDeleteSubscriptionPlanParams = zod.object({
+export const AdminDeletePageParams = zod.object({
   "id": zod.coerce.string()
 })
 
-export const AdminDeleteSubscriptionPlanResponse = zod.object({
+export const AdminDeletePageResponse = zod.object({
   "success": zod.boolean(),
   "message": zod.string().nullish()
 })
 
 
 /**
- * @summary List customer subscriptions
+ * @summary List visible navigation items
  */
-export const AdminListSubscriptionsResponseItem = zod.object({
-  "id": zod.string(),
-  "customerId": zod.string(),
-  "planId": zod.string(),
-  "status": zod.enum(['active', 'cancelled', 'expired', 'pending']),
-  "startedAt": zod.string().nullish(),
-  "expiresAt": zod.string().nullish(),
-  "renewCount": zod.number(),
-  "cancelledAt": zod.string().nullish(),
-  "createdAt": zod.string()
+export const ListNavItemsQueryParams = zod.object({
+  "location": zod.enum(['header', 'footer']).optional()
 })
-export const AdminListSubscriptionsResponse = zod.array(AdminListSubscriptionsResponseItem)
+
+export const ListNavItemsResponseItem = zod.object({
+  "id": zod.string(),
+  "label": zod.string(),
+  "href": zod.string(),
+  "location": zod.enum(['header', 'footer']),
+  "parentId": zod.string().nullish(),
+  "sortOrder": zod.number(),
+  "isVisible": zod.boolean(),
+  "opensNewTab": zod.boolean()
+})
+export const ListNavItemsResponse = zod.array(ListNavItemsResponseItem)
 
 
 /**
- * @summary Redeem a gift card
+ * @summary Get a published custom page by slug
  */
-export const RedeemGiftCardBody = zod.object({
-  "code": zod.string()
+export const GetCustomPageParams = zod.object({
+  "slug": zod.coerce.string()
 })
 
-export const RedeemGiftCardResponse = zod.object({
-  "success": zod.boolean(),
-  "balance": zod.number(),
-  "amount": zod.number().optional(),
-  "message": zod.string().nullish()
-})
-
-
-/**
- * @summary List active subscription plans
- */
-export const ListSubscriptionPlansResponseItem = zod.object({
+export const GetCustomPageResponse = zod.object({
   "id": zod.string(),
-  "nameAr": zod.string(),
-  "nameEn": zod.string(),
   "slug": zod.string(),
-  "descriptionAr": zod.string().nullish(),
-  "descriptionEn": zod.string().nullish(),
-  "price": zod.number(),
-  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
-  "features": zod.array(zod.string()).optional(),
-  "isActive": zod.boolean(),
-  "createdAt": zod.string()
-})
-export const ListSubscriptionPlansResponse = zod.array(ListSubscriptionPlansResponseItem)
-
-
-/**
- * @summary Current customer subscriptions
- */
-export const CustomerSubscriptionsResponseItem = zod.object({
-  "id": zod.string(),
-  "customerId": zod.string(),
-  "planId": zod.string(),
-  "status": zod.enum(['active', 'cancelled', 'expired', 'pending']),
-  "startedAt": zod.string().nullish(),
-  "expiresAt": zod.string().nullish(),
-  "renewCount": zod.number(),
-  "cancelledAt": zod.string().nullish(),
-  "createdAt": zod.string()
-})
-export const CustomerSubscriptionsResponse = zod.array(CustomerSubscriptionsResponseItem)
-
-
-/**
- * @summary Subscribe to a plan
- */
-export const CreateCustomerSubscriptionBody = zod.object({
-  "planId": zod.string()
+  "titleAr": zod.string(),
+  "contentHtml": zod.string(),
+  "isPublished": zod.boolean(),
+  "metaTitle": zod.string().nullish(),
+  "metaDescription": zod.string().nullish(),
+  "createdAt": zod.string(),
+  "updatedAt": zod.string()
 })
 
 

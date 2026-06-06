@@ -9,6 +9,7 @@ import { sql } from "drizzle-orm";
 import { evaluateCoupon } from "../lib/coupon";
 import { optionalCustomerId } from "../middlewares/customer-auth";
 import { rateLimit } from "../middlewares/rate-limit";
+import { allocateCodesForOrder, type DeliveredCode } from "../lib/digital";
 
 const router: IRouter = Router();
 
@@ -18,7 +19,11 @@ router.post("/orders", async (req, res) => {
 
   const data = parsed.data;
   const subtotal = data.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal >= 500 ? 0 : 30;
+  // Digital items never incur shipping; charge shipping only on the physical portion.
+  const physicalSubtotal = data.items
+    .filter((item) => item.productType !== "digital")
+    .reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const shipping = physicalSubtotal === 0 || physicalSubtotal >= 500 ? 0 : 30;
 
   let discount = 0;
   let appliedCode: string | null = null;
@@ -37,23 +42,27 @@ router.post("/orders", async (req, res) => {
   const customerId = await optionalCustomerId(req);
   const id = `NX-${Date.now().toString().slice(-6)}`;
 
-  await db.insert(ordersTable).values({
-    id,
-    customerId: customerId ?? null,
-    customerName: data.customerName,
-    phone: data.phone,
-    city: data.city,
-    address: data.address,
-    email: data.email ?? null,
-    promoCode: appliedCode,
-    discount: discount.toString(),
-    notes: data.notes ?? null,
-    paymentMethod: data.paymentMethod,
-    items: data.items,
-    subtotal: subtotal.toString(),
-    shipping: shipping.toString(),
-    total: total.toString(),
-    status: "pending",
+  let deliveredCodes: DeliveredCode[] = [];
+  await db.transaction(async (tx) => {
+    await tx.insert(ordersTable).values({
+      id,
+      customerId: customerId ?? null,
+      customerName: data.customerName,
+      phone: data.phone,
+      city: data.city,
+      address: data.address,
+      email: data.email ?? null,
+      promoCode: appliedCode,
+      discount: discount.toString(),
+      notes: data.notes ?? null,
+      paymentMethod: data.paymentMethod,
+      items: data.items,
+      subtotal: subtotal.toString(),
+      shipping: shipping.toString(),
+      total: total.toString(),
+      status: "pending",
+    });
+    deliveredCodes = await allocateCodesForOrder(tx, id, data.items);
   });
 
   res.status(201).json({
@@ -72,6 +81,7 @@ router.post("/orders", async (req, res) => {
     shipping,
     total,
     status: "pending",
+    deliveredCodes,
     createdAt: new Date().toISOString(),
   });
 });

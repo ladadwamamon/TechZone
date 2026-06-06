@@ -34,6 +34,12 @@ export const insertBrandSchema = createInsertSchema(brandsTable);
 export type InsertBrand = z.infer<typeof insertBrandSchema>;
 export type Brand = typeof brandsTable.$inferSelect;
 
+export const PRODUCT_TYPES = ["physical", "digital"] as const;
+export type ProductType = (typeof PRODUCT_TYPES)[number];
+
+export const DIGITAL_DELIVERY_TYPES = ["code", "account"] as const;
+export type DigitalDeliveryType = (typeof DIGITAL_DELIVERY_TYPES)[number];
+
 export const productsTable = pgTable("products", {
   id: text("id").primaryKey(),
   nameAr: text("name_ar").notNull(),
@@ -47,6 +53,11 @@ export const productsTable = pgTable("products", {
   brandSlug: text("brand_slug").notNull().references(() => brandsTable.slug),
   image: text("image").notNull(),
   image2: text("image2"),
+  productType: text("product_type").notNull().default("physical"),
+  platform: text("platform"),
+  region: text("region"),
+  deliveryType: text("delivery_type"),
+  digitalInstructionsAr: text("digital_instructions_ar"),
   stock: integer("stock").notNull().default(0),
   rating: decimal("rating", { precision: 3, scale: 2 }).notNull().default("0"),
   reviewCount: integer("review_count").notNull().default(0),

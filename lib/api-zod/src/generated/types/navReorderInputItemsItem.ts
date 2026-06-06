@@ -6,10 +6,9 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface GiftCardRedeemResult {
-  success: boolean;
-  balance: number;
-  amount?: number;
+export type NavReorderInputItemsItem = {
+  id: string;
+  sortOrder: number;
   /** @nullable */
-  message?: string | null;
-}
+  parentId?: string | null;
+};

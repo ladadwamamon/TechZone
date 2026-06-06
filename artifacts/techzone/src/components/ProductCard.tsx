@@ -25,6 +25,7 @@ export function ProductCard({ product }: { product: Product }) {
       price: product.price,
       quantity: 1,
       image: product.image,
+      productType: product.productType,
     });
     toast.success("تمت الإضافة إلى السلة", {
       description: product.nameAr,

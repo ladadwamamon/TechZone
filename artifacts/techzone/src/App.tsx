@@ -33,6 +33,7 @@ import Register from "@/pages/Register";
 import Account from "@/pages/Account";
 import GiftCards from "@/pages/GiftCards";
 import SubscriptionPlans from "@/pages/SubscriptionPlans";
+import CustomPage from "@/pages/CustomPage";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -64,6 +65,7 @@ function Router() {
       <Route path="/account" component={Account} />
       <Route path="/gift-cards" component={GiftCards} />
       <Route path="/subscriptions" component={SubscriptionPlans} />
+      <Route path="/p/:slug" component={CustomPage} />
 
       <Route component={NotFound} />
     </Switch>

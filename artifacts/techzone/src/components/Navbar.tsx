@@ -28,7 +28,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useListCategories } from "@workspace/api-client-react";
 import { CATEGORY_GROUPS, CATEGORY_NAMES_AR, getCategoryIcon } from "@/lib/categoryMeta";
 import { useCustomerAuth } from "@/lib/customerAuth";
+import { useNavLinks } from "@/lib/nav";
 import { toast } from "sonner";
+import type { LucideIcon } from "lucide-react";
 
 interface CategoryLite {
   id: string;
@@ -37,15 +39,19 @@ interface CategoryLite {
   productCount: number;
 }
 
-const QUICK_LINKS = [
-  { href: "/deals", label: "عروض الحرق", icon: Zap, tone: "text-destructive" },
-  { href: "/pc-builder", label: "تجميعة PC", icon: Cpu, tone: "text-secondary" },
-  { href: "/brands", label: "الماركات", icon: Tag, tone: "text-foreground" },
-  { href: "/blog", label: "المدونة", icon: Newspaper, tone: "text-foreground" },
-  { href: "/track-order", label: "تتبع الطلب", icon: PackageSearch, tone: "text-foreground" },
-  { href: "/gift-cards", label: "بطاقات الهدايا", icon: Gift, tone: "text-foreground" },
-  { href: "/subscriptions", label: "خطط الاشتراك", icon: Crown, tone: "text-foreground" },
-];
+const LINK_META: Record<string, { icon: LucideIcon; tone: string }> = {
+  "/deals": { icon: Zap, tone: "text-destructive" },
+  "/pc-builder": { icon: Cpu, tone: "text-secondary" },
+  "/brands": { icon: Tag, tone: "text-foreground" },
+  "/blog": { icon: Newspaper, tone: "text-foreground" },
+  "/track-order": { icon: PackageSearch, tone: "text-foreground" },
+  "/gift-cards": { icon: Gift, tone: "text-foreground" },
+  "/subscriptions": { icon: Crown, tone: "text-foreground" },
+};
+
+function linkMeta(href: string) {
+  return LINK_META[href] ?? { icon: Terminal, tone: "text-foreground" };
+}
 
 export function Navbar() {
   const cartItemsCount = useCartStore((state) => state.getTotalItems());
@@ -59,6 +65,7 @@ export function Navbar() {
   const accountTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { customer, isAuthenticated, logout } = useCustomerAuth();
+  const quickLinks = useNavLinks("header");
 
   const openAccount = () => {
     if (accountTimer.current) clearTimeout(accountTimer.current);
@@ -112,8 +119,8 @@ export function Navbar() {
 
         <Link href="/" className="flex items-center gap-2 shrink-0 group">
           <Monitor className="text-primary h-8 w-8 group-hover:animate-flicker" />
-          <span className="text-xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="TECHZONE">
-            TECHZONE
+          <span className="text-xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="NEXUS">
+            NEXUS
           </span>
         </Link>
 
@@ -322,14 +329,17 @@ export function Navbar() {
 
           {/* Quick links */}
           <nav className="flex items-center gap-1 px-2">
-            {QUICK_LINKS.map((link) => {
-              const Icon = link.icon;
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 uppercase tracking-wider text-xs font-bold hover:bg-white/5 transition-colors ${link.tone} hover:text-primary`}
-                >
+            {quickLinks.map((link) => {
+              const { icon: Icon, tone } = linkMeta(link.href);
+              const external = link.opensNewTab || /^https?:\/\//.test(link.href);
+              const cls = `flex items-center gap-1.5 px-3 py-1.5 uppercase tracking-wider text-xs font-bold hover:bg-white/5 transition-colors ${tone} hover:text-primary`;
+              return external ? (
+                <a key={link.href} href={link.href} target={link.opensNewTab ? "_blank" : undefined} rel="noreferrer" className={cls}>
+                  <Icon size={14} />
+                  {link.label}
+                </a>
+              ) : (
+                <Link key={link.href} href={link.href} className={cls}>
                   <Icon size={14} />
                   {link.label}
                 </Link>
@@ -364,8 +374,8 @@ export function Navbar() {
               className="fixed top-0 right-0 h-full w-[85vw] max-w-sm glass-panel border-l border-primary/20 z-50 md:hidden flex flex-col font-mono overflow-y-auto"
             >
               <div className="p-4 border-b border-primary/20 flex items-center justify-between sticky top-0 bg-background/95 z-10">
-                <span className="text-xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="TECHZONE">
-                  TECHZONE
+                <span className="text-xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="NEXUS">
+                  NEXUS
                 </span>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-primary hover:text-secondary transition-colors" aria-label="إغلاق">
                   <X size={24} />
@@ -433,17 +443,22 @@ export function Navbar() {
               </div>
 
               <div className="p-4 flex flex-col gap-2 text-sm font-bold border-b border-primary/15">
-                {QUICK_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={`${link.tone} hover:text-primary transition-colors py-1`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    {"> "}
-                    {link.label}
-                  </Link>
-                ))}
+                {quickLinks.map((link) => {
+                  const { tone } = linkMeta(link.href);
+                  const external = link.opensNewTab || /^https?:\/\//.test(link.href);
+                  const cls = `${tone} hover:text-primary transition-colors py-1`;
+                  return external ? (
+                    <a key={link.href} href={link.href} target={link.opensNewTab ? "_blank" : undefined} rel="noreferrer" className={cls} onClick={() => setIsMobileMenuOpen(false)}>
+                      {"> "}
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link key={link.href} href={link.href} className={cls} onClick={() => setIsMobileMenuOpen(false)}>
+                      {"> "}
+                      {link.label}
+                    </Link>
+                  );
+                })}
               </div>
 
               <div className="p-4 flex flex-col gap-4">

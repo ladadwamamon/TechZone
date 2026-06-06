@@ -9,7 +9,7 @@ export function AnnouncementBar() {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
-    const dismissed = localStorage.getItem("techzone-announcement-dismissed");
+    const dismissed = localStorage.getItem("nexus-announcement-dismissed");
     if (dismissed) {
       setIsVisible(false);
     }
@@ -17,7 +17,7 @@ export function AnnouncementBar() {
 
   const handleDismiss = () => {
     setIsVisible(false);
-    localStorage.setItem("techzone-announcement-dismissed", "true");
+    localStorage.setItem("nexus-announcement-dismissed", "true");
   };
 
   const text = announcement.text.trim() || DEFAULT_ANNOUNCEMENT_TEXT;

@@ -108,8 +108,8 @@ export default function Login() {
       <div className="w-full max-w-md relative z-10 hud-corners">
         <Card className="glass-panel border-primary/20 bg-background/80 shadow-2xl shadow-primary/10">
           <CardHeader className="text-center space-y-4 pb-6">
-            <div className="font-mono font-bold text-4xl tracking-wider text-primary neon-text glitch mx-auto" data-text="TECHZONE">
-              TECHZONE
+            <div className="font-mono font-bold text-4xl tracking-wider text-primary neon-text glitch mx-auto" data-text="NEXUS">
+              NEXUS
             </div>
             <CardTitle className="text-2xl font-bold">
               {isSetup ? "إعداد النظام" : "تسجيل الدخول"}

@@ -5,6 +5,7 @@
  * TechZone Electronics & Gaming Store API
  * OpenAPI spec version: 0.1.0
  */
+import type { ProductDetailProductType } from './productDetailProductType';
 import type { ProductReview } from './productReview';
 import type { ProductSpec } from './productSpec';
 import type { ProductVariant } from './productVariant';
@@ -33,6 +34,15 @@ export interface ProductDetail {
   isNew?: boolean;
   isBestSeller?: boolean;
   isExclusive?: boolean;
+  productType?: ProductDetailProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
+  /** @nullable */
+  deliveryType?: string | null;
+  /** @nullable */
+  digitalInstructionsAr?: string | null;
   descriptionAr: string;
   specs: ProductSpec[];
   reviews?: ProductReview[];

@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/admin/"
-title = "TechZone CMS — لوحة التحكم"
+title = "Nexus Store CMS — لوحة التحكم"
 version = "1.0.0"
 id = "artifacts/techzone-admin"
 router = "path"

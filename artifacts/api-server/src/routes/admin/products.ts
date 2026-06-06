@@ -7,6 +7,7 @@ import { AdminCreateProductBody, AdminUpdateProductBody } from "@workspace/api-z
 import { requireAuth, requirePermission } from "../../middlewares/auth";
 import { writeAudit } from "../../lib/audit";
 import { mapAdminProduct, buildProductValues, recalcCategoryCount, recalcBrandCount } from "./helpers";
+import { syncDigitalStock } from "../../lib/digital";
 
 const router: IRouter = Router();
 
@@ -56,8 +57,12 @@ router.post("/admin/products", requireAuth, requirePermission("products:write"),
   } as typeof productsTable.$inferInsert).returning();
 
   await Promise.all([recalcCategoryCount(created.categorySlug), recalcBrandCount(created.brandSlug)]);
+  // Digital products derive stock from their available code pool; ignore any
+  // manually supplied stock value.
+  if (created.productType === "digital") await syncDigitalStock(db, created.id);
   await writeAudit(req, { action: "create", entityType: "product", entityId: id, details: { nameAr: created.nameAr } });
-  res.status(201).json(mapAdminProduct(created));
+  const final = await db.query.productsTable.findFirst({ where: eq(productsTable.id, id) });
+  res.status(201).json(mapAdminProduct(final ?? created));
 });
 
 router.put("/admin/products/:id", requireAuth, requirePermission("products:write"), async (req, res) => {
@@ -76,8 +81,11 @@ router.put("/admin/products/:id", requireAuth, requirePermission("products:write
     ...[...slugsToRecalc].map(recalcCategoryCount),
     ...[...brandsToRecalc].map(recalcBrandCount),
   ]);
+  // Keep digital stock locked to the available code pool after edits.
+  if (updated.productType === "digital") await syncDigitalStock(db, updated.id);
   await writeAudit(req, { action: "update", entityType: "product", entityId: (req.params.id as string) });
-  res.json(mapAdminProduct(updated));
+  const final = await db.query.productsTable.findFirst({ where: eq(productsTable.id, (req.params.id as string)) });
+  res.json(mapAdminProduct(final ?? updated));
 });
 
 router.delete("/admin/products/:id", requireAuth, requirePermission("products:write"), async (req, res) => {

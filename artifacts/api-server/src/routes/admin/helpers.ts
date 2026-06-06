@@ -1,6 +1,7 @@
 import { db } from "@workspace/db";
 import { productsTable, categoriesTable, brandsTable, ordersTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
+import { loadDeliveredCodes } from "../../lib/digital";
 
 export function mapAdminProduct(p: typeof productsTable.$inferSelect) {
   return {
@@ -16,6 +17,11 @@ export function mapAdminProduct(p: typeof productsTable.$inferSelect) {
     brandSlug: p.brandSlug,
     image: p.image,
     image2: p.image2 ?? null,
+    productType: p.productType,
+    platform: p.platform ?? null,
+    region: p.region ?? null,
+    deliveryType: p.deliveryType ?? null,
+    digitalInstructionsAr: p.digitalInstructionsAr ?? null,
     stock: p.stock,
     rating: Number(p.rating),
     reviewCount: p.reviewCount,
@@ -48,13 +54,18 @@ export function mapOrder(o: typeof ordersTable.$inferSelect) {
     discount: o.discount ? Number(o.discount) : null,
     notes: o.notes ?? null,
     paymentMethod: o.paymentMethod,
-    items: o.items as Array<{ productId: string; nameAr: string; price: number; quantity: number; image: string }>,
+    items: o.items as Array<{ productId: string; nameAr: string; price: number; quantity: number; image: string; productType?: string | null }>,
     subtotal: Number(o.subtotal),
     shipping: Number(o.shipping),
     total: Number(o.total),
     status: o.status,
     createdAt: o.createdAt.toISOString(),
   };
+}
+
+export async function mapOrderWithCodes(o: typeof ordersTable.$inferSelect) {
+  const deliveredCodes = await loadDeliveredCodes(db, o.id);
+  return { ...mapOrder(o), deliveredCodes };
 }
 
 export async function recalcCategoryCount(slug: string): Promise<void> {
@@ -89,6 +100,11 @@ type ProductInputShape = {
   brandSlug?: string;
   image?: string;
   image2?: string | null;
+  productType?: string;
+  platform?: string | null;
+  region?: string | null;
+  deliveryType?: string | null;
+  digitalInstructionsAr?: string | null;
   stock?: number;
   rating?: number;
   reviewCount?: number;
@@ -123,6 +139,11 @@ export function buildProductValues(data: ProductInputShape): Record<string, unkn
   assign("brandSlug", data.brandSlug);
   assign("image", data.image);
   assign("image2", data.image2);
+  assign("productType", data.productType);
+  assign("platform", data.platform);
+  assign("region", data.region);
+  assign("deliveryType", data.deliveryType);
+  assign("digitalInstructionsAr", data.digitalInstructionsAr);
   assign("stock", data.stock);
   if (data.rating !== undefined) values.rating = data.rating.toString();
   assign("reviewCount", data.reviewCount);

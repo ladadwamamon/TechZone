@@ -5,6 +5,7 @@
  * TechZone Electronics & Gaming Store API
  * OpenAPI spec version: 0.1.0
  */
+import type { AdminProductProductType } from './adminProductProductType';
 import type { ProductSpec } from './productSpec';
 import type { ProductVariant } from './productVariant';
 
@@ -35,6 +36,15 @@ export interface AdminProduct {
   isExclusive?: boolean;
   isFlashDeal?: boolean;
   isFeatured?: boolean;
+  productType?: AdminProductProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
+  /** @nullable */
+  deliveryType?: string | null;
+  /** @nullable */
+  digitalInstructionsAr?: string | null;
   /** @nullable */
   descriptionAr?: string | null;
   specs?: ProductSpec[];

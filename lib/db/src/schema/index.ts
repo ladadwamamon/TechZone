@@ -4,5 +4,5 @@ export * from "./blog";
 export * from "./admin";
 export * from "./coupons";
 export * from "./customers";
-export * from "./gift-cards";
-export * from "./subscriptions";
+export * from "./digital";
+export * from "./navigation";

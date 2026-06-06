@@ -6,6 +6,10 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface GiftCardRedeemInput {
-  code: string;
+export interface DigitalCodeStats {
+  productId: string;
+  available: number;
+  sold: number;
+  total: number;
+  added?: number;
 }

@@ -1,12 +1,14 @@
 import { Link } from "wouter";
 import { Facebook, Twitter, Instagram, Youtube, Monitor, Terminal, Phone, Mail, MapPin } from "lucide-react";
 import { useSiteSettings, getSocialLinks } from "@/lib/settings";
+import { useNavLinks } from "@/lib/nav";
 
 const DEFAULT_SOCIAL_ICONS = [Facebook, Twitter, Instagram, Youtube];
 
 export function Footer() {
   const { social, contact } = useSiteSettings();
   const socialLinks = getSocialLinks(social);
+  const footerLinks = useNavLinks("footer");
 
   return (
     <footer className="glass-panel border-t border-primary/20 pt-16 pb-8 mt-auto relative overflow-hidden">
@@ -81,13 +83,25 @@ export function Footer() {
               <span className="absolute -bottom-2 right-0 w-1/3 h-[2px] bg-primary shadow-[0_0_8px_var(--cyan)]"></span>
             </h3>
             <ul className="space-y-3 text-sm text-foreground">
-              <li><Link href="/about" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>من نحن<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
-              <li><Link href="/contact" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>اتصل بنا<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
-              <li><Link href="/faq" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>الأسئلة الشائعة<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
-              <li><Link href="/blog" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>المدونة<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
-              <li><Link href="/track-order" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>تتبع طلبك<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
-              <li><Link href="/gift-cards" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>بطاقات الهدايا<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
-              <li><Link href="/subscriptions" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>خطط الاشتراك<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              {footerLinks.map((link) => {
+                const external = link.opensNewTab || /^https?:\/\//.test(link.href);
+                const inner = (
+                  <>
+                    <span className="text-primary/50 text-xs">{"["}</span>
+                    {link.label}
+                    <span className="text-primary/50 text-xs">{"]"}</span>
+                  </>
+                );
+                return (
+                  <li key={link.href}>
+                    {external ? (
+                      <a href={link.href} target={link.opensNewTab ? "_blank" : undefined} rel="noreferrer" className="hover:text-primary transition-colors flex items-center gap-2">{inner}</a>
+                    ) : (
+                      <Link href={link.href} className="hover:text-primary transition-colors flex items-center gap-2">{inner}</Link>
+                    )}
+                  </li>
+                );
+              })}
             </ul>
           </div>
 

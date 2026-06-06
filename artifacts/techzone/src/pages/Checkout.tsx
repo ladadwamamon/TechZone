@@ -34,7 +34,11 @@ export default function Checkout() {
   const validateCoupon = useValidateCoupon();
 
   const subtotal = getTotalPrice();
-  const shipping = subtotal > 500 ? 0 : 35;
+  const physicalSubtotal = items
+    .filter((i) => i.productType !== "digital")
+    .reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const hasPhysical = physicalSubtotal > 0;
+  const shipping = physicalSubtotal === 0 || physicalSubtotal >= 500 ? 0 : 30;
   const discount = appliedCoupon?.discount ?? 0;
   const total = Math.max(0, subtotal + shipping - discount);
 
@@ -84,12 +88,24 @@ export default function Checkout() {
           nameAr: item.nameAr,
           price: item.price,
           quantity: item.quantity,
-          image: item.image
+          image: item.image,
+          productType: item.productType ?? null
         }))
       };
 
       const response = await createOrder.mutateAsync({ data: orderData });
-      
+
+      if (response.deliveredCodes && response.deliveredCodes.length > 0) {
+        try {
+          sessionStorage.setItem(
+            `nexus-order-codes-${response.id}`,
+            JSON.stringify(response.deliveredCodes)
+          );
+        } catch {
+          // sessionStorage unavailable — codes still visible in account
+        }
+      }
+
       clearCart();
       toast.success("تم تأكيد الطلب بنجاح");
       setLocation(`/order-success?id=${response.id}`);
@@ -287,8 +303,10 @@ export default function Checkout() {
                 </div>
                 
                 <div className="flex justify-between text-muted-foreground">
-                  <span>رسوم الشحن</span>
-                  {shipping === 0 ? (
+                  <span>{hasPhysical ? "رسوم الشحن" : "التسليم"}</span>
+                  {!hasPhysical ? (
+                    <span className="text-lime font-bold neon-text-lime">[ فوري ]</span>
+                  ) : shipping === 0 ? (
                     <span className="text-lime font-bold neon-text-lime">[ مجاني ]</span>
                   ) : (
                     <span className="text-foreground font-medium">{formatPrice(shipping)}</span>

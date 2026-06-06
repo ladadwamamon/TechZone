@@ -1,6 +1,12 @@
--- TechZone catalog seed (auto-generated). Run against the techzone DB.
--- Categories, brands, products, reviews for the full gaming/electronics store.
+-- Nexus Store catalog seed (auto-generated). Run against the store DB.
+-- Categories, brands, products, reviews, digital codes, navigation and custom pages for the full gaming/electronics store.
 BEGIN;
+DELETE FROM digital_codes;
+
+DELETE FROM nav_items;
+
+DELETE FROM custom_pages;
+
 DELETE FROM product_reviews;
 
 DELETE FROM products;
@@ -454,5 +460,94 @@ INSERT INTO product_reviews (id, product_id, author_name, rating, comment, date)
 ('rev-129-0','prod-129','سارة',5,'يستاهل كل قرش، الجودة فاقت توقعاتي','2026-05-13'),
 ('rev-129-1','prod-129','أحمد',4,'منتج ممتاز وجودة عالية، أنصح فيه بشدة','2026-01-13'),
 ('rev-129-2','prod-129','محمد',5,'وصل بسرعة والتغليف ممتاز، الأداء رهيب','2026-02-13');
+
+-- ============================================================
+-- DIGITAL PRODUCTS, CODE INVENTORY, NAVIGATION & CUSTOM PAGES
+-- ============================================================
+
+-- Subscriptions / digital accounts category
+INSERT INTO categories (id, slug, name_ar, name_en, icon, image, product_count, description_ar) VALUES
+('cat-26','subscriptions','اشتراكات وحسابات','Subscriptions','calendar','/catalog/gift-cards-2.jpg',4,'اشتراكات رقمية وحسابات ألعاب جاهزة بتسليم فوري');
+
+-- Convert existing gift-card products into digital code products
+UPDATE products SET product_type='digital', delivery_type='code', platform='PlayStation', region='US',
+  digital_instructions_ar='ادخل إلى متجر PlayStation Store، اختر "استرداد الرموز" ثم أدخل الكود لإضافة الرصيد إلى محفظتك.'
+  WHERE id='prod-122';
+UPDATE products SET product_type='digital', delivery_type='code', platform='Xbox', region='US',
+  digital_instructions_ar='ادخل إلى متجر Microsoft Store أو تطبيق Xbox، اختر "استرداد" ثم أدخل الكود.'
+  WHERE id='prod-123';
+UPDATE products SET product_type='digital', delivery_type='code', platform='Nintendo', region='US',
+  digital_instructions_ar='افتح متجر Nintendo eShop على جهازك، اختر "Redeem Code" ثم أدخل الكود.'
+  WHERE id='prod-124';
+UPDATE products SET product_type='digital', delivery_type='code', platform='Steam', region='Global',
+  digital_instructions_ar='افتح برنامج Steam، من قائمة "Games" اختر "Activate a Product on Steam" ثم أدخل الكود.'
+  WHERE id='prod-125';
+UPDATE products SET product_type='digital', delivery_type='code', platform='Steam', region='Global',
+  digital_instructions_ar='افتح برنامج Steam، من قائمة "Games" اختر "Activate a Product on Steam" ثم أدخل الكود.'
+  WHERE id='prod-126';
+
+-- New subscription & account digital products
+INSERT INTO products (id, name_ar, name_en, slug, sku, price, original_price, discount_percent, category_slug, brand_slug, image, image2, stock, rating, review_count, warranty, is_new, is_best_seller, is_exclusive, is_flash_deal, is_featured, description_ar, specs, variants, badges, product_type, platform, region, delivery_type, digital_instructions_ar, created_at) VALUES
+('prod-134','اشتراك PlayStation Plus 12 شهر','PlayStation Plus 12 Months','playstation-plus-12m','SON-1130',349,399,13,'subscriptions','sony','/catalog/playstation-1.jpg','/catalog/gift-cards-1.jpg',0,4.9,210,'-',true,true,false,false,true,'اشتراك PlayStation Plus لمدة 12 شهر - ألعاب شهرية مجانية وخصومات حصرية واللعب الجماعي عبر الإنترنت','{"المدة":"12 شهر","النوع":"رقمي"}'::jsonb,NULL,'["الأكثر مبيعاً"]'::jsonb,'digital','PlayStation','US','code','ادخل إلى PlayStation Store، اختر "استرداد الرموز" ثم أدخل الكود لتفعيل الاشتراك.',NOW()),
+('prod-135','اشتراك Xbox Game Pass Ultimate 3 شهور','Xbox Game Pass Ultimate 3 Months','xbox-game-pass-3m','MIC-1131',229,NULL,NULL,'subscriptions','microsoft','/catalog/xbox-1.jpg','/catalog/gift-cards-2.jpg',0,4.8,176,'-',true,true,false,true,true,'اشتراك Xbox Game Pass Ultimate لمدة 3 شهور - مئات الألعاب على الكونسول والكمبيوتر مع EA Play','{"المدة":"3 شهور","النوع":"رقمي"}'::jsonb,NULL,'["الأكثر مبيعاً"]'::jsonb,'digital','Xbox','US','code','ادخل إلى تطبيق Xbox أو Microsoft Store، اختر "استرداد" ثم أدخل الكود لتفعيل الاشتراك.',NOW()),
+('prod-136','حساب PlayStation جاهز - منطقة أمريكا','PlayStation Account US Region','playstation-account-us','SON-1132',129,NULL,NULL,'subscriptions','sony','/catalog/playstation-1.jpg','/catalog/gift-cards-3.jpg',0,4.6,98,'-',false,false,true,false,false,'حساب PlayStation جاهز على المنطقة الأمريكية للوصول إلى العروض والمحتوى الحصري - يُسلّم اسم المستخدم وكلمة المرور','{"المنطقة":"أمريكا","النوع":"حساب"}'::jsonb,NULL,'["حصري"]'::jsonb,'digital','PlayStation','US','account','ستصلك بيانات الحساب (البريد وكلمة المرور). سجّل الدخول من إعدادات الجهاز وننصح بتغيير كلمة المرور بعد التفعيل.',NOW()),
+('prod-137','اشتراك Apple Music 3 شهور','Apple Music 3 Months','apple-music-3m','APL-1133',89,NULL,NULL,'subscriptions','steam','/catalog/gift-cards-1.jpg','/catalog/gift-cards-2.jpg',0,4.5,64,'-',true,false,false,false,false,'اشتراك Apple Music لمدة 3 شهور - استمع لملايين الأغاني بدون إعلانات','{"المدة":"3 شهور","النوع":"رقمي"}'::jsonb,NULL,'["جديد"]'::jsonb,'digital','iTunes','US','code','افتح الرابط المرفق مع الكود أو أدخله في App Store > استرداد بطاقة هدية أو رمز.',NOW());
+
+-- Digital code inventory (available pool per product). Stock is derived from available codes.
+INSERT INTO digital_codes (id, product_id, secret, status) VALUES
+('dc-122-1','prod-122','PSN-50-AAAA-1111-BBBB','available'),
+('dc-122-2','prod-122','PSN-50-AAAA-2222-BBBB','available'),
+('dc-122-3','prod-122','PSN-50-AAAA-3333-BBBB','available'),
+('dc-122-4','prod-122','PSN-50-AAAA-4444-BBBB','available'),
+('dc-123-1','prod-123','XBOX-50-CCCC-1111-DDDD','available'),
+('dc-123-2','prod-123','XBOX-50-CCCC-2222-DDDD','available'),
+('dc-123-3','prod-123','XBOX-50-CCCC-3333-DDDD','available'),
+('dc-124-1','prod-124','NIN-50-EEEE-1111-FFFF','available'),
+('dc-124-2','prod-124','NIN-50-EEEE-2222-FFFF','available'),
+('dc-125-1','prod-125','STEAM-50-GGGG-1111-HHHH','available'),
+('dc-125-2','prod-125','STEAM-50-GGGG-2222-HHHH','available'),
+('dc-125-3','prod-125','STEAM-50-GGGG-3333-HHHH','available'),
+('dc-126-1','prod-126','STEAM-20-IIII-1111-JJJJ','available'),
+('dc-126-2','prod-126','STEAM-20-IIII-2222-JJJJ','available'),
+('dc-134-1','prod-134','PSPLUS-12M-KKKK-1111','available'),
+('dc-134-2','prod-134','PSPLUS-12M-KKKK-2222','available'),
+('dc-134-3','prod-134','PSPLUS-12M-KKKK-3333','available'),
+('dc-135-1','prod-135','GPU-3M-LLLL-1111','available'),
+('dc-135-2','prod-135','GPU-3M-LLLL-2222','available'),
+('dc-135-3','prod-135','GPU-3M-LLLL-3333','available'),
+('dc-136-1','prod-136','PSACC-US-user01@nexus.example | Pass#A1b2C3','available'),
+('dc-136-2','prod-136','PSACC-US-user02@nexus.example | Pass#D4e5F6','available'),
+('dc-137-1','prod-137','APLMUS-3M-MMMM-1111','available'),
+('dc-137-2','prod-137','APLMUS-3M-MMMM-2222','available');
+
+-- Sync digital product stock with available code counts
+UPDATE products p SET stock = (
+  SELECT COUNT(*) FROM digital_codes d WHERE d.product_id = p.id AND d.status = 'available'
+) WHERE p.product_type = 'digital';
+
+-- Header navigation
+INSERT INTO nav_items (id, label, href, location, sort_order, is_visible, opens_new_tab) VALUES
+('nav-h-1','الرئيسية','/','header',0,true,false),
+('nav-h-2','التصنيفات','/categories','header',1,true,false),
+('nav-h-3','العروض','/deals','header',2,true,false),
+('nav-h-4','بطاقات الهدايا','/gift-cards','header',3,true,false),
+('nav-h-5','الاشتراكات','/subscriptions','header',4,true,false),
+('nav-h-6','الماركات','/brands','header',5,true,false),
+('nav-h-7','تواصل معنا','/contact','header',6,true,false);
+
+-- Footer navigation
+INSERT INTO nav_items (id, label, href, location, sort_order, is_visible, opens_new_tab) VALUES
+('nav-f-1','من نحن','/p/about','footer',0,true,false),
+('nav-f-2','تواصل معنا','/contact','footer',1,true,false),
+('nav-f-3','الأسئلة الشائعة','/faq','footer',2,true,false),
+('nav-f-4','سياسة الخصوصية','/p/privacy','footer',3,true,false),
+('nav-f-5','الشروط والأحكام','/p/terms','footer',4,true,false),
+('nav-f-6','تتبع الطلب','/track-order','footer',5,true,false);
+
+-- Sample custom pages
+INSERT INTO custom_pages (id, slug, title_ar, content_html, is_published, meta_title, meta_description) VALUES
+('page-about','about','من نحن','<h2>من نحن</h2><p>Nexus Store هو وجهتك الأولى لعتاد الجيمنج والإلكترونيات والمنتجات الرقمية. نوفّر بطاقات الهدايا والاشتراكات والحسابات الرقمية بتسليم فوري وآمن، إلى جانب تشكيلة واسعة من المنتجات الأصلية.</p>',true,'من نحن - Nexus Store','تعرّف على Nexus Store، متجرك للجيمنج والإلكترونيات والمنتجات الرقمية.'),
+('page-privacy','privacy','سياسة الخصوصية','<h2>سياسة الخصوصية</h2><p>نحرص في Nexus Store على حماية بياناتك. لا نشارك معلوماتك مع أي طرف ثالث، ونستخدمها فقط لإتمام طلباتك وتحسين تجربتك.</p>',true,'سياسة الخصوصية - Nexus Store','سياسة الخصوصية الخاصة بمتجر Nexus Store.'),
+('page-terms','terms','الشروط والأحكام','<h2>الشروط والأحكام</h2><p>باستخدامك لمتجر Nexus Store فإنك توافق على شروط الاستخدام. المنتجات الرقمية غير قابلة للاسترجاع بعد كشف الكود أو بيانات الحساب.</p>',true,'الشروط والأحكام - Nexus Store','الشروط والأحكام الخاصة بمتجر Nexus Store.');
 
 COMMIT;

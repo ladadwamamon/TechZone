@@ -5,6 +5,7 @@
  * TechZone Electronics & Gaming Store API
  * OpenAPI spec version: 0.1.0
  */
+import type { ProductProductType } from './productProductType';
 
 export interface Product {
   id: string;
@@ -30,5 +31,10 @@ export interface Product {
   isNew?: boolean;
   isBestSeller?: boolean;
   isExclusive?: boolean;
+  productType?: ProductProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
   badges?: string[];
 }

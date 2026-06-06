@@ -13,7 +13,7 @@ import {
   CUSTOMER_SESSION_TTL_MS,
 } from "../lib/customer-session";
 import { requireCustomer } from "../middlewares/customer-auth";
-import { mapOrder } from "./admin/helpers";
+import { mapOrderWithCodes } from "./admin/helpers";
 import { rateLimit, recordLoginFailure, recordLoginSuccess, isIpBlocked } from "../middlewares/rate-limit";
 import type { Customer } from "@workspace/db";
 
@@ -162,7 +162,7 @@ router.get("/customers/orders", requireCustomer, async (req, res) => {
   const rows = await db.select().from(ordersTable)
     .where(eq(ordersTable.customerId, req.customer!.id))
     .orderBy(desc(ordersTable.createdAt));
-  res.json(rows.map(mapOrder));
+  res.json(await Promise.all(rows.map(mapOrderWithCodes)));
 });
 
 export default router;

@@ -3,7 +3,7 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: TechZone Electronics & Gaming Store API
+  description: Nexus Store Electronics & Gaming Store API
 servers:
   - url: /api
     description: Base API path
@@ -58,16 +58,14 @@ tags:
     description: Customer accounts and authentication
   - name: admin-coupons
     description: Admin coupon management
-  - name: admin-gift-cards
-    description: Admin gift card management
-  - name: admin-subscription-plans
-    description: Admin subscription plan management
-  - name: admin-subscriptions
-    description: Admin customer subscriptions
-  - name: gift-cards
-    description: Public gift card operations
-  - name: subscription-plans
-    description: Public subscription plan operations
+  - name: admin-digital-codes
+    description: Admin digital code inventory management
+  - name: admin-navigation
+    description: Admin navigation menu management
+  - name: admin-pages
+    description: Admin custom page management
+  - name: navigation
+    description: Public navigation and custom pages
 paths:
   /healthz:
     get:
@@ -1417,43 +1415,29 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
-  /admin/gift-cards:
+  /admin/products/{id}/codes:
     get:
-      operationId: adminListGiftCards
-      tags: [admin-gift-cards]
-      summary: List gift cards
+      operationId: adminListDigitalCodes
+      tags: [admin-digital-codes]
+      summary: List digital codes for a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
       responses:
         "200":
-          description: Gift cards
+          description: Digital codes
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/GiftCard"
+                  $ref: "#/components/schemas/DigitalCode"
     post:
-      operationId: adminCreateGiftCard
-      tags: [admin-gift-cards]
-      summary: Create a gift card
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GiftCardInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GiftCard"
-
-  /admin/gift-cards/{id}:
-    put:
-      operationId: adminUpdateGiftCard
-      tags: [admin-gift-cards]
-      summary: Update a gift card
+      operationId: adminAddDigitalCodes
+      tags: [admin-digital-codes]
+      summary: Bulk add digital codes to a product
       parameters:
         - name: id
           in: path
@@ -1464,20 +1448,153 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/GiftCardUpdate"
+              $ref: "#/components/schemas/DigitalCodesBulkInput"
+      responses:
+        "201":
+          description: Added
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DigitalCodeStats"
+
+  /admin/products/{id}/codes/stats:
+    get:
+      operationId: adminDigitalCodeStats
+      tags: [admin-digital-codes]
+      summary: Get digital code stock stats for a product
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DigitalCodeStats"
+
+  /admin/digital-codes/{codeId}:
+    delete:
+      operationId: adminDeleteDigitalCode
+      tags: [admin-digital-codes]
+      summary: Delete an unsold digital code
+      parameters:
+        - name: codeId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "409":
+          description: Code already sold
+
+  /admin/orders/{id}/fulfill:
+    post:
+      operationId: adminFulfillOrder
+      tags: [admin-orders]
+      summary: Allocate digital codes for pending digital items in an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Updated order with delivered codes
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "404":
+          description: Not found
+
+  /admin/nav-items:
+    get:
+      operationId: adminListNavItems
+      tags: [admin-navigation]
+      summary: List navigation items
+      responses:
+        "200":
+          description: Nav items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/NavItem"
+    post:
+      operationId: adminCreateNavItem
+      tags: [admin-navigation]
+      summary: Create a navigation item
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NavItemInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NavItem"
+
+  /admin/nav-items/reorder:
+    post:
+      operationId: adminReorderNavItems
+      tags: [admin-navigation]
+      summary: Reorder navigation items
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NavReorderInput"
+      responses:
+        "200":
+          description: Reordered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /admin/nav-items/{id}:
+    put:
+      operationId: adminUpdateNavItem
+      tags: [admin-navigation]
+      summary: Update a navigation item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NavItemUpdate"
       responses:
         "200":
           description: Updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/GiftCard"
+                $ref: "#/components/schemas/NavItem"
         "404":
           description: Not found
     delete:
-      operationId: adminDeleteGiftCard
-      tags: [admin-gift-cards]
-      summary: Delete a gift card
+      operationId: adminDeleteNavItem
+      tags: [admin-navigation]
+      summary: Delete a navigation item
       parameters:
         - name: id
           in: path
@@ -1491,43 +1608,43 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
-  /admin/subscription-plans:
+  /admin/pages:
     get:
-      operationId: adminListSubscriptionPlans
-      tags: [admin-subscription-plans]
-      summary: List subscription plans
+      operationId: adminListPages
+      tags: [admin-pages]
+      summary: List custom pages
       responses:
         "200":
-          description: Subscription plans
+          description: Pages
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/SubscriptionPlan"
+                  $ref: "#/components/schemas/CustomPage"
     post:
-      operationId: adminCreateSubscriptionPlan
-      tags: [admin-subscription-plans]
-      summary: Create a subscription plan
+      operationId: adminCreatePage
+      tags: [admin-pages]
+      summary: Create a custom page
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SubscriptionPlanInput"
+              $ref: "#/components/schemas/CustomPageInput"
       responses:
         "201":
           description: Created
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SubscriptionPlan"
+                $ref: "#/components/schemas/CustomPage"
 
-  /admin/subscription-plans/{id}:
+  /admin/pages/{id}:
     put:
-      operationId: adminUpdateSubscriptionPlan
-      tags: [admin-subscription-plans]
-      summary: Update a subscription plan
+      operationId: adminUpdatePage
+      tags: [admin-pages]
+      summary: Update a custom page
       parameters:
         - name: id
           in: path
@@ -1538,20 +1655,20 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/SubscriptionPlanUpdate"
+              $ref: "#/components/schemas/CustomPageUpdate"
       responses:
         "200":
           description: Updated
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SubscriptionPlan"
+                $ref: "#/components/schemas/CustomPage"
         "404":
           description: Not found
     delete:
-      operationId: adminDeleteSubscriptionPlan
-      tags: [admin-subscription-plans]
-      summary: Delete a subscription plan
+      operationId: adminDeletePage
+      tags: [admin-pages]
+      summary: Delete a custom page
       parameters:
         - name: id
           in: path
@@ -1565,86 +1682,45 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
-  /admin/subscriptions:
+  /nav-items:
     get:
-      operationId: adminListSubscriptions
-      tags: [admin-subscriptions]
-      summary: List customer subscriptions
+      operationId: listNavItems
+      tags: [navigation]
+      summary: List visible navigation items
+      parameters:
+        - name: location
+          in: query
+          required: false
+          schema: { type: string, enum: [header, footer] }
       responses:
         "200":
-          description: Subscriptions
+          description: Nav items
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/CustomerSubscription"
+                  $ref: "#/components/schemas/NavItem"
 
-  /gift-cards/redeem:
-    post:
-      operationId: redeemGiftCard
-      tags: [gift-cards]
-      summary: Redeem a gift card
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/GiftCardRedeemInput"
-      responses:
-        "200":
-          description: Redeem result
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/GiftCardRedeemResult"
-
-  /subscription-plans:
+  /pages/{slug}:
     get:
-      operationId: listSubscriptionPlans
-      tags: [subscription-plans]
-      summary: List active subscription plans
+      operationId: getCustomPage
+      tags: [navigation]
+      summary: Get a published custom page by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema: { type: string }
       responses:
         "200":
-          description: Plans
+          description: Page
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/SubscriptionPlan"
-
-  /customers/subscriptions:
-    get:
-      operationId: customerSubscriptions
-      tags: [customers]
-      summary: Current customer subscriptions
-      responses:
-        "200":
-          description: Subscriptions
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/CustomerSubscription"
-    post:
-      operationId: createCustomerSubscription
-      tags: [customers]
-      summary: Subscribe to a plan
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateSubscriptionInput"
-      responses:
-        "201":
-          description: Created
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CustomerSubscription"
+                $ref: "#/components/schemas/CustomPage"
+        "404":
+          description: Not found
 
 components:
   schemas:
@@ -1678,6 +1754,9 @@ components:
         isNew:      { type: boolean }
         isBestSeller: { type: boolean }
         isExclusive: { type: boolean }
+        productType: { type: string, enum: [physical, digital] }
+        platform:    { type: ["string", "null"] }
+        region:      { type: ["string", "null"] }
         badges:
           type: array
           items: { type: string }
@@ -1708,6 +1787,11 @@ components:
         isNew:        { type: boolean }
         isBestSeller: { type: boolean }
         isExclusive:  { type: boolean }
+        productType:  { type: string, enum: [physical, digital] }
+        platform:     { type: ["string", "null"] }
+        region:       { type: ["string", "null"] }
+        deliveryType: { type: ["string", "null"] }
+        digitalInstructionsAr: { type: ["string", "null"] }
         descriptionAr: { type: string }
         specs:
           type: array
@@ -1849,6 +1933,7 @@ components:
         price:     { type: number }
         quantity:  { type: integer }
         image:     { type: string }
+        productType: { type: ["string", "null"] }
 
     OrderInput:
       type: object
@@ -1889,6 +1974,10 @@ components:
         shipping:  { type: number }
         total:     { type: number }
         status:    { type: string }
+        deliveredCodes:
+          type: array
+          items:
+            $ref: "#/components/schemas/DeliveredCode"
         createdAt: { type: string }
 
     OrderTracking:
@@ -2031,6 +2120,11 @@ components:
         isExclusive:     { type: boolean }
         isFlashDeal:     { type: boolean }
         isFeatured:      { type: boolean }
+        productType:     { type: string, enum: [physical, digital] }
+        platform:        { type: ["string", "null"] }
+        region:          { type: ["string", "null"] }
+        deliveryType:    { type: ["string", "null"] }
+        digitalInstructionsAr: { type: ["string", "null"] }
         descriptionAr:   { type: ["string", "null"] }
         specs:
           type: array
@@ -2082,6 +2176,11 @@ components:
         isExclusive:     { type: boolean }
         isFlashDeal:     { type: boolean }
         isFeatured:      { type: boolean }
+        productType:     { type: string, enum: [physical, digital] }
+        platform:        { type: ["string", "null"] }
+        region:          { type: ["string", "null"] }
+        deliveryType:    { type: ["string", "null"] }
+        digitalInstructionsAr: { type: ["string", "null"] }
         descriptionAr:   { type: ["string", "null"] }
         specs:
           type: array
@@ -2121,6 +2220,11 @@ components:
         isExclusive:     { type: boolean }
         isFlashDeal:     { type: boolean }
         isFeatured:      { type: boolean }
+        productType:     { type: string, enum: [physical, digital] }
+        platform:        { type: ["string", "null"] }
+        region:          { type: ["string", "null"] }
+        deliveryType:    { type: ["string", "null"] }
+        digitalInstructionsAr: { type: ["string", "null"] }
         descriptionAr:   { type: ["string", "null"] }
         specs:
           type: array
@@ -2470,115 +2574,125 @@ components:
         city:     { type: ["string", "null"] }
         address:  { type: ["string", "null"] }
 
-    GiftCard:
+    DigitalCode:
       type: object
-      required: [id, code, amount, balance, status, createdAt]
+      required: [id, productId, secret, status, createdAt]
+      properties:
+        id:        { type: string }
+        productId: { type: string }
+        secret:    { type: string }
+        status:    { type: string, enum: [available, sold] }
+        orderId:   { type: ["string", "null"] }
+        soldAt:    { type: ["string", "null"] }
+        createdAt: { type: string }
+
+    DigitalCodesBulkInput:
+      type: object
+      required: [secrets]
+      properties:
+        secrets:
+          type: array
+          items: { type: string }
+
+    DigitalCodeStats:
+      type: object
+      required: [productId, available, sold, total]
+      properties:
+        productId: { type: string }
+        available: { type: integer }
+        sold:      { type: integer }
+        total:     { type: integer }
+        added:     { type: integer }
+
+    DeliveredCode:
+      type: object
+      required: [productId, nameAr, secret]
+      properties:
+        productId: { type: string }
+        nameAr:    { type: string }
+        secret:    { type: string }
+
+    NavItem:
+      type: object
+      required: [id, label, href, location, sortOrder, isVisible, opensNewTab]
       properties:
         id:          { type: string }
-        code:        { type: string }
-        amount:      { type: number }
-        balance:     { type: number }
-        status:      { type: string, enum: [active, redeemed, expired, cancelled] }
-        customerId:  { type: ["string", "null"] }
-        redeemedAt:  { type: ["string", "null"] }
-        expiresAt:   { type: ["string", "null"] }
-        createdAt:   { type: string }
+        label:       { type: string }
+        href:        { type: string }
+        location:    { type: string, enum: [header, footer] }
+        parentId:    { type: ["string", "null"] }
+        sortOrder:   { type: integer }
+        isVisible:   { type: boolean }
+        opensNewTab: { type: boolean }
 
-    GiftCardInput:
+    NavItemInput:
       type: object
-      required: [code, amount]
+      required: [label, href]
       properties:
-        id:          { type: string }
-        code:        { type: string }
-        amount:      { type: number }
-        balance:     { type: number }
-        status:      { type: string, enum: [active, redeemed, expired, cancelled] }
-        expiresAt:   { type: ["string", "null"] }
+        label:       { type: string }
+        href:        { type: string }
+        location:    { type: string, enum: [header, footer] }
+        parentId:    { type: ["string", "null"] }
+        sortOrder:   { type: integer }
+        isVisible:   { type: boolean }
+        opensNewTab: { type: boolean }
 
-    GiftCardUpdate:
-      type: object
-      properties:
-        code:        { type: string }
-        amount:      { type: number }
-        balance:     { type: number }
-        status:      { type: string, enum: [active, redeemed, expired, cancelled] }
-        expiresAt:   { type: ["string", "null"] }
-
-    GiftCardRedeemInput:
-      type: object
-      required: [code]
-      properties:
-        code: { type: string }
-
-    GiftCardRedeemResult:
-      type: object
-      required: [success, balance]
-      properties:
-        success:   { type: boolean }
-        balance:   { type: number }
-        amount:    { type: number }
-        message:   { type: ["string", "null"] }
-
-    SubscriptionPlan:
-      type: object
-      required: [id, nameAr, nameEn, slug, price, period, isActive, createdAt]
-      properties:
-        id:            { type: string }
-        nameAr:        { type: string }
-        nameEn:        { type: string }
-        slug:          { type: string }
-        descriptionAr: { type: ["string", "null"] }
-        descriptionEn: { type: ["string", "null"] }
-        price:         { type: number }
-        period:        { type: string, enum: [monthly, quarterly, yearly] }
-        features:      { type: array, items: { type: string } }
-        isActive:      { type: boolean }
-        createdAt:     { type: string }
-
-    SubscriptionPlanInput:
-      type: object
-      required: [nameAr, nameEn, slug, price, period]
-      properties:
-        id:            { type: string }
-        nameAr:        { type: string }
-        nameEn:        { type: string }
-        slug:          { type: string }
-        descriptionAr: { type: ["string", "null"] }
-        descriptionEn: { type: ["string", "null"] }
-        price:         { type: number }
-        period:        { type: string, enum: [monthly, quarterly, yearly] }
-        features:      { type: array, items: { type: string } }
-        isActive:      { type: boolean }
-
-    SubscriptionPlanUpdate:
+    NavItemUpdate:
       type: object
       properties:
-        nameAr:        { type: string }
-        nameEn:        { type: string }
-        slug:          { type: string }
-        descriptionAr: { type: ["string", "null"] }
-        descriptionEn: { type: ["string", "null"] }
-        price:         { type: number }
-        period:        { type: string, enum: [monthly, quarterly, yearly] }
-        features:      { type: array, items: { type: string } }
-        isActive:      { type: boolean }
+        label:       { type: string }
+        href:        { type: string }
+        location:    { type: string, enum: [header, footer] }
+        parentId:    { type: ["string", "null"] }
+        sortOrder:   { type: integer }
+        isVisible:   { type: boolean }
+        opensNewTab: { type: boolean }
 
-    CustomerSubscription:
+    NavReorderInput:
       type: object
-      required: [id, customerId, planId, status, renewCount, createdAt]
+      required: [items]
       properties:
-        id:          { type: string }
-        customerId:  { type: string }
-        planId:      { type: string }
-        status:      { type: string, enum: [active, cancelled, expired, pending] }
-        startedAt:   { type: ["string", "null"] }
-        expiresAt:   { type: ["string", "null"] }
-        renewCount:  { type: integer }
-        cancelledAt: { type: ["string", "null"] }
-        createdAt:   { type: string }
+        items:
+          type: array
+          items:
+            type: object
+            required: [id, sortOrder]
+            properties:
+              id:        { type: string }
+              sortOrder: { type: integer }
+              parentId:  { type: ["string", "null"] }
 
-    CreateSubscriptionInput:
+    CustomPage:
       type: object
-      required: [planId]
+      required: [id, slug, titleAr, contentHtml, isPublished, createdAt, updatedAt]
       properties:
-        planId: { type: string }
+        id:              { type: string }
+        slug:            { type: string }
+        titleAr:         { type: string }
+        contentHtml:     { type: string }
+        isPublished:     { type: boolean }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+        createdAt:       { type: string }
+        updatedAt:       { type: string }
+
+    CustomPageInput:
+      type: object
+      required: [slug, titleAr]
+      properties:
+        slug:            { type: string }
+        titleAr:         { type: string }
+        contentHtml:     { type: string }
+        isPublished:     { type: boolean }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }
+
+    CustomPageUpdate:
+      type: object
+      properties:
+        slug:            { type: string }
+        titleAr:         { type: string }
+        contentHtml:     { type: string }
+        isPublished:     { type: boolean }
+        metaTitle:       { type: ["string", "null"] }
+        metaDescription: { type: ["string", "null"] }

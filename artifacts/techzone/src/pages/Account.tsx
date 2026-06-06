@@ -3,7 +3,7 @@ import { Link, useLocation } from "wouter";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -13,6 +13,9 @@ import {
   Terminal,
   Save,
   ShoppingBag,
+  KeyRound,
+  Copy,
+  Check,
 } from "lucide-react";
 import {
   useCustomerOrders,
@@ -39,6 +42,39 @@ const STATUS_LABELS: Record<string, string> = {
   delivered: "تم التسليم",
   cancelled: "ملغي",
 };
+
+function AccountCodeRow({ nameAr, secret }: { nameAr: string; secret: string }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(secret);
+      setCopied(true);
+      toast.success("تم نسخ الكود");
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error("تعذر النسخ");
+    }
+  };
+
+  return (
+    <div className="bg-background/60 border border-lime/30 clip-corner-sm p-3">
+      <div className="text-[10px] font-mono text-lime/70 mb-2 uppercase tracking-widest truncate">{nameAr}</div>
+      <div className="flex items-center gap-2">
+        <button
+          onClick={handleCopy}
+          className="shrink-0 w-8 h-8 flex items-center justify-center border border-lime/40 text-lime hover:bg-lime/10 clip-corner-sm transition-colors"
+          aria-label="نسخ الكود"
+        >
+          {copied ? <Check size={14} /> : <Copy size={14} />}
+        </button>
+        <div className="flex-1 font-mono font-bold text-sm tracking-widest text-lime neon-text-lime break-all select-all text-left">
+          {secret}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Account() {
   const [, setLocation] = useLocation();
@@ -273,6 +309,20 @@ export default function Account() {
                         </span>
                         <span className="font-bold text-secondary neon-text-magenta">{formatPrice(order.total)}</span>
                       </div>
+
+                      {order.deliveredCodes && order.deliveredCodes.length > 0 && (
+                        <div className="mt-3 pt-3 border-t border-lime/20">
+                          <div className="flex items-center gap-2 mb-2 font-mono">
+                            <KeyRound size={14} className="text-lime" />
+                            <span className="text-xs text-lime font-bold uppercase tracking-widest neon-text-lime">الأكواد الرقمية</span>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                            {order.deliveredCodes.map((code, idx) => (
+                              <AccountCodeRow key={`${code.productId}-${idx}`} nameAr={code.nameAr} secret={code.secret} />
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>

@@ -1,8 +1,15 @@
 import { Layout } from "@/components/Layout";
 import { Link, useSearch } from "wouter";
-import { CheckCircle2, Package, Home, Terminal } from "lucide-react";
-import { useMemo } from "react";
+import { CheckCircle2, Home, Terminal, KeyRound, Copy, Check } from "lucide-react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
+
+interface DeliveredCode {
+  productId: string;
+  nameAr: string;
+  secret: string;
+}
 
 const NEON_COLORS = ["#00E5FF", "#FF2E97", "#9EFF00"];
 
@@ -44,10 +51,54 @@ function NeonConfetti() {
   );
 }
 
+function CodeRow({ code }: { code: DeliveredCode }) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(code.secret);
+      setCopied(true);
+      toast.success("تم نسخ الكود");
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      toast.error("تعذر النسخ");
+    }
+  };
+
+  return (
+    <div className="bg-background border border-lime/30 clip-corner-sm p-4 text-right">
+      <div className="text-xs font-mono text-lime/70 mb-2 uppercase tracking-widest truncate">{code.nameAr}</div>
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleCopy}
+          className="shrink-0 w-10 h-10 flex items-center justify-center border border-lime/40 text-lime hover:bg-lime/10 clip-corner-sm transition-colors"
+          aria-label="نسخ الكود"
+        >
+          {copied ? <Check size={18} /> : <Copy size={18} />}
+        </button>
+        <div className="flex-1 font-mono font-bold tracking-widest text-lime neon-text-lime break-all select-all text-left">
+          {code.secret}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function OrderSuccess() {
   const searchString = useSearch();
   const params = new URLSearchParams(searchString);
   const orderId = params.get("id") || "ORD-XXXX-XXXX";
+
+  const deliveredCodes = useMemo<DeliveredCode[]>(() => {
+    try {
+      const raw = sessionStorage.getItem(`nexus-order-codes-${orderId}`);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }, [orderId]);
 
   return (
     <Layout>
@@ -89,6 +140,24 @@ export default function OrderSuccess() {
               </div>
             </div>
             
+            {deliveredCodes.length > 0 && (
+              <div className="bg-lime/5 border border-lime/30 clip-corner-sm p-6 w-full mb-8 relative text-right">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-lime to-transparent opacity-50"></div>
+                <div className="flex items-center gap-2 justify-end mb-4">
+                  <div className="text-sm font-mono text-lime font-bold uppercase tracking-widest neon-text-lime">أكوادك الرقمية</div>
+                  <KeyRound size={18} className="text-lime" />
+                </div>
+                <div className="space-y-3">
+                  {deliveredCodes.map((code, idx) => (
+                    <CodeRow key={`${code.productId}-${idx}`} code={code} />
+                  ))}
+                </div>
+                <div className="text-xs text-muted-foreground mt-4 font-mono">
+                  [ احتفظ بهذه الأكواد في مكان آمن — يمكنك أيضاً عرضها لاحقاً من صفحة حسابك ]
+                </div>
+              </div>
+            )}
+
             <div className="flex flex-col sm:flex-row gap-4 w-full justify-center">
               <Link href={`/track-order?id=${orderId}`} className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90 px-6 py-4 clip-corner font-bold transition-all glow-hover flex items-center justify-center gap-2 uppercase tracking-wide">
                 <Terminal size={20} />

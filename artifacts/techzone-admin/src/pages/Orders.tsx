@@ -4,12 +4,13 @@ import {
   getAdminListOrdersQueryKey, 
   useAdminUpdateOrderStatus,
   useAdminGetOrder,
-  getAdminGetOrderQueryKey
+  getAdminGetOrderQueryKey,
+  useAdminFulfillOrder
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ShoppingCart, ExternalLink, Package } from "lucide-react";
+import { ShoppingCart, ExternalLink, Package, KeyRound } from "lucide-react";
 import { format } from "date-fns";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
@@ -52,6 +53,17 @@ export default function Orders() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const updateStatus = useAdminUpdateOrderStatus();
+  const fulfillOrder = useAdminFulfillOrder();
+
+  const handleFulfill = (id: string) => {
+    fulfillOrder.mutate({ id }, {
+      onSuccess: () => {
+        toast({ title: "تم تسليم الأكواد المتاحة" });
+        queryClient.invalidateQueries({ queryKey: getAdminGetOrderQueryKey(id) });
+      },
+      onError: () => toast({ title: "تعذر التسليم (قد لا يتوفر مخزون كافٍ)", variant: "destructive" }),
+    });
+  };
 
   const handleStatusChange = (id: string, newStatus: any) => {
     updateStatus.mutate({ id, data: { status: newStatus } }, {
@@ -186,6 +198,38 @@ export default function Orders() {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div>
+                <div className="flex items-center justify-between mb-3 border-b border-primary/20 pb-2">
+                  <h3 className="font-bold flex items-center gap-2">
+                    <KeyRound className="w-4 h-4" />
+                    الأكواد الرقمية المُسلّمة
+                  </h3>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleFulfill(orderDetails.id)}
+                    disabled={fulfillOrder.isPending}
+                    className="gap-2 border-primary/40 text-primary hover:bg-primary/10"
+                  >
+                    {fulfillOrder.isPending ? "جاري التسليم..." : "تسليم/تعبئة الأكواد"}
+                  </Button>
+                </div>
+                {orderDetails.deliveredCodes && orderDetails.deliveredCodes.length > 0 ? (
+                  <div className="space-y-2">
+                    {orderDetails.deliveredCodes.map((dc, i) => (
+                      <div key={i} className="flex items-center justify-between gap-3 bg-background/40 border border-primary/15 rounded px-3 py-2">
+                        <span className="text-sm text-muted-foreground line-clamp-1">{dc.nameAr}</span>
+                        <span className="font-mono text-sm text-lime" dir="ltr">{dc.secret}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-xs text-muted-foreground py-2">
+                    لا توجد أكواد رقمية في هذا الطلب، أو لم يتوفر مخزون وقت الشراء. استخدم "تسليم/تعبئة الأكواد" إذا أضفت مخزوناً لاحقاً.
+                  </div>
+                )}
               </div>
 
               <div className="bg-primary/5 p-4 rounded border border-primary/20 space-y-2">

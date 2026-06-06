@@ -7,6 +7,7 @@ export interface CartItem {
   price: number;
   quantity: number;
   image: string;
+  productType?: string;
 }
 
 interface CartState {
@@ -48,7 +49,7 @@ export const useCartStore = create<CartState>()(
       getTotalPrice: () => get().items.reduce((total, item) => total + (item.price * item.quantity), 0),
       getTotalItems: () => get().items.reduce((total, item) => total + item.quantity, 0),
     }),
-    { name: 'techzone-cart' }
+    { name: 'nexus-cart' }
   )
 );
 
@@ -69,7 +70,7 @@ export const useWishlistStore = create<WishlistState>()(
       })),
       isInWishlist: (productId) => get().productIds.includes(productId),
     }),
-    { name: 'techzone-wishlist' }
+    { name: 'nexus-wishlist' }
   )
 );
 
@@ -96,6 +97,6 @@ export const usePCBuilderStore = create<PCBuilderState>()(
       clearBuilder: () => set({ components: {} }),
       getTotalPrice: () => Object.values(get().components).reduce((total, comp) => total + (comp?.price || 0), 0),
     }),
-    { name: 'techzone-pcbuilder' }
+    { name: 'nexus-pcbuilder' }
   )
 );

@@ -10,7 +10,11 @@ export default function Cart() {
   const [, setLocation] = useLocation();
 
   const subtotal = getTotalPrice();
-  const shipping = subtotal > 500 ? 0 : 35;
+  const physicalSubtotal = items
+    .filter((i) => i.productType !== "digital")
+    .reduce((sum, i) => sum + i.price * i.quantity, 0);
+  const hasPhysical = physicalSubtotal > 0;
+  const shipping = physicalSubtotal === 0 || physicalSubtotal >= 500 ? 0 : 30;
   const total = subtotal + shipping;
 
   if (items.length === 0) {
@@ -153,19 +157,21 @@ export default function Cart() {
                 </div>
                 
                 <div className="flex justify-between text-muted-foreground">
-                  <span>رسوم الشحن</span>
-                  {shipping === 0 ? (
+                  <span>{hasPhysical ? "رسوم الشحن" : "التسليم"}</span>
+                  {!hasPhysical ? (
+                    <span className="text-lime font-bold neon-text-lime">[ فوري ]</span>
+                  ) : shipping === 0 ? (
                     <span className="text-lime font-bold neon-text-lime">[ مجاني ]</span>
                   ) : (
                     <span className="text-foreground font-medium">{formatPrice(shipping)}</span>
                   )}
                 </div>
                 
-                {shipping > 0 && (
+                {hasPhysical && shipping > 0 && (
                   <div className="bg-primary/10 border border-primary/30 clip-corner-sm p-3 text-sm flex gap-2 font-sans">
                     <Tag className="text-primary shrink-0 animate-pulse-glow" size={18} />
                     <p className="text-primary/90">
-                      أضف منتجات بقيمة <span className="font-mono font-bold">{formatPrice(500 - subtotal)}</span> للحصول على شحن مجاني!
+                      أضف منتجات بقيمة <span className="font-mono font-bold">{formatPrice(500 - physicalSubtotal)}</span> للحصول على شحن مجاني!
                     </p>
                   </div>
                 )}

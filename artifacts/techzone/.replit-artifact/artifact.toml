@@ -1,6 +1,6 @@
 kind = "web"
 previewPath = "/"
-title = "TechZone متجر الإلكترونيات"
+title = "Nexus Store متجر الإلكترونيات"
 version = "1.0.0"
 id = "artifacts/techzone"
 router = "path"

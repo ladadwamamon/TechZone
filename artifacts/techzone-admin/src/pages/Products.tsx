@@ -7,6 +7,10 @@ import {
   useListBrands,
   useAdminCreateProduct,
   useAdminUpdateProduct,
+  useAdminListDigitalCodes,
+  getAdminListDigitalCodesQueryKey,
+  useAdminAddDigitalCodes,
+  useAdminDeleteDigitalCode,
   type AdminProduct,
 } from "@workspace/api-client-react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -65,6 +69,11 @@ interface ProductFormState {
   metaTitle: string;
   metaDescription: string;
   metaKeywords: string;
+  productType: "physical" | "digital";
+  platform: string;
+  region: string;
+  deliveryType: string;
+  digitalInstructionsAr: string;
 }
 
 const EMPTY_FORM: ProductFormState = {
@@ -95,6 +104,11 @@ const EMPTY_FORM: ProductFormState = {
   metaTitle: "",
   metaDescription: "",
   metaKeywords: "",
+  productType: "physical",
+  platform: "",
+  region: "",
+  deliveryType: "code",
+  digitalInstructionsAr: "",
 };
 
 const numOrUndef = (v: string): number | undefined => {
@@ -188,6 +202,11 @@ export default function Products() {
       metaTitle: (p as any).metaTitle ?? "",
       metaDescription: (p as any).metaDescription ?? "",
       metaKeywords: (p as any).metaKeywords ?? "",
+      productType: p.productType === "digital" ? "digital" : "physical",
+      platform: p.platform ?? "",
+      region: p.region ?? "",
+      deliveryType: p.deliveryType ?? "code",
+      digitalInstructionsAr: p.digitalInstructionsAr ?? "",
     });
     setIsDialogOpen(true);
   };
@@ -240,6 +259,11 @@ export default function Products() {
     metaTitle: form.metaTitle.trim() || null,
     metaDescription: form.metaDescription.trim() || null,
     metaKeywords: form.metaKeywords.trim() || null,
+    productType: form.productType,
+    platform: form.productType === "digital" ? (form.platform.trim() || null) : null,
+    region: form.productType === "digital" ? (form.region.trim() || null) : null,
+    deliveryType: form.productType === "digital" ? (form.deliveryType.trim() || null) : null,
+    digitalInstructionsAr: form.productType === "digital" ? (form.digitalInstructionsAr.trim() || null) : null,
   });
 
   const handleSubmit = () => {
@@ -382,6 +406,7 @@ export default function Products() {
           <Tabs defaultValue="basic" dir="rtl">
             <TabsList className="flex flex-wrap h-auto">
               <TabsTrigger value="basic">أساسي</TabsTrigger>
+              <TabsTrigger value="digital">رقمي</TabsTrigger>
               <TabsTrigger value="media">الصور</TabsTrigger>
               <TabsTrigger value="specs">المواصفات</TabsTrigger>
               <TabsTrigger value="variants">الخيارات</TabsTrigger>
@@ -463,6 +488,68 @@ export default function Products() {
                   placeholder="اكتب وصف المنتج..."
                 />
               </Field>
+            </TabsContent>
+
+            <TabsContent value="digital" className="space-y-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <Field label="نوع المنتج">
+                  <Select value={form.productType} onValueChange={(v) => set("productType", v as "physical" | "digital")} dir="rtl">
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="physical">منتج فعلي (يُشحن)</SelectItem>
+                      <SelectItem value="digital">منتج رقمي (كود/حساب)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </Field>
+                {form.productType === "digital" && (
+                  <Field label="طريقة التسليم">
+                    <Select value={form.deliveryType} onValueChange={(v) => set("deliveryType", v)} dir="rtl">
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="code">كود (بطاقة/اشتراك)</SelectItem>
+                        <SelectItem value="account">حساب (بيانات دخول)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </Field>
+                )}
+              </div>
+
+              {form.productType === "digital" ? (
+                <>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Field label="المنصة">
+                      <Input
+                        value={form.platform}
+                        onChange={(e) => set("platform", e.target.value)}
+                        placeholder="iTunes / Steam / Razer / PSN / Xbox"
+                      />
+                    </Field>
+                    <Field label="المنطقة">
+                      <Input value={form.region} onChange={(e) => set("region", e.target.value)} placeholder="US / EU / KSA / Global" />
+                    </Field>
+                  </div>
+                  <Field label="تعليمات التفعيل (تظهر للعميل بعد الشراء)">
+                    <Textarea
+                      value={form.digitalInstructionsAr}
+                      onChange={(e) => set("digitalInstructionsAr", e.target.value)}
+                      className="min-h-24"
+                      placeholder="مثال: ادخل إلى متجر التطبيق واستبدل الكود من قسم الاسترداد..."
+                    />
+                  </Field>
+
+                  {editingId ? (
+                    <CodeManager productId={editingId} />
+                  ) : (
+                    <div className="rounded border border-primary/20 bg-background/40 p-4 text-sm text-muted-foreground">
+                      احفظ المنتج أولاً ثم افتحه للتعديل لإضافة مخزون الأكواد. المخزون يُحتسب تلقائياً من عدد الأكواد المتاحة.
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="rounded border border-primary/20 bg-background/40 p-4 text-sm text-muted-foreground">
+                  هذا منتج فعلي. اختر "منتج رقمي" لإدارة الأكواد والمنصة وطريقة التسليم.
+                </div>
+              )}
             </TabsContent>
 
             <TabsContent value="media" className="space-y-4">
@@ -795,6 +882,123 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
     <div className="space-y-1.5">
       <label className="text-sm text-muted-foreground">{label}</label>
       {children}
+    </div>
+  );
+}
+
+function CodeManager({ productId }: { productId: string }) {
+  const [bulk, setBulk] = useState("");
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
+  const codesParams = getAdminListDigitalCodesQueryKey(productId);
+  const { data: codes, isLoading } = useAdminListDigitalCodes(productId, {
+    query: { queryKey: codesParams },
+  });
+  const addMutation = useAdminAddDigitalCodes();
+  const deleteMutation = useAdminDeleteDigitalCode();
+
+  const available = (codes ?? []).filter((c) => c.status === "available").length;
+  const sold = (codes ?? []).filter((c) => c.status === "sold").length;
+
+  const refresh = () => queryClient.invalidateQueries({ queryKey: getAdminListDigitalCodesQueryKey(productId) });
+
+  const handleAdd = () => {
+    const secrets = bulk
+      .split("\n")
+      .map((s) => s.trim())
+      .filter((s) => s.length > 0);
+    if (secrets.length === 0) {
+      toast({ title: "أدخل كوداً واحداً على الأقل", variant: "destructive" });
+      return;
+    }
+    addMutation.mutate(
+      { id: productId, data: { secrets } },
+      {
+        onSuccess: (res) => {
+          toast({ title: `تمت إضافة ${res.added ?? secrets.length} كود` });
+          setBulk("");
+          refresh();
+        },
+        onError: () => toast({ title: "فشل إضافة الأكواد", variant: "destructive" }),
+      },
+    );
+  };
+
+  const handleDelete = (codeId: string) => {
+    deleteMutation.mutate(
+      { codeId },
+      {
+        onSuccess: () => {
+          toast({ title: "تم حذف الكود" });
+          refresh();
+        },
+        onError: () => toast({ title: "تعذر الحذف (قد يكون مُباعاً)", variant: "destructive" }),
+      },
+    );
+  };
+
+  return (
+    <div className="space-y-4 rounded border border-primary/20 bg-background/40 p-4">
+      <div className="flex items-center gap-4 text-sm font-mono">
+        <span className="text-lime">متاح: {available}</span>
+        <span className="text-muted-foreground">مُباع: {sold}</span>
+        <span className="text-primary">الإجمالي: {available + sold}</span>
+      </div>
+
+      <Field label="إضافة أكواد (كود واحد في كل سطر)">
+        <Textarea
+          value={bulk}
+          onChange={(e) => setBulk(e.target.value)}
+          dir="ltr"
+          className="min-h-28 font-mono text-xs"
+          placeholder={"XXXX-XXXX-XXXX\nYYYY-YYYY-YYYY"}
+        />
+      </Field>
+      <div className="flex justify-end">
+        <Button type="button" onClick={handleAdd} disabled={addMutation.isPending} className="gap-2 glow-hover">
+          <Plus className="h-4 w-4" />
+          {addMutation.isPending ? "جاري الإضافة..." : "إضافة للمخزون"}
+        </Button>
+      </div>
+
+      <div className="max-h-56 overflow-y-auto space-y-1">
+        {isLoading ? (
+          <Skeleton className="h-8 w-full bg-primary/20" />
+        ) : (codes ?? []).length === 0 ? (
+          <div className="text-center text-xs text-muted-foreground py-3">لا توجد أكواد بعد</div>
+        ) : (
+          (codes ?? []).map((c) => (
+            <div
+              key={c.id}
+              className="flex items-center justify-between gap-2 rounded border border-primary/10 bg-background/60 px-2 py-1"
+            >
+              <span className="font-mono text-xs truncate" dir="ltr">
+                {c.status === "sold" ? "•••• مُباع" : c.secret}
+              </span>
+              <div className="flex items-center gap-2 shrink-0">
+                <span
+                  className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${
+                    c.status === "available" ? "bg-lime/10 text-lime" : "bg-muted text-muted-foreground"
+                  }`}
+                >
+                  {c.status === "available" ? "متاح" : "مُباع"}
+                </span>
+                {c.status === "available" && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(c.id)}
+                    className="h-6 w-6 hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
+                )}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

@@ -5,6 +5,7 @@
  * TechZone Electronics & Gaming Store API
  * OpenAPI spec version: 0.1.0
  */
+import type { DeliveredCode } from './deliveredCode';
 import type { OrderItem } from './orderItem';
 
 export interface Order {
@@ -27,5 +28,6 @@ export interface Order {
   shipping: number;
   total: number;
   status: string;
+  deliveredCodes?: DeliveredCode[];
   createdAt: string;
 }

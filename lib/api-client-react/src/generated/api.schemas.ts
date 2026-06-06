@@ -9,6 +9,14 @@ export interface HealthStatus {
   status: string;
 }
 
+export type ProductProductType = typeof ProductProductType[keyof typeof ProductProductType];
+
+
+export const ProductProductType = {
+  physical: 'physical',
+  digital: 'digital',
+} as const;
+
 export interface Product {
   id: string;
   nameAr: string;
@@ -33,8 +41,21 @@ export interface Product {
   isNew?: boolean;
   isBestSeller?: boolean;
   isExclusive?: boolean;
+  productType?: ProductProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
   badges?: string[];
 }
+
+export type ProductDetailProductType = typeof ProductDetailProductType[keyof typeof ProductDetailProductType];
+
+
+export const ProductDetailProductType = {
+  physical: 'physical',
+  digital: 'digital',
+} as const;
 
 export interface ProductSpec {
   labelAr: string;
@@ -81,6 +102,15 @@ export interface ProductDetail {
   isNew?: boolean;
   isBestSeller?: boolean;
   isExclusive?: boolean;
+  productType?: ProductDetailProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
+  /** @nullable */
+  deliveryType?: string | null;
+  /** @nullable */
+  digitalInstructionsAr?: string | null;
   descriptionAr: string;
   specs: ProductSpec[];
   reviews?: ProductReview[];
@@ -173,6 +203,8 @@ export interface OrderItem {
   price: number;
   quantity: number;
   image: string;
+  /** @nullable */
+  productType?: string | null;
 }
 
 export type OrderInputPaymentMethod = typeof OrderInputPaymentMethod[keyof typeof OrderInputPaymentMethod];
@@ -199,6 +231,12 @@ export interface OrderInput {
   items: OrderItem[];
 }
 
+export interface DeliveredCode {
+  productId: string;
+  nameAr: string;
+  secret: string;
+}
+
 export interface Order {
   id: string;
   customerName: string;
@@ -219,6 +257,7 @@ export interface Order {
   shipping: number;
   total: number;
   status: string;
+  deliveredCodes?: DeliveredCode[];
   createdAt: string;
 }
 
@@ -350,6 +389,14 @@ export interface AdminAccountUpdate {
   isActive?: boolean;
 }
 
+export type AdminProductProductType = typeof AdminProductProductType[keyof typeof AdminProductProductType];
+
+
+export const AdminProductProductType = {
+  physical: 'physical',
+  digital: 'digital',
+} as const;
+
 export interface AdminProduct {
   id: string;
   nameAr: string;
@@ -377,6 +424,15 @@ export interface AdminProduct {
   isExclusive?: boolean;
   isFlashDeal?: boolean;
   isFeatured?: boolean;
+  productType?: AdminProductProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
+  /** @nullable */
+  deliveryType?: string | null;
+  /** @nullable */
+  digitalInstructionsAr?: string | null;
   /** @nullable */
   descriptionAr?: string | null;
   specs?: ProductSpec[];
@@ -391,6 +447,14 @@ export interface AdminProductListResponse {
   page: number;
   limit: number;
 }
+
+export type AdminProductInputProductType = typeof AdminProductInputProductType[keyof typeof AdminProductInputProductType];
+
+
+export const AdminProductInputProductType = {
+  physical: 'physical',
+  digital: 'digital',
+} as const;
 
 export interface AdminProductInput {
   id?: string;
@@ -419,6 +483,15 @@ export interface AdminProductInput {
   isExclusive?: boolean;
   isFlashDeal?: boolean;
   isFeatured?: boolean;
+  productType?: AdminProductInputProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
+  /** @nullable */
+  deliveryType?: string | null;
+  /** @nullable */
+  digitalInstructionsAr?: string | null;
   /** @nullable */
   descriptionAr?: string | null;
   specs?: ProductSpec[];
@@ -431,6 +504,14 @@ export interface AdminProductInput {
   /** @nullable */
   metaKeywords?: string | null;
 }
+
+export type AdminProductUpdateProductType = typeof AdminProductUpdateProductType[keyof typeof AdminProductUpdateProductType];
+
+
+export const AdminProductUpdateProductType = {
+  physical: 'physical',
+  digital: 'digital',
+} as const;
 
 export interface AdminProductUpdate {
   nameAr?: string;
@@ -458,6 +539,15 @@ export interface AdminProductUpdate {
   isExclusive?: boolean;
   isFlashDeal?: boolean;
   isFeatured?: boolean;
+  productType?: AdminProductUpdateProductType;
+  /** @nullable */
+  platform?: string | null;
+  /** @nullable */
+  region?: string | null;
+  /** @nullable */
+  deliveryType?: string | null;
+  /** @nullable */
+  digitalInstructionsAr?: string | null;
   /** @nullable */
   descriptionAr?: string | null;
   specs?: ProductSpec[];
@@ -840,181 +930,141 @@ export interface CustomerProfileUpdate {
   address?: string | null;
 }
 
-export type GiftCardStatus = typeof GiftCardStatus[keyof typeof GiftCardStatus];
+export type DigitalCodeStatus = typeof DigitalCodeStatus[keyof typeof DigitalCodeStatus];
 
 
-export const GiftCardStatus = {
-  active: 'active',
-  redeemed: 'redeemed',
-  expired: 'expired',
-  cancelled: 'cancelled',
+export const DigitalCodeStatus = {
+  available: 'available',
+  sold: 'sold',
 } as const;
 
-export interface GiftCard {
+export interface DigitalCode {
   id: string;
-  code: string;
-  amount: number;
-  balance: number;
-  status: GiftCardStatus;
+  productId: string;
+  secret: string;
+  status: DigitalCodeStatus;
   /** @nullable */
-  customerId?: string | null;
+  orderId?: string | null;
   /** @nullable */
-  redeemedAt?: string | null;
-  /** @nullable */
-  expiresAt?: string | null;
+  soldAt?: string | null;
   createdAt: string;
 }
 
-export type GiftCardInputStatus = typeof GiftCardInputStatus[keyof typeof GiftCardInputStatus];
+export interface DigitalCodesBulkInput {
+  secrets: string[];
+}
+
+export interface DigitalCodeStats {
+  productId: string;
+  available: number;
+  sold: number;
+  total: number;
+  added?: number;
+}
+
+export type NavItemLocation = typeof NavItemLocation[keyof typeof NavItemLocation];
 
 
-export const GiftCardInputStatus = {
-  active: 'active',
-  redeemed: 'redeemed',
-  expired: 'expired',
-  cancelled: 'cancelled',
+export const NavItemLocation = {
+  header: 'header',
+  footer: 'footer',
 } as const;
 
-export interface GiftCardInput {
-  id?: string;
-  code: string;
-  amount: number;
-  balance?: number;
-  status?: GiftCardInputStatus;
-  /** @nullable */
-  expiresAt?: string | null;
-}
-
-export type GiftCardUpdateStatus = typeof GiftCardUpdateStatus[keyof typeof GiftCardUpdateStatus];
-
-
-export const GiftCardUpdateStatus = {
-  active: 'active',
-  redeemed: 'redeemed',
-  expired: 'expired',
-  cancelled: 'cancelled',
-} as const;
-
-export interface GiftCardUpdate {
-  code?: string;
-  amount?: number;
-  balance?: number;
-  status?: GiftCardUpdateStatus;
-  /** @nullable */
-  expiresAt?: string | null;
-}
-
-export interface GiftCardRedeemInput {
-  code: string;
-}
-
-export interface GiftCardRedeemResult {
-  success: boolean;
-  balance: number;
-  amount?: number;
-  /** @nullable */
-  message?: string | null;
-}
-
-export type SubscriptionPlanPeriod = typeof SubscriptionPlanPeriod[keyof typeof SubscriptionPlanPeriod];
-
-
-export const SubscriptionPlanPeriod = {
-  monthly: 'monthly',
-  quarterly: 'quarterly',
-  yearly: 'yearly',
-} as const;
-
-export interface SubscriptionPlan {
+export interface NavItem {
   id: string;
-  nameAr: string;
-  nameEn: string;
+  label: string;
+  href: string;
+  location: NavItemLocation;
+  /** @nullable */
+  parentId?: string | null;
+  sortOrder: number;
+  isVisible: boolean;
+  opensNewTab: boolean;
+}
+
+export type NavItemInputLocation = typeof NavItemInputLocation[keyof typeof NavItemInputLocation];
+
+
+export const NavItemInputLocation = {
+  header: 'header',
+  footer: 'footer',
+} as const;
+
+export interface NavItemInput {
+  label: string;
+  href: string;
+  location?: NavItemInputLocation;
+  /** @nullable */
+  parentId?: string | null;
+  sortOrder?: number;
+  isVisible?: boolean;
+  opensNewTab?: boolean;
+}
+
+export type NavItemUpdateLocation = typeof NavItemUpdateLocation[keyof typeof NavItemUpdateLocation];
+
+
+export const NavItemUpdateLocation = {
+  header: 'header',
+  footer: 'footer',
+} as const;
+
+export interface NavItemUpdate {
+  label?: string;
+  href?: string;
+  location?: NavItemUpdateLocation;
+  /** @nullable */
+  parentId?: string | null;
+  sortOrder?: number;
+  isVisible?: boolean;
+  opensNewTab?: boolean;
+}
+
+export type NavReorderInputItemsItem = {
+  id: string;
+  sortOrder: number;
+  /** @nullable */
+  parentId?: string | null;
+};
+
+export interface NavReorderInput {
+  items: NavReorderInputItemsItem[];
+}
+
+export interface CustomPage {
+  id: string;
   slug: string;
+  titleAr: string;
+  contentHtml: string;
+  isPublished: boolean;
   /** @nullable */
-  descriptionAr?: string | null;
+  metaTitle?: string | null;
   /** @nullable */
-  descriptionEn?: string | null;
-  price: number;
-  period: SubscriptionPlanPeriod;
-  features?: string[];
-  isActive: boolean;
+  metaDescription?: string | null;
   createdAt: string;
+  updatedAt: string;
 }
 
-export type SubscriptionPlanInputPeriod = typeof SubscriptionPlanInputPeriod[keyof typeof SubscriptionPlanInputPeriod];
-
-
-export const SubscriptionPlanInputPeriod = {
-  monthly: 'monthly',
-  quarterly: 'quarterly',
-  yearly: 'yearly',
-} as const;
-
-export interface SubscriptionPlanInput {
-  id?: string;
-  nameAr: string;
-  nameEn: string;
+export interface CustomPageInput {
   slug: string;
+  titleAr: string;
+  contentHtml?: string;
+  isPublished?: boolean;
   /** @nullable */
-  descriptionAr?: string | null;
+  metaTitle?: string | null;
   /** @nullable */
-  descriptionEn?: string | null;
-  price: number;
-  period: SubscriptionPlanInputPeriod;
-  features?: string[];
-  isActive?: boolean;
+  metaDescription?: string | null;
 }
 
-export type SubscriptionPlanUpdatePeriod = typeof SubscriptionPlanUpdatePeriod[keyof typeof SubscriptionPlanUpdatePeriod];
-
-
-export const SubscriptionPlanUpdatePeriod = {
-  monthly: 'monthly',
-  quarterly: 'quarterly',
-  yearly: 'yearly',
-} as const;
-
-export interface SubscriptionPlanUpdate {
-  nameAr?: string;
-  nameEn?: string;
+export interface CustomPageUpdate {
   slug?: string;
+  titleAr?: string;
+  contentHtml?: string;
+  isPublished?: boolean;
   /** @nullable */
-  descriptionAr?: string | null;
+  metaTitle?: string | null;
   /** @nullable */
-  descriptionEn?: string | null;
-  price?: number;
-  period?: SubscriptionPlanUpdatePeriod;
-  features?: string[];
-  isActive?: boolean;
-}
-
-export type CustomerSubscriptionStatus = typeof CustomerSubscriptionStatus[keyof typeof CustomerSubscriptionStatus];
-
-
-export const CustomerSubscriptionStatus = {
-  active: 'active',
-  cancelled: 'cancelled',
-  expired: 'expired',
-  pending: 'pending',
-} as const;
-
-export interface CustomerSubscription {
-  id: string;
-  customerId: string;
-  planId: string;
-  status: CustomerSubscriptionStatus;
-  /** @nullable */
-  startedAt?: string | null;
-  /** @nullable */
-  expiresAt?: string | null;
-  renewCount: number;
-  /** @nullable */
-  cancelledAt?: string | null;
-  createdAt: string;
-}
-
-export interface CreateSubscriptionInput {
-  planId: string;
+  metaDescription?: string | null;
 }
 
 export type ListProductsParams = {
@@ -1102,4 +1152,16 @@ q?: string;
 action?: string;
 entityType?: string;
 };
+
+export type ListNavItemsParams = {
+location?: ListNavItemsLocation;
+};
+
+export type ListNavItemsLocation = typeof ListNavItemsLocation[keyof typeof ListNavItemsLocation];
+
+
+export const ListNavItemsLocation = {
+  header: 'header',
+  footer: 'footer',
+} as const;
 

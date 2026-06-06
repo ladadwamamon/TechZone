@@ -15,8 +15,9 @@ export type Permission =
   | "admins:manage"
   | "audit:read"
   | "coupons:write"
-  | "gift_cards:write"
-  | "subscriptions:write";
+  | "digital_codes:write"
+  | "navigation:write"
+  | "pages:write";
 
 const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
   super_admin: [
@@ -34,8 +35,9 @@ const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "admins:manage",
     "audit:read",
     "coupons:write",
-    "gift_cards:write",
-    "subscriptions:write",
+    "digital_codes:write",
+    "navigation:write",
+    "pages:write",
   ],
   content_editor: [
     "products:write",
@@ -47,16 +49,15 @@ const ROLE_PERMISSIONS: Record<AdminRole, Permission[]> = {
     "settings:write",
     "analytics:read",
     "coupons:write",
-    "gift_cards:write",
-    "subscriptions:write",
+    "navigation:write",
+    "pages:write",
   ],
   order_manager: [
     "orders:write",
     "newsletter:read",
     "newsletter:write",
     "analytics:read",
-    "gift_cards:write",
-    "subscriptions:write",
+    "digital_codes:write",
   ],
 };
 

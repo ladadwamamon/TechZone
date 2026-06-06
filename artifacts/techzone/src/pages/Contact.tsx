@@ -179,7 +179,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <h4 className="font-mono text-sm text-secondary uppercase mb-1">EMAIL</h4>
-                    <p className="text-foreground font-mono dir-ltr">hello@techzone.sa</p>
+                    <p className="text-foreground font-mono dir-ltr">hello@nexus.sa</p>
                   </div>
                 </div>
               </div>

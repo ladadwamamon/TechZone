@@ -5,7 +5,8 @@ import { eq, and, or, ilike, desc, sql } from "drizzle-orm";
 import { AdminUpdateOrderStatusBody } from "@workspace/api-zod";
 import { requireAuth, requirePermission } from "../../middlewares/auth";
 import { writeAudit } from "../../lib/audit";
-import { mapOrder } from "./helpers";
+import { mapOrder, mapOrderWithCodes } from "./helpers";
+import { allocateCodesForOrder } from "../../lib/digital";
 
 const router: IRouter = Router();
 
@@ -43,7 +44,20 @@ router.get("/admin/orders", requireAuth, requirePermission("orders:write"), asyn
 router.get("/admin/orders/:id", requireAuth, requirePermission("orders:write"), async (req, res) => {
   const order = await db.query.ordersTable.findFirst({ where: eq(ordersTable.id, (req.params.id as string)) });
   if (!order) return res.status(404).json({ error: "غير موجود" });
-  res.json(mapOrder(order));
+  res.json(await mapOrderWithCodes(order));
+});
+
+// POST /admin/orders/:id/fulfill — allocate codes for any still-unfulfilled digital items
+router.post("/admin/orders/:id/fulfill", requireAuth, requirePermission("orders:write"), async (req, res) => {
+  const order = await db.query.ordersTable.findFirst({ where: eq(ordersTable.id, (req.params.id as string)) });
+  if (!order) return res.status(404).json({ error: "غير موجود" });
+
+  const items = order.items as Array<{ productId: string; nameAr: string; quantity: number }>;
+  await db.transaction(async (tx) => {
+    await allocateCodesForOrder(tx, order.id, items);
+  });
+  await writeAudit(req, { action: "fulfill", entityType: "order", entityId: order.id });
+  res.json(await mapOrderWithCodes(order));
 });
 
 router.patch("/admin/orders/:id/status", requireAuth, requirePermission("orders:write"), async (req, res) => {

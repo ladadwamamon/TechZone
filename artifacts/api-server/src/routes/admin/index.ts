@@ -13,9 +13,8 @@ import settingsRouter from "./settings";
 import analyticsRouter from "./analytics";
 import auditRouter from "./audit";
 import couponsRouter from "./coupons";
-import giftCardsRouter from "./gift-cards";
-import subscriptionPlansRouter from "./subscription-plans";
-import subscriptionsRouter from "./subscriptions";
+import digitalCodesRouter from "./digital-codes";
+import navigationRouter from "./navigation";
 
 const router: IRouter = Router();
 
@@ -33,8 +32,7 @@ router.use(settingsRouter);
 router.use(analyticsRouter);
 router.use(auditRouter);
 router.use(couponsRouter);
-router.use(giftCardsRouter);
-router.use(subscriptionPlansRouter);
-router.use(subscriptionsRouter);
+router.use(digitalCodesRouter);
+router.use(navigationRouter);
 
 export default router;

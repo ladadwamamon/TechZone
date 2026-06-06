@@ -5,7 +5,8 @@
  * TechZone Electronics & Gaming Store API
  * OpenAPI spec version: 0.1.0
  */
+import type { NavReorderInputItemsItem } from './navReorderInputItemsItem';
 
-export interface CreateSubscriptionInput {
-  planId: string;
+export interface NavReorderInput {
+  items: NavReorderInputItemsItem[];
 }

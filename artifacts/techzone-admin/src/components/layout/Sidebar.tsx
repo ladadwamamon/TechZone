@@ -22,8 +22,7 @@ import {
   Users, 
   UserRound,
   Ticket,
-  Gift,
-  Calendar,
+  Menu,
   Settings, 
   Activity
 } from "lucide-react";
@@ -39,10 +38,10 @@ export function Sidebar() {
     { href: "/categories", label: "الفئات", icon: Tags, perm: "categories:write" },
     { href: "/brands", label: "العلامات التجارية", icon: Copyright, perm: "brands:write" },
     { href: "/coupons", label: "الكوبونات", icon: Ticket, perm: "coupons:write" },
-    { href: "/gift-cards", label: "بطاقات الهدايا", icon: Gift, perm: "gift_cards:write" },
-    { href: "/subscription-plans", label: "خطط الاشتراك", icon: Calendar, perm: "subscriptions:write" },
     { href: "/reviews", label: "التقييمات", icon: MessageSquare, perm: "reviews:write" },
     { href: "/blog", label: "المدونة", icon: FileText, perm: "blog:write" },
+    { href: "/navigation", label: "القوائم", icon: Menu, perm: "navigation:write" },
+    { href: "/pages", label: "الصفحات", icon: FileText, perm: "pages:write" },
     { href: "/media", label: "الوسائط", icon: ImageIcon, perm: "media:write" },
     { href: "/customers", label: "العملاء", icon: UserRound, perm: "orders:write" },
     { href: "/newsletter", label: "النشرة الإخبارية", icon: Mail, perm: "newsletter:read" },
@@ -55,7 +54,7 @@ export function Sidebar() {
     <SidebarComponent className="border-l border-primary/20 bg-background/95 glass-panel z-20 font-sans">
       <SidebarHeader className="h-16 flex items-center px-4 border-b border-primary/20">
         <div className="font-mono font-bold text-xl tracking-wider text-primary neon-text flex items-center gap-2">
-          <span>TECHZONE</span>
+          <span>NEXUS</span>
           <span className="text-xs text-muted-foreground bg-primary/10 px-2 py-0.5 rounded clip-corner-sm">OS</span>
         </div>
       </SidebarHeader>
