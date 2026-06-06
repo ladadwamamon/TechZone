@@ -1673,3 +1673,233 @@ export const AdminDeleteCouponResponse = zod.object({
 })
 
 
+/**
+ * @summary List gift cards
+ */
+export const AdminListGiftCardsResponseItem = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "amount": zod.number(),
+  "balance": zod.number(),
+  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']),
+  "customerId": zod.string().nullish(),
+  "redeemedAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const AdminListGiftCardsResponse = zod.array(AdminListGiftCardsResponseItem)
+
+
+/**
+ * @summary Create a gift card
+ */
+export const AdminCreateGiftCardBody = zod.object({
+  "id": zod.string().optional(),
+  "code": zod.string(),
+  "amount": zod.number(),
+  "balance": zod.number().optional(),
+  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']).optional(),
+  "expiresAt": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update a gift card
+ */
+export const AdminUpdateGiftCardParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminUpdateGiftCardBody = zod.object({
+  "code": zod.string().optional(),
+  "amount": zod.number().optional(),
+  "balance": zod.number().optional(),
+  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']).optional(),
+  "expiresAt": zod.string().nullish()
+})
+
+export const AdminUpdateGiftCardResponse = zod.object({
+  "id": zod.string(),
+  "code": zod.string(),
+  "amount": zod.number(),
+  "balance": zod.number(),
+  "status": zod.enum(['active', 'redeemed', 'expired', 'cancelled']),
+  "customerId": zod.string().nullish(),
+  "redeemedAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a gift card
+ */
+export const AdminDeleteGiftCardParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminDeleteGiftCardResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary List subscription plans
+ */
+export const AdminListSubscriptionPlansResponseItem = zod.object({
+  "id": zod.string(),
+  "nameAr": zod.string(),
+  "nameEn": zod.string(),
+  "slug": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "descriptionEn": zod.string().nullish(),
+  "price": zod.number(),
+  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
+  "features": zod.array(zod.string()).optional(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+export const AdminListSubscriptionPlansResponse = zod.array(AdminListSubscriptionPlansResponseItem)
+
+
+/**
+ * @summary Create a subscription plan
+ */
+export const AdminCreateSubscriptionPlanBody = zod.object({
+  "id": zod.string().optional(),
+  "nameAr": zod.string(),
+  "nameEn": zod.string(),
+  "slug": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "descriptionEn": zod.string().nullish(),
+  "price": zod.number(),
+  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
+  "features": zod.array(zod.string()).optional(),
+  "isActive": zod.boolean().optional()
+})
+
+
+/**
+ * @summary Update a subscription plan
+ */
+export const AdminUpdateSubscriptionPlanParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminUpdateSubscriptionPlanBody = zod.object({
+  "nameAr": zod.string().optional(),
+  "nameEn": zod.string().optional(),
+  "slug": zod.string().optional(),
+  "descriptionAr": zod.string().nullish(),
+  "descriptionEn": zod.string().nullish(),
+  "price": zod.number().optional(),
+  "period": zod.enum(['monthly', 'quarterly', 'yearly']).optional(),
+  "features": zod.array(zod.string()).optional(),
+  "isActive": zod.boolean().optional()
+})
+
+export const AdminUpdateSubscriptionPlanResponse = zod.object({
+  "id": zod.string(),
+  "nameAr": zod.string(),
+  "nameEn": zod.string(),
+  "slug": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "descriptionEn": zod.string().nullish(),
+  "price": zod.number(),
+  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
+  "features": zod.array(zod.string()).optional(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a subscription plan
+ */
+export const AdminDeleteSubscriptionPlanParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminDeleteSubscriptionPlanResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary List customer subscriptions
+ */
+export const AdminListSubscriptionsResponseItem = zod.object({
+  "id": zod.string(),
+  "customerId": zod.string(),
+  "planId": zod.string(),
+  "status": zod.enum(['active', 'cancelled', 'expired', 'pending']),
+  "startedAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "renewCount": zod.number(),
+  "cancelledAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const AdminListSubscriptionsResponse = zod.array(AdminListSubscriptionsResponseItem)
+
+
+/**
+ * @summary Redeem a gift card
+ */
+export const RedeemGiftCardBody = zod.object({
+  "code": zod.string()
+})
+
+export const RedeemGiftCardResponse = zod.object({
+  "success": zod.boolean(),
+  "balance": zod.number(),
+  "amount": zod.number().optional(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary List active subscription plans
+ */
+export const ListSubscriptionPlansResponseItem = zod.object({
+  "id": zod.string(),
+  "nameAr": zod.string(),
+  "nameEn": zod.string(),
+  "slug": zod.string(),
+  "descriptionAr": zod.string().nullish(),
+  "descriptionEn": zod.string().nullish(),
+  "price": zod.number(),
+  "period": zod.enum(['monthly', 'quarterly', 'yearly']),
+  "features": zod.array(zod.string()).optional(),
+  "isActive": zod.boolean(),
+  "createdAt": zod.string()
+})
+export const ListSubscriptionPlansResponse = zod.array(ListSubscriptionPlansResponseItem)
+
+
+/**
+ * @summary Current customer subscriptions
+ */
+export const CustomerSubscriptionsResponseItem = zod.object({
+  "id": zod.string(),
+  "customerId": zod.string(),
+  "planId": zod.string(),
+  "status": zod.enum(['active', 'cancelled', 'expired', 'pending']),
+  "startedAt": zod.string().nullish(),
+  "expiresAt": zod.string().nullish(),
+  "renewCount": zod.number(),
+  "cancelledAt": zod.string().nullish(),
+  "createdAt": zod.string()
+})
+export const CustomerSubscriptionsResponse = zod.array(CustomerSubscriptionsResponseItem)
+
+
+/**
+ * @summary Subscribe to a plan
+ */
+export const CreateCustomerSubscriptionBody = zod.object({
+  "planId": zod.string()
+})
+
+

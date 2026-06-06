@@ -8,6 +8,7 @@ import { couponsTable } from "@workspace/db";
 import { sql } from "drizzle-orm";
 import { evaluateCoupon } from "../lib/coupon";
 import { optionalCustomerId } from "../middlewares/customer-auth";
+import { rateLimit } from "../middlewares/rate-limit";
 
 const router: IRouter = Router();
 
@@ -34,7 +35,7 @@ router.post("/orders", async (req, res) => {
   const total = subtotal + shipping - discount;
 
   const customerId = await optionalCustomerId(req);
-  const id = `TZ-${Date.now().toString().slice(-6)}`;
+  const id = `NX-${Date.now().toString().slice(-6)}`;
 
   await db.insert(ordersTable).values({
     id,
@@ -115,7 +116,7 @@ router.get("/orders/track", async (req, res) => {
   });
 });
 
-router.post("/newsletter", async (req, res) => {
+router.post("/newsletter", rateLimit({ max: 3, windowMs: 60_000 }), async (req, res) => {
   const parsed = SubscribeNewsletterBody.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: "Invalid email" });
 

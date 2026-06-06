@@ -14,6 +14,7 @@ import {
 } from "../lib/customer-session";
 import { requireCustomer } from "../middlewares/customer-auth";
 import { mapOrder } from "./admin/helpers";
+import { rateLimit, recordLoginFailure, recordLoginSuccess, isIpBlocked } from "../middlewares/rate-limit";
 import type { Customer } from "@workspace/db";
 
 const router: IRouter = Router();
@@ -56,7 +57,11 @@ function toPublic(c: Customer) {
 }
 
 // POST /customers/register
-router.post("/customers/register", async (req, res) => {
+router.post("/customers/register", rateLimit({ max: 5, windowMs: 60_000 }), async (req, res) => {
+  const ip = req.ip ?? "unknown";
+  if (isIpBlocked(ip)) {
+    return res.status(429).json({ error: "تم حظر الإيبي التالي ملائمياً بسبب الإجراءات المتكررة. يرجى الانتظار 5 دقائق." });
+  }
   const parsed = CustomerRegisterBody.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: "بيانات غير صالحة", details: parsed.error.issues });
 
@@ -85,19 +90,28 @@ router.post("/customers/register", async (req, res) => {
 });
 
 // POST /customers/login
-router.post("/customers/login", async (req, res) => {
+router.post("/customers/login", rateLimit({ max: 10, windowMs: 60_000 }), async (req, res) => {
+  const ip = req.ip ?? "unknown";
+  if (isIpBlocked(ip)) {
+    return res.status(429).json({ error: "تم حظر الإيبي التالي ملائمياً بسبب الإجراءات المتكررة. يرجى الانتظار 5 دقائق." });
+  }
+
   const parsed = CustomerLoginBody.safeParse(req.body);
   if (!parsed.success) return res.status(400).json({ error: "بيانات غير صالحة" });
 
   const email = parsed.data.email.trim().toLowerCase();
   const customer = await db.query.customersTable.findFirst({ where: eq(customersTable.email, email) });
   if (!customer || !customer.isActive) {
+    recordLoginFailure(ip);
     return res.status(401).json({ error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" });
   }
   const valid = await verifyPassword(parsed.data.password, customer.passwordHash);
   if (!valid) {
+    recordLoginFailure(ip);
     return res.status(401).json({ error: "البريد الإلكتروني أو كلمة المرور غير صحيحة" });
   }
+
+  recordLoginSuccess(ip);
 
   const { token } = await createCustomerSession(customer.id, {
     userAgent: req.headers["user-agent"] ?? null,

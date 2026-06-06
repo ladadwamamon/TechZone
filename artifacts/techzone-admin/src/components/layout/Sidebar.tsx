@@ -22,6 +22,8 @@ import {
   Users, 
   UserRound,
   Ticket,
+  Gift,
+  Calendar,
   Settings, 
   Activity
 } from "lucide-react";
@@ -37,6 +39,8 @@ export function Sidebar() {
     { href: "/categories", label: "الفئات", icon: Tags, perm: "categories:write" },
     { href: "/brands", label: "العلامات التجارية", icon: Copyright, perm: "brands:write" },
     { href: "/coupons", label: "الكوبونات", icon: Ticket, perm: "coupons:write" },
+    { href: "/gift-cards", label: "بطاقات الهدايا", icon: Gift, perm: "gift_cards:write" },
+    { href: "/subscription-plans", label: "خطط الاشتراك", icon: Calendar, perm: "subscriptions:write" },
     { href: "/reviews", label: "التقييمات", icon: MessageSquare, perm: "reviews:write" },
     { href: "/blog", label: "المدونة", icon: FileText, perm: "blog:write" },
     { href: "/media", label: "الوسائط", icon: ImageIcon, perm: "media:write" },

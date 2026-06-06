@@ -22,9 +22,9 @@ export default function CategoryDetail() {
     limit: 20
   });
 
-  const helmetTitle = category?.metaTitle || category?.nameAr || "تيك زون";
-  const helmetDesc = category?.metaDescription || category?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من TechZone";
-  const helmetKeywords = category?.metaKeywords || "تيك زون, إلكترونيات, كمبيوتر, ألعاب";
+  const helmetTitle = category?.metaTitle || category?.nameAr || "نكسس";
+  const helmetDesc = category?.metaDescription || category?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من Nexus Store";
+  const helmetKeywords = category?.metaKeywords || "نكسس, إلكترونيات, كمبيوتر, ألعاب";
 
   return (
     <Layout>

@@ -59,13 +59,20 @@ import type {
   Coupon,
   CouponValidateInput,
   CouponValidateResult,
+  CreateSubscriptionInput,
   Customer,
   CustomerLoginInput,
   CustomerProfileUpdate,
   CustomerRegisterInput,
+  CustomerSubscription,
   FlashDealsResponse,
   GetBestSellersParams,
   GetRecentlyViewedProductsParams,
+  GiftCard,
+  GiftCardInput,
+  GiftCardRedeemInput,
+  GiftCardRedeemResult,
+  GiftCardUpdate,
   HealthStatus,
   ListBlogPostsParams,
   ListProductsParams,
@@ -85,6 +92,9 @@ import type {
   SalesPoint,
   SettingsMap,
   StoreSummary,
+  SubscriptionPlan,
+  SubscriptionPlanInput,
+  SubscriptionPlanUpdate,
   SuccessResponse,
   TopProduct,
   TrackOrderParams
@@ -5439,5 +5449,958 @@ export const useAdminDeleteCoupon = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getAdminDeleteCouponMutationOptions(options));
+    }
+
+export const getAdminListGiftCardsUrl = () => {
+
+
+
+
+  return `/api/admin/gift-cards`
+}
+
+/**
+ * @summary List gift cards
+ */
+export const adminListGiftCards = async ( options?: RequestInit): Promise<GiftCard[]> => {
+
+  return customFetch<GiftCard[]>(getAdminListGiftCardsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getAdminListGiftCardsQueryKey = () => {
+    return [
+    `/api/admin/gift-cards`
+    ] as const;
+    }
+
+
+export const getAdminListGiftCardsQueryOptions = <TData = Awaited<ReturnType<typeof adminListGiftCards>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof adminListGiftCards>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getAdminListGiftCardsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof adminListGiftCards>>> = ({ signal }) => adminListGiftCards({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof adminListGiftCards>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type AdminListGiftCardsQueryResult = NonNullable<Awaited<ReturnType<typeof adminListGiftCards>>>
+export type AdminListGiftCardsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List gift cards
+ */
+
+export function useAdminListGiftCards<TData = Awaited<ReturnType<typeof adminListGiftCards>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof adminListGiftCards>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getAdminListGiftCardsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getAdminCreateGiftCardUrl = () => {
+
+
+
+
+  return `/api/admin/gift-cards`
+}
+
+/**
+ * @summary Create a gift card
+ */
+export const adminCreateGiftCard = async (giftCardInput: GiftCardInput, options?: RequestInit): Promise<GiftCard> => {
+
+  return customFetch<GiftCard>(getAdminCreateGiftCardUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      giftCardInput,)
+  }
+);}
+
+
+
+
+export const getAdminCreateGiftCardMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateGiftCard>>, TError,{data: BodyType<GiftCardInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminCreateGiftCard>>, TError,{data: BodyType<GiftCardInput>}, TContext> => {
+
+const mutationKey = ['adminCreateGiftCard'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminCreateGiftCard>>, {data: BodyType<GiftCardInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  adminCreateGiftCard(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminCreateGiftCardMutationResult = NonNullable<Awaited<ReturnType<typeof adminCreateGiftCard>>>
+    export type AdminCreateGiftCardMutationBody = BodyType<GiftCardInput>
+    export type AdminCreateGiftCardMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a gift card
+ */
+export const useAdminCreateGiftCard = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateGiftCard>>, TError,{data: BodyType<GiftCardInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminCreateGiftCard>>,
+        TError,
+        {data: BodyType<GiftCardInput>},
+        TContext
+      > => {
+      return useMutation(getAdminCreateGiftCardMutationOptions(options));
+    }
+
+export const getAdminUpdateGiftCardUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/gift-cards/${id}`
+}
+
+/**
+ * @summary Update a gift card
+ */
+export const adminUpdateGiftCard = async (id: string,
+    giftCardUpdate: GiftCardUpdate, options?: RequestInit): Promise<GiftCard> => {
+
+  return customFetch<GiftCard>(getAdminUpdateGiftCardUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      giftCardUpdate,)
+  }
+);}
+
+
+
+
+export const getAdminUpdateGiftCardMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateGiftCard>>, TError,{id: string;data: BodyType<GiftCardUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminUpdateGiftCard>>, TError,{id: string;data: BodyType<GiftCardUpdate>}, TContext> => {
+
+const mutationKey = ['adminUpdateGiftCard'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminUpdateGiftCard>>, {id: string;data: BodyType<GiftCardUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  adminUpdateGiftCard(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminUpdateGiftCardMutationResult = NonNullable<Awaited<ReturnType<typeof adminUpdateGiftCard>>>
+    export type AdminUpdateGiftCardMutationBody = BodyType<GiftCardUpdate>
+    export type AdminUpdateGiftCardMutationError = ErrorType<void>
+
+    /**
+ * @summary Update a gift card
+ */
+export const useAdminUpdateGiftCard = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateGiftCard>>, TError,{id: string;data: BodyType<GiftCardUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminUpdateGiftCard>>,
+        TError,
+        {id: string;data: BodyType<GiftCardUpdate>},
+        TContext
+      > => {
+      return useMutation(getAdminUpdateGiftCardMutationOptions(options));
+    }
+
+export const getAdminDeleteGiftCardUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/gift-cards/${id}`
+}
+
+/**
+ * @summary Delete a gift card
+ */
+export const adminDeleteGiftCard = async (id: string, options?: RequestInit): Promise<SuccessResponse> => {
+
+  return customFetch<SuccessResponse>(getAdminDeleteGiftCardUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getAdminDeleteGiftCardMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminDeleteGiftCard>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminDeleteGiftCard>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['adminDeleteGiftCard'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminDeleteGiftCard>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  adminDeleteGiftCard(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminDeleteGiftCardMutationResult = NonNullable<Awaited<ReturnType<typeof adminDeleteGiftCard>>>
+
+    export type AdminDeleteGiftCardMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a gift card
+ */
+export const useAdminDeleteGiftCard = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminDeleteGiftCard>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminDeleteGiftCard>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getAdminDeleteGiftCardMutationOptions(options));
+    }
+
+export const getAdminListSubscriptionPlansUrl = () => {
+
+
+
+
+  return `/api/admin/subscription-plans`
+}
+
+/**
+ * @summary List subscription plans
+ */
+export const adminListSubscriptionPlans = async ( options?: RequestInit): Promise<SubscriptionPlan[]> => {
+
+  return customFetch<SubscriptionPlan[]>(getAdminListSubscriptionPlansUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getAdminListSubscriptionPlansQueryKey = () => {
+    return [
+    `/api/admin/subscription-plans`
+    ] as const;
+    }
+
+
+export const getAdminListSubscriptionPlansQueryOptions = <TData = Awaited<ReturnType<typeof adminListSubscriptionPlans>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof adminListSubscriptionPlans>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getAdminListSubscriptionPlansQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof adminListSubscriptionPlans>>> = ({ signal }) => adminListSubscriptionPlans({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof adminListSubscriptionPlans>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type AdminListSubscriptionPlansQueryResult = NonNullable<Awaited<ReturnType<typeof adminListSubscriptionPlans>>>
+export type AdminListSubscriptionPlansQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List subscription plans
+ */
+
+export function useAdminListSubscriptionPlans<TData = Awaited<ReturnType<typeof adminListSubscriptionPlans>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof adminListSubscriptionPlans>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getAdminListSubscriptionPlansQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getAdminCreateSubscriptionPlanUrl = () => {
+
+
+
+
+  return `/api/admin/subscription-plans`
+}
+
+/**
+ * @summary Create a subscription plan
+ */
+export const adminCreateSubscriptionPlan = async (subscriptionPlanInput: SubscriptionPlanInput, options?: RequestInit): Promise<SubscriptionPlan> => {
+
+  return customFetch<SubscriptionPlan>(getAdminCreateSubscriptionPlanUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      subscriptionPlanInput,)
+  }
+);}
+
+
+
+
+export const getAdminCreateSubscriptionPlanMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateSubscriptionPlan>>, TError,{data: BodyType<SubscriptionPlanInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminCreateSubscriptionPlan>>, TError,{data: BodyType<SubscriptionPlanInput>}, TContext> => {
+
+const mutationKey = ['adminCreateSubscriptionPlan'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminCreateSubscriptionPlan>>, {data: BodyType<SubscriptionPlanInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  adminCreateSubscriptionPlan(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminCreateSubscriptionPlanMutationResult = NonNullable<Awaited<ReturnType<typeof adminCreateSubscriptionPlan>>>
+    export type AdminCreateSubscriptionPlanMutationBody = BodyType<SubscriptionPlanInput>
+    export type AdminCreateSubscriptionPlanMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Create a subscription plan
+ */
+export const useAdminCreateSubscriptionPlan = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminCreateSubscriptionPlan>>, TError,{data: BodyType<SubscriptionPlanInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminCreateSubscriptionPlan>>,
+        TError,
+        {data: BodyType<SubscriptionPlanInput>},
+        TContext
+      > => {
+      return useMutation(getAdminCreateSubscriptionPlanMutationOptions(options));
+    }
+
+export const getAdminUpdateSubscriptionPlanUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/subscription-plans/${id}`
+}
+
+/**
+ * @summary Update a subscription plan
+ */
+export const adminUpdateSubscriptionPlan = async (id: string,
+    subscriptionPlanUpdate: SubscriptionPlanUpdate, options?: RequestInit): Promise<SubscriptionPlan> => {
+
+  return customFetch<SubscriptionPlan>(getAdminUpdateSubscriptionPlanUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      subscriptionPlanUpdate,)
+  }
+);}
+
+
+
+
+export const getAdminUpdateSubscriptionPlanMutationOptions = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateSubscriptionPlan>>, TError,{id: string;data: BodyType<SubscriptionPlanUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminUpdateSubscriptionPlan>>, TError,{id: string;data: BodyType<SubscriptionPlanUpdate>}, TContext> => {
+
+const mutationKey = ['adminUpdateSubscriptionPlan'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminUpdateSubscriptionPlan>>, {id: string;data: BodyType<SubscriptionPlanUpdate>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  adminUpdateSubscriptionPlan(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminUpdateSubscriptionPlanMutationResult = NonNullable<Awaited<ReturnType<typeof adminUpdateSubscriptionPlan>>>
+    export type AdminUpdateSubscriptionPlanMutationBody = BodyType<SubscriptionPlanUpdate>
+    export type AdminUpdateSubscriptionPlanMutationError = ErrorType<void>
+
+    /**
+ * @summary Update a subscription plan
+ */
+export const useAdminUpdateSubscriptionPlan = <TError = ErrorType<void>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateSubscriptionPlan>>, TError,{id: string;data: BodyType<SubscriptionPlanUpdate>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminUpdateSubscriptionPlan>>,
+        TError,
+        {id: string;data: BodyType<SubscriptionPlanUpdate>},
+        TContext
+      > => {
+      return useMutation(getAdminUpdateSubscriptionPlanMutationOptions(options));
+    }
+
+export const getAdminDeleteSubscriptionPlanUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/subscription-plans/${id}`
+}
+
+/**
+ * @summary Delete a subscription plan
+ */
+export const adminDeleteSubscriptionPlan = async (id: string, options?: RequestInit): Promise<SuccessResponse> => {
+
+  return customFetch<SuccessResponse>(getAdminDeleteSubscriptionPlanUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+export const getAdminDeleteSubscriptionPlanMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminDeleteSubscriptionPlan>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminDeleteSubscriptionPlan>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['adminDeleteSubscriptionPlan'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminDeleteSubscriptionPlan>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  adminDeleteSubscriptionPlan(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminDeleteSubscriptionPlanMutationResult = NonNullable<Awaited<ReturnType<typeof adminDeleteSubscriptionPlan>>>
+
+    export type AdminDeleteSubscriptionPlanMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Delete a subscription plan
+ */
+export const useAdminDeleteSubscriptionPlan = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminDeleteSubscriptionPlan>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminDeleteSubscriptionPlan>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getAdminDeleteSubscriptionPlanMutationOptions(options));
+    }
+
+export const getAdminListSubscriptionsUrl = () => {
+
+
+
+
+  return `/api/admin/subscriptions`
+}
+
+/**
+ * @summary List customer subscriptions
+ */
+export const adminListSubscriptions = async ( options?: RequestInit): Promise<CustomerSubscription[]> => {
+
+  return customFetch<CustomerSubscription[]>(getAdminListSubscriptionsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getAdminListSubscriptionsQueryKey = () => {
+    return [
+    `/api/admin/subscriptions`
+    ] as const;
+    }
+
+
+export const getAdminListSubscriptionsQueryOptions = <TData = Awaited<ReturnType<typeof adminListSubscriptions>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof adminListSubscriptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getAdminListSubscriptionsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof adminListSubscriptions>>> = ({ signal }) => adminListSubscriptions({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof adminListSubscriptions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type AdminListSubscriptionsQueryResult = NonNullable<Awaited<ReturnType<typeof adminListSubscriptions>>>
+export type AdminListSubscriptionsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List customer subscriptions
+ */
+
+export function useAdminListSubscriptions<TData = Awaited<ReturnType<typeof adminListSubscriptions>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof adminListSubscriptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getAdminListSubscriptionsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getRedeemGiftCardUrl = () => {
+
+
+
+
+  return `/api/gift-cards/redeem`
+}
+
+/**
+ * @summary Redeem a gift card
+ */
+export const redeemGiftCard = async (giftCardRedeemInput: GiftCardRedeemInput, options?: RequestInit): Promise<GiftCardRedeemResult> => {
+
+  return customFetch<GiftCardRedeemResult>(getRedeemGiftCardUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      giftCardRedeemInput,)
+  }
+);}
+
+
+
+
+export const getRedeemGiftCardMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof redeemGiftCard>>, TError,{data: BodyType<GiftCardRedeemInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof redeemGiftCard>>, TError,{data: BodyType<GiftCardRedeemInput>}, TContext> => {
+
+const mutationKey = ['redeemGiftCard'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof redeemGiftCard>>, {data: BodyType<GiftCardRedeemInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  redeemGiftCard(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RedeemGiftCardMutationResult = NonNullable<Awaited<ReturnType<typeof redeemGiftCard>>>
+    export type RedeemGiftCardMutationBody = BodyType<GiftCardRedeemInput>
+    export type RedeemGiftCardMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Redeem a gift card
+ */
+export const useRedeemGiftCard = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof redeemGiftCard>>, TError,{data: BodyType<GiftCardRedeemInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof redeemGiftCard>>,
+        TError,
+        {data: BodyType<GiftCardRedeemInput>},
+        TContext
+      > => {
+      return useMutation(getRedeemGiftCardMutationOptions(options));
+    }
+
+export const getListSubscriptionPlansUrl = () => {
+
+
+
+
+  return `/api/subscription-plans`
+}
+
+/**
+ * @summary List active subscription plans
+ */
+export const listSubscriptionPlans = async ( options?: RequestInit): Promise<SubscriptionPlan[]> => {
+
+  return customFetch<SubscriptionPlan[]>(getListSubscriptionPlansUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListSubscriptionPlansQueryKey = () => {
+    return [
+    `/api/subscription-plans`
+    ] as const;
+    }
+
+
+export const getListSubscriptionPlansQueryOptions = <TData = Awaited<ReturnType<typeof listSubscriptionPlans>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSubscriptionPlans>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListSubscriptionPlansQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listSubscriptionPlans>>> = ({ signal }) => listSubscriptionPlans({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listSubscriptionPlans>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListSubscriptionPlansQueryResult = NonNullable<Awaited<ReturnType<typeof listSubscriptionPlans>>>
+export type ListSubscriptionPlansQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary List active subscription plans
+ */
+
+export function useListSubscriptionPlans<TData = Awaited<ReturnType<typeof listSubscriptionPlans>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listSubscriptionPlans>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListSubscriptionPlansQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCustomerSubscriptionsUrl = () => {
+
+
+
+
+  return `/api/customers/subscriptions`
+}
+
+/**
+ * @summary Current customer subscriptions
+ */
+export const customerSubscriptions = async ( options?: RequestInit): Promise<CustomerSubscription[]> => {
+
+  return customFetch<CustomerSubscription[]>(getCustomerSubscriptionsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getCustomerSubscriptionsQueryKey = () => {
+    return [
+    `/api/customers/subscriptions`
+    ] as const;
+    }
+
+
+export const getCustomerSubscriptionsQueryOptions = <TData = Awaited<ReturnType<typeof customerSubscriptions>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof customerSubscriptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getCustomerSubscriptionsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof customerSubscriptions>>> = ({ signal }) => customerSubscriptions({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof customerSubscriptions>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type CustomerSubscriptionsQueryResult = NonNullable<Awaited<ReturnType<typeof customerSubscriptions>>>
+export type CustomerSubscriptionsQueryError = ErrorType<unknown>
+
+
+/**
+ * @summary Current customer subscriptions
+ */
+
+export function useCustomerSubscriptions<TData = Awaited<ReturnType<typeof customerSubscriptions>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof customerSubscriptions>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getCustomerSubscriptionsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return { ...query, queryKey: queryOptions.queryKey };
+}
+
+
+
+
+
+
+
+export const getCreateCustomerSubscriptionUrl = () => {
+
+
+
+
+  return `/api/customers/subscriptions`
+}
+
+/**
+ * @summary Subscribe to a plan
+ */
+export const createCustomerSubscription = async (createSubscriptionInput: CreateSubscriptionInput, options?: RequestInit): Promise<CustomerSubscription> => {
+
+  return customFetch<CustomerSubscription>(getCreateCustomerSubscriptionUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      createSubscriptionInput,)
+  }
+);}
+
+
+
+
+export const getCreateCustomerSubscriptionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerSubscription>>, TError,{data: BodyType<CreateSubscriptionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createCustomerSubscription>>, TError,{data: BodyType<CreateSubscriptionInput>}, TContext> => {
+
+const mutationKey = ['createCustomerSubscription'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createCustomerSubscription>>, {data: BodyType<CreateSubscriptionInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createCustomerSubscription(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateCustomerSubscriptionMutationResult = NonNullable<Awaited<ReturnType<typeof createCustomerSubscription>>>
+    export type CreateCustomerSubscriptionMutationBody = BodyType<CreateSubscriptionInput>
+    export type CreateCustomerSubscriptionMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Subscribe to a plan
+ */
+export const useCreateCustomerSubscription = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createCustomerSubscription>>, TError,{data: BodyType<CreateSubscriptionInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createCustomerSubscription>>,
+        TError,
+        {data: BodyType<CreateSubscriptionInput>},
+        TContext
+      > => {
+      return useMutation(getCreateCustomerSubscriptionMutationOptions(options));
     }
 

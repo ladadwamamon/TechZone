@@ -18,6 +18,8 @@ import {
   Package,
   UserPlus,
   LogIn,
+  Gift,
+  Crown,
 } from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { useState, useRef } from "react";
@@ -41,6 +43,8 @@ const QUICK_LINKS = [
   { href: "/brands", label: "الماركات", icon: Tag, tone: "text-foreground" },
   { href: "/blog", label: "المدونة", icon: Newspaper, tone: "text-foreground" },
   { href: "/track-order", label: "تتبع الطلب", icon: PackageSearch, tone: "text-foreground" },
+  { href: "/gift-cards", label: "بطاقات الهدايا", icon: Gift, tone: "text-foreground" },
+  { href: "/subscriptions", label: "خطط الاشتراك", icon: Crown, tone: "text-foreground" },
 ];
 
 export function Navbar() {

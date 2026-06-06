@@ -58,6 +58,16 @@ tags:
     description: Customer accounts and authentication
   - name: admin-coupons
     description: Admin coupon management
+  - name: admin-gift-cards
+    description: Admin gift card management
+  - name: admin-subscription-plans
+    description: Admin subscription plan management
+  - name: admin-subscriptions
+    description: Admin customer subscriptions
+  - name: gift-cards
+    description: Public gift card operations
+  - name: subscription-plans
+    description: Public subscription plan operations
 paths:
   /healthz:
     get:
@@ -1407,6 +1417,235 @@ paths:
               schema:
                 $ref: "#/components/schemas/SuccessResponse"
 
+  /admin/gift-cards:
+    get:
+      operationId: adminListGiftCards
+      tags: [admin-gift-cards]
+      summary: List gift cards
+      responses:
+        "200":
+          description: Gift cards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GiftCard"
+    post:
+      operationId: adminCreateGiftCard
+      tags: [admin-gift-cards]
+      summary: Create a gift card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GiftCardInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GiftCard"
+
+  /admin/gift-cards/{id}:
+    put:
+      operationId: adminUpdateGiftCard
+      tags: [admin-gift-cards]
+      summary: Update a gift card
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GiftCardUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GiftCard"
+        "404":
+          description: Not found
+    delete:
+      operationId: adminDeleteGiftCard
+      tags: [admin-gift-cards]
+      summary: Delete a gift card
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /admin/subscription-plans:
+    get:
+      operationId: adminListSubscriptionPlans
+      tags: [admin-subscription-plans]
+      summary: List subscription plans
+      responses:
+        "200":
+          description: Subscription plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionPlan"
+    post:
+      operationId: adminCreateSubscriptionPlan
+      tags: [admin-subscription-plans]
+      summary: Create a subscription plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionPlanInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionPlan"
+
+  /admin/subscription-plans/{id}:
+    put:
+      operationId: adminUpdateSubscriptionPlan
+      tags: [admin-subscription-plans]
+      summary: Update a subscription plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubscriptionPlanUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SubscriptionPlan"
+        "404":
+          description: Not found
+    delete:
+      operationId: adminDeleteSubscriptionPlan
+      tags: [admin-subscription-plans]
+      summary: Delete a subscription plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /admin/subscriptions:
+    get:
+      operationId: adminListSubscriptions
+      tags: [admin-subscriptions]
+      summary: List customer subscriptions
+      responses:
+        "200":
+          description: Subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerSubscription"
+
+  /gift-cards/redeem:
+    post:
+      operationId: redeemGiftCard
+      tags: [gift-cards]
+      summary: Redeem a gift card
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GiftCardRedeemInput"
+      responses:
+        "200":
+          description: Redeem result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GiftCardRedeemResult"
+
+  /subscription-plans:
+    get:
+      operationId: listSubscriptionPlans
+      tags: [subscription-plans]
+      summary: List active subscription plans
+      responses:
+        "200":
+          description: Plans
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SubscriptionPlan"
+
+  /customers/subscriptions:
+    get:
+      operationId: customerSubscriptions
+      tags: [customers]
+      summary: Current customer subscriptions
+      responses:
+        "200":
+          description: Subscriptions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CustomerSubscription"
+    post:
+      operationId: createCustomerSubscription
+      tags: [customers]
+      summary: Subscribe to a plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSubscriptionInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerSubscription"
+
 components:
   schemas:
     HealthStatus:
@@ -2230,3 +2469,116 @@ components:
         phone:    { type: ["string", "null"] }
         city:     { type: ["string", "null"] }
         address:  { type: ["string", "null"] }
+
+    GiftCard:
+      type: object
+      required: [id, code, amount, balance, status, createdAt]
+      properties:
+        id:          { type: string }
+        code:        { type: string }
+        amount:      { type: number }
+        balance:     { type: number }
+        status:      { type: string, enum: [active, redeemed, expired, cancelled] }
+        customerId:  { type: ["string", "null"] }
+        redeemedAt:  { type: ["string", "null"] }
+        expiresAt:   { type: ["string", "null"] }
+        createdAt:   { type: string }
+
+    GiftCardInput:
+      type: object
+      required: [code, amount]
+      properties:
+        id:          { type: string }
+        code:        { type: string }
+        amount:      { type: number }
+        balance:     { type: number }
+        status:      { type: string, enum: [active, redeemed, expired, cancelled] }
+        expiresAt:   { type: ["string", "null"] }
+
+    GiftCardUpdate:
+      type: object
+      properties:
+        code:        { type: string }
+        amount:      { type: number }
+        balance:     { type: number }
+        status:      { type: string, enum: [active, redeemed, expired, cancelled] }
+        expiresAt:   { type: ["string", "null"] }
+
+    GiftCardRedeemInput:
+      type: object
+      required: [code]
+      properties:
+        code: { type: string }
+
+    GiftCardRedeemResult:
+      type: object
+      required: [success, balance]
+      properties:
+        success:   { type: boolean }
+        balance:   { type: number }
+        amount:    { type: number }
+        message:   { type: ["string", "null"] }
+
+    SubscriptionPlan:
+      type: object
+      required: [id, nameAr, nameEn, slug, price, period, isActive, createdAt]
+      properties:
+        id:            { type: string }
+        nameAr:        { type: string }
+        nameEn:        { type: string }
+        slug:          { type: string }
+        descriptionAr: { type: ["string", "null"] }
+        descriptionEn: { type: ["string", "null"] }
+        price:         { type: number }
+        period:        { type: string, enum: [monthly, quarterly, yearly] }
+        features:      { type: array, items: { type: string } }
+        isActive:      { type: boolean }
+        createdAt:     { type: string }
+
+    SubscriptionPlanInput:
+      type: object
+      required: [nameAr, nameEn, slug, price, period]
+      properties:
+        id:            { type: string }
+        nameAr:        { type: string }
+        nameEn:        { type: string }
+        slug:          { type: string }
+        descriptionAr: { type: ["string", "null"] }
+        descriptionEn: { type: ["string", "null"] }
+        price:         { type: number }
+        period:        { type: string, enum: [monthly, quarterly, yearly] }
+        features:      { type: array, items: { type: string } }
+        isActive:      { type: boolean }
+
+    SubscriptionPlanUpdate:
+      type: object
+      properties:
+        nameAr:        { type: string }
+        nameEn:        { type: string }
+        slug:          { type: string }
+        descriptionAr: { type: ["string", "null"] }
+        descriptionEn: { type: ["string", "null"] }
+        price:         { type: number }
+        period:        { type: string, enum: [monthly, quarterly, yearly] }
+        features:      { type: array, items: { type: string } }
+        isActive:      { type: boolean }
+
+    CustomerSubscription:
+      type: object
+      required: [id, customerId, planId, status, renewCount, createdAt]
+      properties:
+        id:          { type: string }
+        customerId:  { type: string }
+        planId:      { type: string }
+        status:      { type: string, enum: [active, cancelled, expired, pending] }
+        startedAt:   { type: ["string", "null"] }
+        expiresAt:   { type: ["string", "null"] }
+        renewCount:  { type: integer }
+        cancelledAt: { type: ["string", "null"] }
+        createdAt:   { type: string }
+
+    CreateSubscriptionInput:
+      type: object
+      required: [planId]
+      properties:
+        planId: { type: string }

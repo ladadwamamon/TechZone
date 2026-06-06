@@ -77,7 +77,7 @@ export default function OrderSuccess() {
             <h1 className="text-3xl md:text-4xl font-black mb-4 glitch text-lime neon-text-lime uppercase tracking-wide" data-text="تم تأكيد طلبك بنجاح!">تم تأكيد طلبك بنجاح!</h1>
             
             <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
-              شكراً لتسوقك من TechZone. جاري معالجة الطلب في النظام وسنتواصل معك قريباً.
+              شكراً لتسوقك من Nexus Store. جاري معالجة الطلب في النظام وسنتواصل معك قريباً.
             </p>
             
             <div className="bg-background border border-primary/30 clip-corner-sm p-6 w-full mb-8 relative">

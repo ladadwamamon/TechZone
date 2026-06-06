@@ -17,12 +17,12 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-2 mb-6 group">
               <Monitor className="text-primary h-8 w-8 group-hover:animate-flicker" />
-              <span className="text-2xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="TECHZONE">
-                TECHZONE
+              <span className="text-2xl font-black tracking-wider text-primary neon-text uppercase glitch" data-text="NEXUS">
+                NEXUS
               </span>
             </Link>
             <p className="text-primary/70 text-sm leading-relaxed mb-6">
-              متجر TechZone هو وجهتك الأولى لكل ما يخص عالم الجيمنج والإلكترونيات. نوفر لك أفضل القطع وأحدث التجميعات بأسعار تنافسية.
+              متجر Nexus Store هو وجهتك الأولى لكل ما يخص عالم الجيمنج والإلكترونيات. نوفر لك أفضل القطع وأحدث التجميعات بأسعار تنافسية.
               <br /><br />
               <span className="text-secondary neon-text-magenta animate-pulse text-xs">{"//"} SYSTEM_INITIALIZED</span>
             </p>
@@ -86,6 +86,8 @@ export function Footer() {
               <li><Link href="/faq" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>الأسئلة الشائعة<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
               <li><Link href="/blog" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>المدونة<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
               <li><Link href="/track-order" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>تتبع طلبك<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/gift-cards" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>بطاقات الهدايا<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
+              <li><Link href="/subscriptions" className="hover:text-primary transition-colors flex items-center gap-2"><span className="text-primary/50 text-xs">{"["}</span>خطط الاشتراك<span className="text-primary/50 text-xs">{"]"}</span></Link></li>
             </ul>
           </div>
 
@@ -132,7 +134,7 @@ export function Footer() {
         </div>
 
         <div className="pt-8 border-t border-primary/20 text-center text-sm text-primary/50 flex flex-col md:flex-row items-center justify-between">
-          <p>© {new Date().getFullYear()} TECHZONE_OS. ALL_RIGHTS_RESERVED.</p>
+          <p>© {new Date().getFullYear()} NEXUS_OS. ALL_RIGHTS_RESERVED.</p>
           <p className="mt-2 md:mt-0 animate-pulse">{"//"} SYSTEM_STATUS: ONLINE</p>
         </div>
       </div>

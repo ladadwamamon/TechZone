@@ -12,6 +12,8 @@ import Products from "@/pages/Products";
 import Categories from "@/pages/Categories";
 import Brands from "@/pages/Brands";
 import Coupons from "@/pages/Coupons";
+import GiftCards from "@/pages/GiftCards";
+import SubscriptionPlans from "@/pages/SubscriptionPlans";
 import Reviews from "@/pages/Reviews";
 import Blog from "@/pages/Blog";
 import Media from "@/pages/Media";
@@ -58,6 +60,12 @@ function Router() {
       </Route>
       <Route path="/coupons">
         {(params) => <ProtectedRoute component={Coupons} perm="coupons:write" {...params} />}
+      </Route>
+      <Route path="/gift-cards">
+        {(params) => <ProtectedRoute component={GiftCards} perm="gift_cards:write" {...params} />}
+      </Route>
+      <Route path="/subscription-plans">
+        {(params) => <ProtectedRoute component={SubscriptionPlans} perm="subscriptions:write" {...params} />}
       </Route>
       <Route path="/reviews">
         {(params) => <ProtectedRoute component={Reviews} perm="reviews:write" {...params} />}

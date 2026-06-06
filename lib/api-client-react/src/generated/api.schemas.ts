@@ -840,6 +840,183 @@ export interface CustomerProfileUpdate {
   address?: string | null;
 }
 
+export type GiftCardStatus = typeof GiftCardStatus[keyof typeof GiftCardStatus];
+
+
+export const GiftCardStatus = {
+  active: 'active',
+  redeemed: 'redeemed',
+  expired: 'expired',
+  cancelled: 'cancelled',
+} as const;
+
+export interface GiftCard {
+  id: string;
+  code: string;
+  amount: number;
+  balance: number;
+  status: GiftCardStatus;
+  /** @nullable */
+  customerId?: string | null;
+  /** @nullable */
+  redeemedAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  createdAt: string;
+}
+
+export type GiftCardInputStatus = typeof GiftCardInputStatus[keyof typeof GiftCardInputStatus];
+
+
+export const GiftCardInputStatus = {
+  active: 'active',
+  redeemed: 'redeemed',
+  expired: 'expired',
+  cancelled: 'cancelled',
+} as const;
+
+export interface GiftCardInput {
+  id?: string;
+  code: string;
+  amount: number;
+  balance?: number;
+  status?: GiftCardInputStatus;
+  /** @nullable */
+  expiresAt?: string | null;
+}
+
+export type GiftCardUpdateStatus = typeof GiftCardUpdateStatus[keyof typeof GiftCardUpdateStatus];
+
+
+export const GiftCardUpdateStatus = {
+  active: 'active',
+  redeemed: 'redeemed',
+  expired: 'expired',
+  cancelled: 'cancelled',
+} as const;
+
+export interface GiftCardUpdate {
+  code?: string;
+  amount?: number;
+  balance?: number;
+  status?: GiftCardUpdateStatus;
+  /** @nullable */
+  expiresAt?: string | null;
+}
+
+export interface GiftCardRedeemInput {
+  code: string;
+}
+
+export interface GiftCardRedeemResult {
+  success: boolean;
+  balance: number;
+  amount?: number;
+  /** @nullable */
+  message?: string | null;
+}
+
+export type SubscriptionPlanPeriod = typeof SubscriptionPlanPeriod[keyof typeof SubscriptionPlanPeriod];
+
+
+export const SubscriptionPlanPeriod = {
+  monthly: 'monthly',
+  quarterly: 'quarterly',
+  yearly: 'yearly',
+} as const;
+
+export interface SubscriptionPlan {
+  id: string;
+  nameAr: string;
+  nameEn: string;
+  slug: string;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  descriptionEn?: string | null;
+  price: number;
+  period: SubscriptionPlanPeriod;
+  features?: string[];
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type SubscriptionPlanInputPeriod = typeof SubscriptionPlanInputPeriod[keyof typeof SubscriptionPlanInputPeriod];
+
+
+export const SubscriptionPlanInputPeriod = {
+  monthly: 'monthly',
+  quarterly: 'quarterly',
+  yearly: 'yearly',
+} as const;
+
+export interface SubscriptionPlanInput {
+  id?: string;
+  nameAr: string;
+  nameEn: string;
+  slug: string;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  descriptionEn?: string | null;
+  price: number;
+  period: SubscriptionPlanInputPeriod;
+  features?: string[];
+  isActive?: boolean;
+}
+
+export type SubscriptionPlanUpdatePeriod = typeof SubscriptionPlanUpdatePeriod[keyof typeof SubscriptionPlanUpdatePeriod];
+
+
+export const SubscriptionPlanUpdatePeriod = {
+  monthly: 'monthly',
+  quarterly: 'quarterly',
+  yearly: 'yearly',
+} as const;
+
+export interface SubscriptionPlanUpdate {
+  nameAr?: string;
+  nameEn?: string;
+  slug?: string;
+  /** @nullable */
+  descriptionAr?: string | null;
+  /** @nullable */
+  descriptionEn?: string | null;
+  price?: number;
+  period?: SubscriptionPlanUpdatePeriod;
+  features?: string[];
+  isActive?: boolean;
+}
+
+export type CustomerSubscriptionStatus = typeof CustomerSubscriptionStatus[keyof typeof CustomerSubscriptionStatus];
+
+
+export const CustomerSubscriptionStatus = {
+  active: 'active',
+  cancelled: 'cancelled',
+  expired: 'expired',
+  pending: 'pending',
+} as const;
+
+export interface CustomerSubscription {
+  id: string;
+  customerId: string;
+  planId: string;
+  status: CustomerSubscriptionStatus;
+  /** @nullable */
+  startedAt?: string | null;
+  /** @nullable */
+  expiresAt?: string | null;
+  renewCount: number;
+  /** @nullable */
+  cancelledAt?: string | null;
+  createdAt: string;
+}
+
+export interface CreateSubscriptionInput {
+  planId: string;
+}
+
 export type ListProductsParams = {
 category?: string;
 brand?: string;

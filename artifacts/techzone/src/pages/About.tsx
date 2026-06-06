@@ -30,8 +30,8 @@ export default function About() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black neon-text text-primary glitch uppercase mb-4" data-text="TechZone_OS">
-            TechZone_OS
+            className="text-4xl md:text-6xl font-black neon-text text-primary glitch uppercase mb-4" data-text="NEXUS_OS">
+            NEXUS_OS
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -58,7 +58,7 @@ export default function About() {
             </div>
             <h2 className="text-3xl md:text-4xl font-bold font-sans">تأسيس النظام الأساسي</h2>
             <p className="text-muted-foreground leading-relaxed text-lg font-sans">
-              بدأت TechZone كفكرة بسيطة في غرفة مظلمة تضيئها شاشات الكمبيوتر. كنا مجموعة من اللاعبين الشغوفين، نبحث دائماً عن أفضل أداء، أعلى معدل إطارات، وأحدث التقنيات. لكننا واجهنا دائماً مشكلة واحدة: صعوبة العثور على قطع الهاردوير الاحترافية في منطقتنا.
+              بدأت Nexus Store كفكرة بسيطة في غرفة مظلمة تضيئها شاشات الكمبيوتر. كنا مجموعة من اللاعبين الشغوفين، نبحث دائماً عن أفضل أداء، أعلى معدل إطارات، وأحدث التقنيات. لكننا واجهنا دائماً مشكلة واحدة: صعوبة العثور على قطع الهاردوير الاحترافية في منطقتنا.
             </p>
             <p className="text-muted-foreground leading-relaxed text-lg font-sans">
               لذلك، قررنا بناء نظامنا الخاص. وجهة واحدة متكاملة تجمع أفضل العلامات التجارية، أحدث المنتجات، وأقوى العتاد. نحن لا نبيع مجرد قطع إلكترونية، نحن نبيع تجربة لعب متكاملة، ونساعدك في بناء جهاز أحلامك.
@@ -104,7 +104,7 @@ export default function About() {
         {/* Core Values */}
         <div className="text-center mb-16">
           <h2 className="text-3xl font-bold font-sans mb-4">بروتوكولات النظام</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">القيم والمبادئ التي تحكم كل عملية داخل TechZone.</p>
+          <p className="text-muted-foreground max-w-2xl mx-auto">القيم والمبادئ التي تحكم كل عملية داخل Nexus Store.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
           <motion.div 

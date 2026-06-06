@@ -86,9 +86,9 @@ export default function ProductDetail() {
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
-    const helmetTitle = product?.metaTitle || product?.nameAr || "تيك زون";
-  const helmetDesc = product?.metaDescription || product?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من TechZone";
-  const helmetKeywords = product?.metaKeywords || "تيك زون, إلكترونيات, كمبيوتر, ألعاب";
+    const helmetTitle = product?.metaTitle || product?.nameAr || "نكسس";
+  const helmetDesc = product?.metaDescription || product?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من Nexus Store";
+  const helmetKeywords = product?.metaKeywords || "نكسس, إلكترونيات, كمبيوتر, ألعاب";
 
   if (isLoading || !product) {
     return (

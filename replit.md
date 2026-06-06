@@ -1,6 +1,12 @@
-# TechZone — متجر الإلكترونيات والجيمنج
+# Nexus Store — متجر الإلكترونيات والجيمنج
 
 An Arabic (RTL) gaming & electronics e-commerce storefront with a cyberpunk "NEON GRID OS" visual identity. Customers browse products, categories and brands, add to cart, and place orders.
+
+- Nexus Store: `artifacts/techzone` (React + Vite) — the main storefront.
+- Nexus Store CMS: `artifacts/techzone-admin` (React + Vite) — admin panel.
+- API Server: `artifacts/api-server` (Express 5) — backend.
+- Database: PostgreSQL (Drizzle ORM) — `lib/db`.
+- API contract: OpenAPI (`lib/api-spec`) → codegen to `lib/api-client-react` + `lib/api-zod`.
 
 ## Run & Operate
 

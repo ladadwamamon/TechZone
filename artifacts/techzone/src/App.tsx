@@ -31,6 +31,8 @@ import Faq from "@/pages/Faq";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Account from "@/pages/Account";
+import GiftCards from "@/pages/GiftCards";
+import SubscriptionPlans from "@/pages/SubscriptionPlans";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -60,6 +62,8 @@ function Router() {
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route path="/account" component={Account} />
+      <Route path="/gift-cards" component={GiftCards} />
+      <Route path="/subscriptions" component={SubscriptionPlans} />
 
       <Route component={NotFound} />
     </Switch>
