@@ -9,6 +9,7 @@ import { useCartStore, useWishlistStore } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
 import { useSiteSettings } from "@/lib/settings";
 import { toast } from "sonner";
+import { Helmet } from "react-helmet-async";
 
 export default function ProductDetail() {
   const { id } = useParams<{ id: string }>();
@@ -85,9 +86,16 @@ export default function ProductDetail() {
     window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
+    const helmetTitle = product?.metaTitle || product?.nameAr || "تيك زون";
+  const helmetDesc = product?.metaDescription || product?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من TechZone";
+  const helmetKeywords = product?.metaKeywords || "تيك زون, إلكترونيات, كمبيوتر, ألعاب";
+
   if (isLoading || !product) {
     return (
       <Layout>
+        <Helmet>
+          <title>جار التحميل...</title>
+        </Helmet>
         <div className="container mx-auto px-4 py-8 animate-pulse">
           <div className="h-4 w-64 bg-primary/20 clip-corner mb-8"></div>
           <div className="flex flex-col lg:flex-row gap-8">
@@ -133,6 +141,13 @@ export default function ProductDetail() {
         </div>
       </div>
 
+        <Helmet>
+          <title>{helmetTitle}</title>
+          <meta name="description" content={helmetDesc} />
+          <meta name="keywords" content={helmetKeywords} />
+          <meta property="og:title" content={helmetTitle} />
+          <meta property="og:description" content={helmetDesc} />
+        </Helmet>
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-10 mb-16">
           
@@ -222,9 +237,9 @@ export default function ProductDetail() {
               </div>
             </div>
 
-            <p className="text-muted-foreground leading-relaxed mb-8 font-mono text-sm border-r-2 border-primary/30 pr-4 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4">
-              {product.descriptionAr}
-            </p>
+            <div className="text-muted-foreground leading-relaxed mb-8 font-mono text-sm border-r-2 border-primary/30 pr-4 rtl:border-l-0 rtl:border-r-2 rtl:pl-0 rtl:pr-4">
+              <div dangerouslySetInnerHTML={{ __html: product.descriptionAr || "" }} />
+            </div>
 
             {/* Quick Specs */}
             {product.specs && product.specs.length > 0 && (

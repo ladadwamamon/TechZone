@@ -100,9 +100,7 @@ export default function BlogPostPage() {
           )}
 
           <div className="prose prose-invert prose-p:leading-relaxed prose-p:mb-6 prose-p:text-foreground/90 prose-p:font-sans prose-a:text-primary prose-a:neon-text hover:prose-a:text-secondary max-w-none">
-            {post.contentAr.split(/\n\s*\n/).map((paragraph, idx) => (
-              <p key={idx}>{paragraph}</p>
-            ))}
+            <div dangerouslySetInnerHTML={{ __html: post.contentAr }} />
           </div>
 
           <div className="mt-16 pt-8 border-t border-primary/20 flex items-center justify-between">

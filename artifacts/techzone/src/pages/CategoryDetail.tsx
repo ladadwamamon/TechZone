@@ -5,6 +5,7 @@ import { Link, useParams } from "wouter";
 import { ChevronLeft, SlidersHorizontal, LayoutGrid, List, Monitor } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Helmet } from "react-helmet-async";
 
 export default function CategoryDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -21,8 +22,19 @@ export default function CategoryDetail() {
     limit: 20
   });
 
+  const helmetTitle = category?.metaTitle || category?.nameAr || "تيك زون";
+  const helmetDesc = category?.metaDescription || category?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من TechZone";
+  const helmetKeywords = category?.metaKeywords || "تيك زون, إلكترونيات, كمبيوتر, ألعاب";
+
   return (
     <Layout>
+      <Helmet>
+        <title>{helmetTitle}</title>
+        <meta name="description" content={helmetDesc} />
+        <meta name="keywords" content={helmetKeywords} />
+        <meta property="og:title" content={helmetTitle} />
+        <meta property="og:description" content={helmetDesc} />
+      </Helmet>
       <div className="border-b border-primary/20 py-8 relative overflow-hidden glass-panel">
         <div className="absolute inset-0 bg-primary/5 pointer-events-none" />
         <div className="container mx-auto px-4 relative z-10">

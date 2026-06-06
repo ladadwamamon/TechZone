@@ -18,6 +18,7 @@ import {
   useCustomerOrders,
   useCustomerUpdateProfile,
   getCustomerMeQueryKey,
+  getCustomerOrdersQueryKey,
 } from "@workspace/api-client-react";
 import { useCustomerAuth } from "@/lib/customerAuth";
 import { formatPrice } from "@/lib/utils";
@@ -45,7 +46,7 @@ export default function Account() {
   const { customer, isLoading, isAuthenticated, logout } = useCustomerAuth();
 
   const { data: orders, isLoading: ordersLoading } = useCustomerOrders({
-    query: { enabled: isAuthenticated },
+    query: { queryKey: getCustomerOrdersQueryKey(), enabled: isAuthenticated },
   });
 
   const updateProfile = useCustomerUpdateProfile();
