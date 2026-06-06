@@ -11,6 +11,7 @@ import Orders from "@/pages/Orders";
 import Products from "@/pages/Products";
 import Categories from "@/pages/Categories";
 import Brands from "@/pages/Brands";
+import Coupons from "@/pages/Coupons";
 import Reviews from "@/pages/Reviews";
 import Blog from "@/pages/Blog";
 import Media from "@/pages/Media";
@@ -54,6 +55,9 @@ function Router() {
       </Route>
       <Route path="/brands">
         {(params) => <ProtectedRoute component={Brands} perm="brands:write" {...params} />}
+      </Route>
+      <Route path="/coupons">
+        {(params) => <ProtectedRoute component={Coupons} perm="coupons:write" {...params} />}
       </Route>
       <Route path="/reviews">
         {(params) => <ProtectedRoute component={Reviews} perm="reviews:write" {...params} />}

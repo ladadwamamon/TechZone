@@ -14,6 +14,10 @@ import {
   Tag,
   Newspaper,
   PackageSearch,
+  LogOut,
+  Package,
+  UserPlus,
+  LogIn,
 } from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
 import { useState, useRef } from "react";
@@ -21,6 +25,8 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useListCategories } from "@workspace/api-client-react";
 import { CATEGORY_GROUPS, CATEGORY_NAMES_AR, getCategoryIcon } from "@/lib/categoryMeta";
+import { useCustomerAuth } from "@/lib/customerAuth";
+import { toast } from "sonner";
 
 interface CategoryLite {
   id: string;
@@ -42,9 +48,32 @@ export function Navbar() {
   const wishlistItemsCount = useWishlistStore((state) => state.productIds.length);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [megaOpen, setMegaOpen] = useState(false);
+  const [accountOpen, setAccountOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const [, navigate] = useLocation();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const accountTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const { customer, isAuthenticated, logout } = useCustomerAuth();
+
+  const openAccount = () => {
+    if (accountTimer.current) clearTimeout(accountTimer.current);
+    setAccountOpen(true);
+  };
+  const closeAccount = () => {
+    accountTimer.current = setTimeout(() => setAccountOpen(false), 120);
+  };
+  const handleLogout = async () => {
+    try {
+      await logout();
+      toast.success("تم تسجيل الخروج");
+      navigate("/");
+    } catch {
+      toast.error("تعذر تسجيل الخروج");
+    }
+    setAccountOpen(false);
+    setIsMobileMenuOpen(false);
+  };
 
   const { data: categories } = useListCategories();
   const catMap = new Map<string, CategoryLite>();
@@ -128,9 +157,89 @@ export function Navbar() {
 
           <div className="hidden sm:block w-px h-6 bg-primary/20 mx-1" />
 
-          <button className="hidden sm:flex p-2 text-foreground hover:text-primary transition-colors" aria-label="الحساب">
-            <User size={20} />
-          </button>
+          <div className="hidden sm:block relative" onMouseEnter={openAccount} onMouseLeave={closeAccount}>
+            <button
+              className={`flex items-center gap-1.5 p-2 transition-colors ${accountOpen ? "text-primary" : "text-foreground hover:text-primary"}`}
+              aria-label="الحساب"
+              aria-expanded={accountOpen}
+              onClick={() => {
+                if (isAuthenticated) {
+                  setAccountOpen((v) => !v);
+                } else {
+                  navigate("/login");
+                }
+              }}
+            >
+              <User size={20} />
+              {isAuthenticated && (
+                <span className="hidden lg:inline max-w-[100px] truncate text-sm font-bold">{customer?.fullName}</span>
+              )}
+            </button>
+
+            <AnimatePresence>
+              {accountOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full left-0 mt-1 w-56 glass-panel border border-primary/30 neon-border shadow-2xl z-50 font-mono"
+                >
+                  {isAuthenticated ? (
+                    <div className="flex flex-col">
+                      <div className="px-4 py-3 border-b border-primary/15">
+                        <div className="text-[10px] text-primary/50 uppercase tracking-widest mb-1">// USER</div>
+                        <div className="text-sm font-bold text-foreground truncate">{customer?.fullName}</div>
+                        <div className="text-xs text-muted-foreground truncate" dir="ltr">{customer?.email}</div>
+                      </div>
+                      <Link
+                        href="/account"
+                        onClick={() => setAccountOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-foreground/90 hover:bg-primary/10 hover:text-primary transition-colors"
+                      >
+                        <User size={16} />
+                        حسابي
+                      </Link>
+                      <Link
+                        href="/account"
+                        onClick={() => setAccountOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-foreground/90 hover:bg-primary/10 hover:text-primary transition-colors"
+                      >
+                        <Package size={16} />
+                        طلباتي
+                      </Link>
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-destructive hover:bg-destructive/10 transition-colors border-t border-primary/15 text-right"
+                      >
+                        <LogOut size={16} />
+                        تسجيل الخروج
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col">
+                      <Link
+                        href="/login"
+                        onClick={() => setAccountOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-foreground/90 hover:bg-primary/10 hover:text-primary transition-colors"
+                      >
+                        <LogIn size={16} />
+                        تسجيل الدخول
+                      </Link>
+                      <Link
+                        href="/register"
+                        onClick={() => setAccountOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-foreground/90 hover:bg-secondary/10 hover:text-secondary transition-colors border-t border-primary/15"
+                      >
+                        <UserPlus size={16} />
+                        إنشاء حساب
+                      </Link>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
@@ -273,6 +382,51 @@ export function Navbar() {
                   </button>
                 </div>
               </form>
+
+              <div className="p-4 flex flex-col gap-2 text-sm font-bold border-b border-primary/15">
+                {isAuthenticated ? (
+                  <>
+                    <div className="text-[10px] text-primary/50 uppercase tracking-widest mb-1">// {customer?.fullName}</div>
+                    <Link
+                      href="/account"
+                      className="text-primary hover:text-secondary transition-colors py-1 flex items-center gap-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <User size={16} /> حسابي
+                    </Link>
+                    <Link
+                      href="/account"
+                      className="text-primary hover:text-secondary transition-colors py-1 flex items-center gap-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <Package size={16} /> طلباتي
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="text-destructive hover:text-destructive/80 transition-colors py-1 flex items-center gap-2 text-right"
+                    >
+                      <LogOut size={16} /> تسجيل الخروج
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link
+                      href="/login"
+                      className="text-primary hover:text-secondary transition-colors py-1 flex items-center gap-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <LogIn size={16} /> تسجيل الدخول
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="text-secondary hover:text-primary transition-colors py-1 flex items-center gap-2"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <UserPlus size={16} /> إنشاء حساب
+                    </Link>
+                  </>
+                )}
+              </div>
 
               <div className="p-4 flex flex-col gap-2 text-sm font-bold border-b border-primary/15">
                 {QUICK_LINKS.map((link) => (

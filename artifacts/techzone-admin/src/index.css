@@ -270,3 +270,63 @@
   0% { background-position: 0 0; }
   100% { background-position: 44px 44px; }
 }
+
+/* ============================================================
+   Rich Text Editor (Quill) — NEON GRID OS dark theme
+   ============================================================ */
+.rte-wrapper .ql-toolbar.ql-snow {
+  border: 1px solid hsl(var(--primary) / 0.2);
+  border-bottom: none;
+  background: hsl(235 30% 7% / 0.6);
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+.rte-wrapper .ql-container.ql-snow {
+  border: 1px solid hsl(var(--primary) / 0.2);
+  background: hsl(var(--input));
+  color: hsl(var(--foreground));
+  font-family: var(--app-font-sans);
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  min-height: 200px;
+}
+.rte-wrapper .ql-editor {
+  min-height: 200px;
+}
+.rte-wrapper .ql-editor.ql-blank::before {
+  color: hsl(var(--muted-foreground));
+  font-style: normal;
+  right: 15px;
+  left: auto;
+}
+.rte-wrapper .ql-snow .ql-stroke {
+  stroke: hsl(var(--muted-foreground));
+}
+.rte-wrapper .ql-snow .ql-fill {
+  fill: hsl(var(--muted-foreground));
+}
+.rte-wrapper .ql-snow .ql-picker {
+  color: hsl(var(--muted-foreground));
+}
+.rte-wrapper .ql-snow .ql-picker-options {
+  background: hsl(var(--popover));
+  border: 1px solid hsl(var(--primary) / 0.2);
+}
+.rte-wrapper .ql-snow.ql-toolbar button:hover .ql-stroke,
+.rte-wrapper .ql-snow.ql-toolbar button.ql-active .ql-stroke,
+.rte-wrapper .ql-snow .ql-picker-label:hover .ql-stroke {
+  stroke: hsl(var(--primary));
+}
+.rte-wrapper .ql-snow.ql-toolbar button:hover .ql-fill,
+.rte-wrapper .ql-snow.ql-toolbar button.ql-active .ql-fill {
+  fill: hsl(var(--primary));
+}
+.rte-wrapper .ql-snow.ql-toolbar button:hover,
+.rte-wrapper .ql-snow.ql-toolbar button.ql-active,
+.rte-wrapper .ql-snow .ql-picker-label:hover,
+.rte-wrapper .ql-snow .ql-picker-item:hover {
+  color: hsl(var(--primary));
+}
+.rte-wrapper .ql-snow a {
+  color: hsl(var(--primary));
+}

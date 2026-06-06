@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Dialog,
   DialogContent,
@@ -32,6 +33,9 @@ const categorySchema = z.object({
   icon: z.string().min(1, "الأيقونة مطلوبة"),
   image: z.string().optional(),
   descriptionAr: z.string().optional(),
+  metaTitle: z.string().optional(),
+  metaDescription: z.string().optional(),
+  metaKeywords: z.string().optional(),
 });
 
 export default function Categories() {
@@ -51,7 +55,7 @@ export default function Categories() {
 
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
-    defaultValues: { slug: "", nameAr: "", nameEn: "", icon: "", image: "", descriptionAr: "" }
+    defaultValues: { slug: "", nameAr: "", nameEn: "", icon: "", image: "", descriptionAr: "", metaTitle: "", metaDescription: "", metaKeywords: "" }
   });
 
   const onSubmit = (data: z.infer<typeof categorySchema>) => {
@@ -89,6 +93,9 @@ export default function Categories() {
       icon: category.icon,
       image: category.image || undefined,
       descriptionAr: category.descriptionAr || undefined,
+      metaTitle: category.metaTitle || undefined,
+      metaDescription: category.metaDescription || undefined,
+      metaKeywords: category.metaKeywords || undefined,
     });
     setIsDialogOpen(true);
   };
@@ -109,7 +116,7 @@ export default function Categories() {
 
   const handleOpenDialog = () => {
     setEditingId(null);
-    form.reset({ slug: "", nameAr: "", nameEn: "", icon: "", image: "", descriptionAr: "" });
+    form.reset({ slug: "", nameAr: "", nameEn: "", icon: "", image: "", descriptionAr: "", metaTitle: "", metaDescription: "", metaKeywords: "" });
     setIsDialogOpen(true);
   };
 
@@ -147,6 +154,20 @@ export default function Categories() {
               <FormField control={form.control} name="icon" render={({ field }) => (
                 <FormItem><FormLabel>الأيقونة (Lucide Icon name)</FormLabel><FormControl><Input {...field} dir="ltr" /></FormControl><FormMessage /></FormItem>
               )} />
+              <div className="pt-2 border-t border-primary/10">
+                <p className="text-sm font-mono text-primary/80 mb-3">تحسين محركات البحث (SEO)</p>
+                <div className="space-y-4">
+                  <FormField control={form.control} name="metaTitle" render={({ field }) => (
+                    <FormItem><FormLabel>عنوان الميتا (Meta Title)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
+                  )} />
+                  <FormField control={form.control} name="metaDescription" render={({ field }) => (
+                    <FormItem><FormLabel>وصف الميتا (Meta Description)</FormLabel><FormControl><Textarea {...field} className="min-h-20" /></FormControl><FormMessage /></FormItem>
+                  )} />
+                  <FormField control={form.control} name="metaKeywords" render={({ field }) => (
+                    <FormItem><FormLabel>الكلمات المفتاحية (Meta Keywords)</FormLabel><FormControl><Input {...field} placeholder="كلمة1، كلمة2، كلمة3" /></FormControl><FormMessage /></FormItem>
+                  )} />
+                </div>
+              </div>
               <div className="flex justify-end gap-2 pt-4">
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>إلغاء</Button>
                 <Button type="submit" className="glow-hover" disabled={createMutation.isPending || updateMutation.isPending}>

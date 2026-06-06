@@ -27,6 +27,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 const blogPostSchema = z.object({
   slug: z.string().min(1, "الرابط (Slug) مطلوب"),
@@ -183,7 +184,7 @@ export default function Blog() {
                 <FormItem><FormLabel>مقتطف (ملخص)</FormLabel><FormControl><Textarea {...field} className="resize-none" /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="contentAr" render={({ field }) => (
-                <FormItem><FormLabel>المحتوى</FormLabel><FormControl><Textarea {...field} className="min-h-[200px]" /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>المحتوى</FormLabel><FormControl><RichTextEditor value={field.value} onChange={field.onChange} placeholder="اكتب محتوى المقال..." /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="isFeatured" render={({ field }) => (
                 <FormItem className="flex items-center gap-2 space-y-0">

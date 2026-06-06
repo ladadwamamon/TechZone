@@ -1,9 +1,9 @@
 import { Layout } from "@/components/Layout";
 import { useCartStore } from "@/lib/store";
 import { formatPrice } from "@/lib/utils";
-import { useCreateOrder } from "@workspace/api-client-react";
+import { useCreateOrder, useValidateCoupon } from "@workspace/api-client-react";
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, ArrowRight, ShieldCheck, Truck, CheckCircle2, Terminal } from "lucide-react";
+import { ShoppingCart, ArrowRight, ShieldCheck, Truck, CheckCircle2, Terminal, Tag, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -26,12 +26,40 @@ export default function Checkout() {
   const { items, getTotalPrice, clearCart } = useCartStore();
   const [, setLocation] = useLocation();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
+  const [couponInput, setCouponInput] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<{ code: string; discount: number } | null>(null);
+
   const createOrder = useCreateOrder();
+  const validateCoupon = useValidateCoupon();
 
   const subtotal = getTotalPrice();
   const shipping = subtotal > 500 ? 0 : 35;
-  const total = subtotal + shipping;
+  const discount = appliedCoupon?.discount ?? 0;
+  const total = Math.max(0, subtotal + shipping - discount);
+
+  const handleApplyCoupon = async () => {
+    const code = couponInput.trim();
+    if (!code) return;
+    try {
+      const result = await validateCoupon.mutateAsync({ data: { code, subtotal } });
+      if (result.valid && result.discount > 0) {
+        setAppliedCoupon({ code: result.code ?? code, discount: result.discount });
+        toast.success(result.message || "تم تطبيق الكوبون بنجاح");
+      } else {
+        setAppliedCoupon(null);
+        toast.error(result.message || "الكوبون غير صالح");
+      }
+    } catch {
+      setAppliedCoupon(null);
+      toast.error("تعذر التحقق من الكوبون");
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponInput("");
+  };
 
   const { register, handleSubmit, formState: { errors } } = useForm<CheckoutForm>({
     resolver: zodResolver(checkoutSchema),
@@ -50,6 +78,7 @@ export default function Checkout() {
     try {
       const orderData = {
         ...data,
+        promoCode: appliedCoupon?.code ?? null,
         items: items.map(item => ({
           productId: item.productId,
           nameAr: item.nameAr,
@@ -265,8 +294,62 @@ export default function Checkout() {
                     <span className="text-foreground font-medium">{formatPrice(shipping)}</span>
                   )}
                 </div>
+
+                {appliedCoupon && (
+                  <div className="flex justify-between text-lime">
+                    <span className="flex items-center gap-1.5">
+                      <Tag size={14} />
+                      خصم ({appliedCoupon.code})
+                    </span>
+                    <span className="font-bold neon-text-lime">- {formatPrice(discount)}</span>
+                  </div>
+                )}
               </div>
-              
+
+              <div className="mb-6">
+                <label className="block text-xs font-mono text-primary/60 uppercase tracking-widest mb-2">// كود الخصم</label>
+                {appliedCoupon ? (
+                  <div className="flex items-center justify-between gap-2 border border-lime/40 bg-lime/5 px-3 py-2.5 clip-corner">
+                    <span className="flex items-center gap-2 font-mono text-sm text-lime">
+                      <Tag size={16} />
+                      {appliedCoupon.code}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleRemoveCoupon}
+                      className="text-muted-foreground hover:text-destructive transition-colors"
+                      aria-label="إزالة الكوبون"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponInput}
+                      onChange={(e) => setCouponInput(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleApplyCoupon();
+                        }
+                      }}
+                      placeholder="أدخل كود الخصم"
+                      className="flex-1 bg-background/60 border border-primary/20 focus:border-primary px-3 py-2.5 font-mono text-sm outline-none transition-colors clip-corner"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleApplyCoupon}
+                      disabled={validateCoupon.isPending || !couponInput.trim()}
+                      className="bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 px-4 py-2.5 font-bold text-sm transition-colors disabled:opacity-50 clip-corner whitespace-nowrap"
+                    >
+                      {validateCoupon.isPending ? "..." : "تطبيق"}
+                    </button>
+                  </div>
+                )}
+              </div>
+
               <div className="neon-divider my-4"></div>
               
               <div className="mb-8">

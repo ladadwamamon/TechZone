@@ -73,5 +73,9 @@
     "vite": "catalog:",
     "wouter": "^3.3.5",
     "zod": "catalog:"
+  },
+  "dependencies": {
+    "quill": "^2.0.3",
+    "react-quill-new": "^3.8.3"
   }
 }

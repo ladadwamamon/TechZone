@@ -21,6 +21,7 @@ import {
   Image as ImageIcon, 
   Users, 
   UserRound,
+  Ticket,
   Settings, 
   Activity
 } from "lucide-react";
@@ -35,6 +36,7 @@ export function Sidebar() {
     { href: "/products", label: "المنتجات", icon: Package, perm: "products:write" },
     { href: "/categories", label: "الفئات", icon: Tags, perm: "categories:write" },
     { href: "/brands", label: "العلامات التجارية", icon: Copyright, perm: "brands:write" },
+    { href: "/coupons", label: "الكوبونات", icon: Ticket, perm: "coupons:write" },
     { href: "/reviews", label: "التقييمات", icon: MessageSquare, perm: "reviews:write" },
     { href: "/blog", label: "المدونة", icon: FileText, perm: "blog:write" },
     { href: "/media", label: "الوسائط", icon: ImageIcon, perm: "media:write" },

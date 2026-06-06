@@ -23,6 +23,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { MediaPicker } from "@/components/MediaPicker";
+import { RichTextEditor } from "@/components/RichTextEditor";
 
 interface SpecRow {
   labelAr: string;
@@ -61,6 +62,9 @@ interface ProductFormState {
   specs: SpecRow[];
   variants: VariantRow[];
   badges: string[];
+  metaTitle: string;
+  metaDescription: string;
+  metaKeywords: string;
 }
 
 const EMPTY_FORM: ProductFormState = {
@@ -88,6 +92,9 @@ const EMPTY_FORM: ProductFormState = {
   specs: [],
   variants: [],
   badges: [],
+  metaTitle: "",
+  metaDescription: "",
+  metaKeywords: "",
 };
 
 const numOrUndef = (v: string): number | undefined => {
@@ -178,6 +185,9 @@ export default function Products() {
         inStock: v.inStock,
       })),
       badges: p.badges ?? [],
+      metaTitle: (p as any).metaTitle ?? "",
+      metaDescription: (p as any).metaDescription ?? "",
+      metaKeywords: (p as any).metaKeywords ?? "",
     });
     setIsDialogOpen(true);
   };
@@ -227,6 +237,9 @@ export default function Products() {
         inStock: v.inStock,
       })),
     badges: form.badges,
+    metaTitle: form.metaTitle.trim() || null,
+    metaDescription: form.metaDescription.trim() || null,
+    metaKeywords: form.metaKeywords.trim() || null,
   });
 
   const handleSubmit = () => {
@@ -373,6 +386,7 @@ export default function Products() {
               <TabsTrigger value="specs">المواصفات</TabsTrigger>
               <TabsTrigger value="variants">الخيارات</TabsTrigger>
               <TabsTrigger value="flags">الشارات والحالة</TabsTrigger>
+              <TabsTrigger value="seo">تحسين محركات البحث</TabsTrigger>
             </TabsList>
 
             <TabsContent value="basic" className="space-y-4">
@@ -443,10 +457,10 @@ export default function Products() {
                 </Field>
               </div>
               <Field label="الوصف بالعربي">
-                <Textarea
+                <RichTextEditor
                   value={form.descriptionAr}
-                  onChange={(e) => set("descriptionAr", e.target.value)}
-                  className="min-h-24"
+                  onChange={(v) => set("descriptionAr", v)}
+                  placeholder="اكتب وصف المنتج..."
                 />
               </Field>
             </TabsContent>
@@ -624,6 +638,26 @@ export default function Products() {
                     ))}
                   </div>
                 )}
+              </Field>
+            </TabsContent>
+
+            <TabsContent value="seo" className="space-y-4">
+              <Field label="عنوان الميتا (Meta Title)">
+                <Input value={form.metaTitle} onChange={(e) => set("metaTitle", e.target.value)} />
+              </Field>
+              <Field label="وصف الميتا (Meta Description)">
+                <Textarea
+                  value={form.metaDescription}
+                  onChange={(e) => set("metaDescription", e.target.value)}
+                  className="min-h-24"
+                />
+              </Field>
+              <Field label="الكلمات المفتاحية (Meta Keywords)">
+                <Input
+                  value={form.metaKeywords}
+                  onChange={(e) => set("metaKeywords", e.target.value)}
+                  placeholder="كلمة1، كلمة2، كلمة3"
+                />
               </Field>
             </TabsContent>
           </Tabs>
