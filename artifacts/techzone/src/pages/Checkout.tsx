@@ -248,8 +248,8 @@ export default function Checkout() {
                     <input type="radio" value="card" disabled {...register("paymentMethod")} className="w-4 h-4 text-primary bg-background border-white/20" />
                   </div>
                   <div className="flex-1 relative z-10">
-                    <div className="font-bold flex items-center gap-2">البطاقة الائتمانية <span className="text-xs bg-muted text-muted-foreground px-2 py-0.5 rounded-sm font-mono">[ LOCKED ]</span></div>
-                    <div className="text-sm text-muted-foreground mt-1 font-mono">// CREDIT_CARD_UNAVAILABLE</div>
+                    <div className="font-bold flex items-center gap-2">البطاقة الائتمانية <span className="text-xs bg-secondary/20 text-secondary border border-secondary/40 px-2 py-0.5 rounded-sm font-mono">[ قريباً ]</span></div>
+                    <div className="text-sm text-muted-foreground mt-1 font-mono">// CREDIT_CARD_COMING_SOON</div>
                   </div>
                 </label>
               </div>
