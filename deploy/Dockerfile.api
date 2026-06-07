@@ -1,0 +1,27 @@
+# =========================================================
+# API Server (Express 5) — multi-stage build
+# Build context = repository root
+#   docker build -f deploy/Dockerfile.api -t nexus-api .
+# =========================================================
+
+FROM node:24-bookworm-slim AS base
+ENV PNPM_HOME=/pnpm
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+WORKDIR /app
+
+# ---- build stage: install all deps and bundle with esbuild ----
+FROM base AS build
+COPY . .
+RUN pnpm install --frozen-lockfile
+RUN pnpm --filter @workspace/api-server run build
+
+# ---- runtime stage: only the self-contained bundle ----
+# The esbuild output bundles express, drizzle, pg and the workspace
+# libs into a single file, so no node_modules is needed at runtime.
+FROM base AS runtime
+ENV NODE_ENV=production
+ENV PORT=8080
+COPY --from=build /app/artifacts/api-server/dist ./dist
+EXPOSE 8080
+CMD ["node", "--enable-source-maps", "dist/index.mjs"]

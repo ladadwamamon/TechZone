@@ -1,0 +1,82 @@
+# =========================================================
+# Nexus Store — production stack (Docker Compose / Portainer)
+#
+# Build context for all images is the repository ROOT (..),
+# so deploy this stack from inside the cloned repo, or point
+# a Portainer "Repository" stack at deploy/docker-compose.yml.
+#
+# First deploy:
+#   1) docker compose -f deploy/docker-compose.yml --env-file deploy/.env up -d --build
+#   2) docker compose -f deploy/docker-compose.yml --env-file deploy/.env --profile tools run --rm migrate
+#   3) (optional demo data) see DEPLOYMENT.md
+#   4) create the first admin (see DEPLOYMENT.md)
+# =========================================================
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    # Not published to the host — only reachable inside the stack network.
+
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.api
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: "8080"
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      SESSION_SECRET: ${SESSION_SECRET}
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://localhost:8080/api/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+      interval: 15s
+      timeout: 5s
+      retries: 5
+    # Not published — Nginx reaches it over the internal network.
+
+  web:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      # host:container — put Cloudflare / your edge proxy in front of this host port.
+      - "${WEB_PORT:-8088}:80"
+
+  # One-off schema push. Enabled only with the "tools" profile so it
+  # never runs as part of the normal `up`.
+  migrate:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.migrate
+    profiles: ["tools"]
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  db-data:

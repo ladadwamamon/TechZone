@@ -467,3 +467,9 @@ id = "slNxqRt_SXIgmzmQ1GScl"
 uri = "file://attached_assets/stock_images/accessories_3.jpg"
 type = "image"
 title = "usb hub cables and tech accessories on desk"
+
+[[outputs]]
+id = "iV3IFPys21Cn8m8Zgz6zl"
+uri = "file://deploy/DEPLOYMENT.md"
+type = "text"
+title = "دليل نشر Nexus Store (Docker + Portainer + Cloudflare)"

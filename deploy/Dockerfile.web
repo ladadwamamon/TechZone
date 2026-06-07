@@ -1,0 +1,30 @@
+# =========================================================
+# Storefront + Admin (Vite static builds) served by Nginx
+# Build context = repository root
+#   docker build -f deploy/Dockerfile.web -t nexus-web .
+#
+# Both Vite configs require PORT and BASE_PATH at build time
+# (they are read while evaluating vite.config.ts). PORT is only
+# used by the dev/preview server, so any valid value works here.
+# =========================================================
+
+FROM node:24-bookworm-slim AS build
+ENV PNPM_HOME=/pnpm
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable && corepack prepare pnpm@10.26.1 --activate
+WORKDIR /app
+COPY . .
+RUN pnpm install --frozen-lockfile
+
+# Storefront -> base path "/"
+RUN PORT=3000 BASE_PATH=/ pnpm --filter @workspace/techzone run build
+# Admin CMS -> base path "/admin/"
+RUN PORT=3000 BASE_PATH=/admin/ pnpm --filter @workspace/techzone-admin run build
+
+# ---- runtime: nginx serving both SPAs + reverse proxy to /api ----
+FROM nginx:1.27-alpine AS runtime
+RUN rm -rf /usr/share/nginx/html/*
+COPY --from=build /app/artifacts/techzone/dist/public /usr/share/nginx/html
+COPY --from=build /app/artifacts/techzone-admin/dist/public /usr/share/nginx/html/admin
+COPY deploy/nginx/nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
