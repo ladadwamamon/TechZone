@@ -17,6 +17,7 @@ export function mapAdminProduct(p: typeof productsTable.$inferSelect) {
     brandSlug: p.brandSlug,
     image: p.image,
     image2: p.image2 ?? null,
+    images: Array.isArray(p.images) ? p.images : [],
     productType: p.productType,
     platform: p.platform ?? null,
     region: p.region ?? null,
@@ -100,6 +101,7 @@ type ProductInputShape = {
   brandSlug?: string;
   image?: string;
   image2?: string | null;
+  images?: string[];
   productType?: string;
   platform?: string | null;
   region?: string | null;
@@ -139,6 +141,7 @@ export function buildProductValues(data: ProductInputShape): Record<string, unkn
   assign("brandSlug", data.brandSlug);
   assign("image", data.image);
   assign("image2", data.image2);
+  assign("images", data.images);
   assign("productType", data.productType);
   assign("platform", data.platform);
   assign("region", data.region);

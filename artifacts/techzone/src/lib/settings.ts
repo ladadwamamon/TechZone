@@ -33,6 +33,17 @@ export interface HeroSetting {
   ctaLink: string;
   image: string;
 }
+export interface HeroSlide {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  subtitle: string;
+  ctaText: string;
+  ctaLink: string;
+  image: string;
+  tone: string;
+  stat: string;
+}
 export interface ContactSetting {
   phone: string;
   email: string;
@@ -171,6 +182,7 @@ export function getSocialLinks(social: SocialSetting): SocialLink[] {
 export interface SiteSettings {
   announcement: AnnouncementSetting;
   hero: HeroSetting;
+  heroSlides: HeroSlide[];
   contact: ContactSetting;
   social: SocialSetting;
   features: FeatureSetting[];
@@ -181,9 +193,11 @@ export function useSiteSettings(): SiteSettings {
   const { data, isLoading } = useGetPublicSettings();
   const s = (data ?? {}) as Record<string, unknown>;
   const features = Array.isArray(s.features) ? (s.features as FeatureSetting[]) : [];
+  const heroSlides = Array.isArray(s.heroSlides) ? (s.heroSlides as HeroSlide[]) : [];
   return {
     announcement: asObject(s.announcementBar, DEFAULT_ANNOUNCEMENT),
     hero: asObject(s.hero, DEFAULT_HERO),
+    heroSlides,
     contact: asObject(s.contact, DEFAULT_CONTACT),
     social: asObject(s.social, DEFAULT_SOCIAL),
     features: features.length > 0 ? features : DEFAULT_FEATURES,

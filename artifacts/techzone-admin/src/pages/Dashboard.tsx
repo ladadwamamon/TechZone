@@ -1,3 +1,4 @@
+import { formatPrice } from "@/lib/utils";
 import {
   useAdminAnalyticsOverview,
   getAdminAnalyticsOverviewQueryKey,
@@ -113,7 +114,7 @@ export default function Dashboard() {
   if (!data) return null;
 
   const stats = [
-    { label: "إجمالي الإيرادات", value: `${data.totalRevenue} ريال`, icon: DollarSign, color: "text-lime neon-text-lime" },
+    { label: "إجمالي الإيرادات", value: formatPrice(data.totalRevenue), icon: DollarSign, color: "text-lime neon-text-lime" },
     { label: "إجمالي الطلبات", value: data.totalOrders, icon: ShoppingCart, color: "text-primary neon-text" },
     { label: "المنتجات", value: data.totalProducts, icon: Package, color: "text-secondary neon-text-magenta" },
     { label: "المشتركين", value: data.totalSubscribers, icon: Users, color: "text-primary neon-text" },
@@ -281,7 +282,7 @@ export default function Dashboard() {
                     </div>
                     <div className="text-left shrink-0">
                       <div className="font-mono text-sm text-lime">{p.quantitySold}</div>
-                      <div className="text-xs text-muted-foreground font-mono">{p.revenue} ريال</div>
+                      <div className="text-xs text-muted-foreground font-mono">{formatPrice(p.revenue)}</div>
                     </div>
                   </div>
                 ))}
@@ -355,7 +356,7 @@ export default function Dashboard() {
                       <div className="text-sm text-muted-foreground">{order.customerName}</div>
                     </div>
                     <div className="text-left">
-                      <div className="font-bold font-mono">{order.total} ريال</div>
+                      <div className="font-bold font-mono">{formatPrice(order.total)}</div>
                       <div className="text-xs text-muted-foreground">
                         {STATUS_LABELS[order.status] ?? order.status}
                       </div>

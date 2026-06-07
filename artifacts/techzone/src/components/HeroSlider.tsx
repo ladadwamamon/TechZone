@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Link } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ChevronRight, ChevronLeft } from "lucide-react";
-import type { HeroSetting } from "@/lib/settings";
+import type { HeroSetting, HeroSlide } from "@/lib/settings";
 
 type Accent = "primary" | "secondary" | "lime" | "destructive";
 
@@ -107,14 +107,44 @@ const TONE: Record<Accent, { text: string; border: string; bg: string; ring: str
 
 const DURATION = 6500;
 
-export function HeroSlider({ heroOverride }: { heroOverride?: HeroSetting }) {
+const ACCENTS: Accent[] = ["primary", "secondary", "lime", "destructive"];
+function toAccent(value: string): Accent {
+  return ACCENTS.includes(value as Accent) ? (value as Accent) : "primary";
+}
+
+export function HeroSlider({
+  heroOverride,
+  configuredSlides,
+}: {
+  heroOverride?: HeroSetting;
+  configuredSlides?: HeroSlide[];
+}) {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const [direction, setDirection] = useState(1);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // When the CMS hero is configured (title set), it replaces the first slide.
   const slides = useMemo<Slide[]>(() => {
+    // Full CMS control: when slides are configured in the admin, they fully
+    // replace the built-in defaults.
+    if (configuredSlides && configuredSlides.length > 0) {
+      const mapped = configuredSlides
+        .filter((s) => s.title.trim() || s.image.trim())
+        .map<Slide>((s, i) => ({
+          code: `SLIDE_${String(i + 1).padStart(2, "0")}`,
+          eyebrow: s.eyebrow.trim() || "نكسس",
+          title: s.title.trim(),
+          accent: s.accent.trim(),
+          sub: s.subtitle.trim(),
+          href: s.ctaLink.trim() || "/",
+          cta: s.ctaText.trim() || "تسوّق الآن",
+          image: s.image.trim(),
+          tone: toAccent(s.tone.trim()),
+          stat: s.stat.trim(),
+        }));
+      if (mapped.length > 0) return mapped;
+    }
+    // Backward-compatible fallback: a single configured hero overrides slide 1.
     if (!heroOverride || !heroOverride.title.trim()) return SLIDES;
     const base = SLIDES[0];
     return [
@@ -129,7 +159,7 @@ export function HeroSlider({ heroOverride }: { heroOverride?: HeroSetting }) {
       },
       ...SLIDES.slice(1),
     ];
-  }, [heroOverride]);
+  }, [configuredSlides, heroOverride]);
 
   const go = useCallback((next: number, dir: number) => {
     setDirection(dir);
@@ -150,7 +180,8 @@ export function HeroSlider({ heroOverride }: { heroOverride?: HeroSetting }) {
     };
   }, [current, paused, go]);
 
-  const slide = slides[current];
+  const safeIndex = Math.min(current, slides.length - 1);
+  const slide = slides[safeIndex] ?? slides[0];
   const tone = TONE[slide.tone];
 
   return (

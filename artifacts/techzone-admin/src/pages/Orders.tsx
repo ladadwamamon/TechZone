@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { formatPrice } from "@/lib/utils";
 import { 
   useAdminListOrders, 
   getAdminListOrdersQueryKey, 
@@ -193,7 +194,7 @@ export default function Orders() {
                         <div className="text-xs text-muted-foreground font-mono">الكمية: {item.quantity}</div>
                       </div>
                       <div className="font-mono font-bold text-primary whitespace-nowrap">
-                        {item.price * item.quantity} ريال
+                        {formatPrice(item.price * item.quantity)}
                       </div>
                     </div>
                   ))}
@@ -235,21 +236,21 @@ export default function Orders() {
               <div className="bg-primary/5 p-4 rounded border border-primary/20 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">المجموع الفرعي</span>
-                  <span className="font-mono">{orderDetails.subtotal} ريال</span>
+                  <span className="font-mono">{formatPrice(orderDetails.subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">الشحن</span>
-                  <span className="font-mono">{orderDetails.shipping} ريال</span>
+                  <span className="font-mono">{formatPrice(orderDetails.shipping)}</span>
                 </div>
                 {orderDetails.discount && orderDetails.discount > 0 && (
                   <div className="flex justify-between text-sm text-lime">
                     <span>الخصم</span>
-                    <span className="font-mono">-{orderDetails.discount} ريال</span>
+                    <span className="font-mono">-{formatPrice(orderDetails.discount)}</span>
                   </div>
                 )}
                 <div className="flex justify-between font-bold border-t border-primary/20 pt-2 mt-2 text-lg">
                   <span>الإجمالي</span>
-                  <span className="font-mono text-primary">{orderDetails.total} ريال</span>
+                  <span className="font-mono text-primary">{formatPrice(orderDetails.total)}</span>
                 </div>
               </div>
             </div>
@@ -291,7 +292,7 @@ export default function Orders() {
                         {format(new Date(order.createdAt), "yyyy-MM-dd")}
                       </TableCell>
                       <TableCell className="font-medium">{order.customerName}</TableCell>
-                      <TableCell className="font-mono font-bold">{order.total} ريال</TableCell>
+                      <TableCell className="font-mono font-bold">{formatPrice(order.total)}</TableCell>
                       <TableCell onClick={(e) => e.stopPropagation()}>
                         <Select 
                           value={order.status} 

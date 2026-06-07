@@ -58,12 +58,12 @@ export default function Home() {
   const { data: flashDeals, isLoading: flashDealsLoading } = useGetFlashDeals();
   const { data: categories, isLoading: categoriesLoading } = useListCategories();
   const { data: brands, isLoading: brandsLoading } = useListBrands();
-  const { hero, features } = useSiteSettings();
+  const { hero, heroSlides, features } = useSiteSettings();
 
   return (
     <Layout>
       {/* Hero Slider */}
-      <HeroSlider heroOverride={hero} />
+      <HeroSlider heroOverride={hero} configuredSlides={heroSlides} />
 
       {/* Featured Categories */}
       <section className="py-20 relative">

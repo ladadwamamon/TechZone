@@ -18,7 +18,7 @@ function mapProduct(p: typeof productsTable.$inferSelect) {
     categorySlug: p.categorySlug,
     brandSlug: p.brandSlug,
     image: p.image,
-    image2: p.image2 ?? null,
+    image2: p.image2 ?? (Array.isArray(p.images) ? p.images[0] ?? null : null),
     productType: p.productType,
     platform: p.platform ?? null,
     region: p.region ?? null,
@@ -146,7 +146,13 @@ router.get("/products/:id", async (req, res) => {
 
   res.json({
     ...mapProduct(product),
-    images: [product.image, product.image2].filter(Boolean),
+    images: Array.from(
+      new Set(
+        [product.image, ...(Array.isArray(product.images) ? product.images : []), product.image2].filter(
+          (x): x is string => Boolean(x),
+        ),
+      ),
+    ),
     categoryNameAr: category?.nameAr ?? "",
     brandNameEn: brand?.nameEn ?? "",
     deliveryType: product.deliveryType ?? null,

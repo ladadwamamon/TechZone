@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { formatPrice } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { adminListOrders, type Order } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -144,7 +145,7 @@ export default function Customers() {
                       </TableCell>
                       <TableCell>{c.city}</TableCell>
                       <TableCell className="font-mono">{c.orders}</TableCell>
-                      <TableCell className="font-mono text-lime">{c.total} ريال</TableCell>
+                      <TableCell className="font-mono text-lime">{formatPrice(c.total)}</TableCell>
                       <TableCell className="font-mono text-sm" dir="ltr">
                         {format(new Date(c.lastOrder), "yyyy-MM-dd")}
                       </TableCell>

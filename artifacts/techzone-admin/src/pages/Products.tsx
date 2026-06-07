@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { formatPrice } from "@/lib/utils";
 import {
   useAdminListProducts,
   getAdminListProductsQueryKey,
@@ -16,7 +17,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Package, Plus, Search, Edit, Trash2, X } from "lucide-react";
+import { Package, Plus, Search, Edit, Trash2, X, ArrowUp, ArrowDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -52,7 +53,7 @@ interface ProductFormState {
   categorySlug: string;
   brandSlug: string;
   image: string;
-  image2: string;
+  images: string[];
   stock: string;
   rating: string;
   reviewCount: string;
@@ -87,7 +88,7 @@ const EMPTY_FORM: ProductFormState = {
   categorySlug: "",
   brandSlug: "",
   image: "",
-  image2: "",
+  images: [],
   stock: "0",
   rating: "0",
   reviewCount: "0",
@@ -179,7 +180,9 @@ export default function Products() {
       categorySlug: p.categorySlug,
       brandSlug: p.brandSlug,
       image: p.image,
-      image2: p.image2 ?? "",
+      images: Array.isArray((p as any).images) && (p as any).images.length > 0
+        ? ((p as any).images as string[])
+        : (p.image2 ? [p.image2] : []),
       stock: String(p.stock),
       rating: String(p.rating),
       reviewCount: String(p.reviewCount),
@@ -234,7 +237,8 @@ export default function Products() {
     categorySlug: form.categorySlug,
     brandSlug: form.brandSlug,
     image: form.image.trim(),
-    image2: form.image2.trim() || null,
+    images: form.images.map((u) => u.trim()).filter(Boolean),
+    image2: (form.images.map((u) => u.trim()).filter(Boolean)[0]) ?? null,
     stock: numOrUndef(form.stock) ?? 0,
     rating: numOrUndef(form.rating) ?? 0,
     reviewCount: numOrUndef(form.reviewCount) ?? 0,
@@ -556,9 +560,112 @@ export default function Products() {
               <Field label="الصورة الرئيسية">
                 <MediaPicker value={form.image} onChange={(url) => set("image", url)} />
               </Field>
-              <Field label="الصورة الثانية (اختياري)">
-                <MediaPicker value={form.image2} onChange={(url) => set("image2", url)} />
-              </Field>
+
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium">معرض الصور الإضافية</p>
+                    <p className="text-xs text-muted-foreground">
+                      أضف أي عدد من الصور. تظهر في صفحة المنتج بعد الصورة الرئيسية بالترتيب. أول صورة تُستخدم أيضاً كصورة التمرير في البطاقة.
+                    </p>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={() => set("images", [...form.images, ""])}
+                    className="gap-2"
+                  >
+                    <Plus className="h-4 w-4" /> إضافة صورة
+                  </Button>
+                </div>
+
+                {form.images.length === 0 && (
+                  <div className="rounded border border-dashed border-primary/20 p-6 text-center text-sm text-muted-foreground">
+                    لا توجد صور إضافية. اضغط "إضافة صورة" لإضافة صور للمعرض.
+                  </div>
+                )}
+
+                {form.images.map((img, idx) => (
+                  <div key={idx} className="rounded border border-primary/15 bg-background/40 p-3 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs text-primary">{`IMG_${String(idx + 1).padStart(2, "0")}`}</span>
+                      <div className="flex items-center gap-1">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          disabled={idx === 0}
+                          onClick={() => {
+                            const next = [...form.images];
+                            [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
+                            set("images", next);
+                          }}
+                          aria-label="تحريك لأعلى"
+                        >
+                          <ArrowUp className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          disabled={idx === form.images.length - 1}
+                          onClick={() => {
+                            const next = [...form.images];
+                            [next[idx + 1], next[idx]] = [next[idx], next[idx + 1]];
+                            set("images", next);
+                          }}
+                          aria-label="تحريك لأسفل"
+                        >
+                          <ArrowDown className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => set("images", form.images.filter((_, i) => i !== idx))}
+                          aria-label="حذف الصورة"
+                          className="text-destructive hover:text-destructive"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                    <MediaPicker
+                      value={img}
+                      onChange={(url) =>
+                        set("images", form.images.map((v, i) => (i === idx ? url : v)))
+                      }
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded border border-primary/20 bg-background/40 p-4 space-y-3">
+                <p className="text-sm font-medium">معاينة مباشرة</p>
+                {form.image ? (
+                  <div className="space-y-3">
+                    <div className="aspect-square w-full max-w-xs overflow-hidden rounded border border-primary/15 bg-background">
+                      <img src={form.image} alt={form.nameAr || "معاينة"} className="h-full w-full object-cover" />
+                    </div>
+                    {form.images.filter(Boolean).length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        {form.images.filter(Boolean).map((img, i) => (
+                          <div key={i} className="h-16 w-16 overflow-hidden rounded border border-primary/15 bg-background">
+                            <img src={img} alt={`صورة ${i + 1}`} className="h-full w-full object-cover" />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <div>
+                      <p className="font-medium">{form.nameAr || "اسم المنتج"}</p>
+                      <p className="text-sm text-primary">
+                        {form.price ? `${form.price} شيكل` : "السعر غير محدد"}
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-sm text-muted-foreground">اختر الصورة الرئيسية لعرض المعاينة.</p>
+                )}
+              </div>
             </TabsContent>
 
             <TabsContent value="specs" className="space-y-3">
@@ -804,7 +911,7 @@ export default function Products() {
                         </div>
                       </TableCell>
                       <TableCell>{product.categorySlug}</TableCell>
-                      <TableCell className="font-mono">{product.price} ريال</TableCell>
+                      <TableCell className="font-mono">{formatPrice(product.price)}</TableCell>
                       <TableCell>
                         <span
                           className={`px-2 py-1 rounded text-xs font-mono ${

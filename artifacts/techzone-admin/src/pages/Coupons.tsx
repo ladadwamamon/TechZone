@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { formatPrice } from "@/lib/utils";
 import {
   useAdminListCoupons,
   getAdminListCouponsQueryKey,
@@ -292,7 +293,7 @@ export default function Coupons() {
                       <TableCell className="font-mono font-bold text-primary" dir="ltr">{coupon.code}</TableCell>
                       <TableCell>{coupon.type === "percent" ? "نسبة مئوية" : "مبلغ ثابت"}</TableCell>
                       <TableCell className="font-mono">
-                        {coupon.type === "percent" ? `${coupon.value}%` : `${coupon.value} ريال`}
+                        {coupon.type === "percent" ? `${coupon.value}%` : `${formatPrice(coupon.value)}`}
                       </TableCell>
                       <TableCell className="font-mono">
                         {coupon.usedCount}

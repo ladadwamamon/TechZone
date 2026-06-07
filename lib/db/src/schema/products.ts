@@ -53,6 +53,7 @@ export const productsTable = pgTable("products", {
   brandSlug: text("brand_slug").notNull().references(() => brandsTable.slug),
   image: text("image").notNull(),
   image2: text("image2"),
+  images: jsonb("images").$type<string[]>(),
   productType: text("product_type").notNull().default("physical"),
   platform: text("platform"),
   region: text("region"),
