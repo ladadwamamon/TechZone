@@ -22,9 +22,9 @@ import {
   Crown,
 } from "lucide-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
 import { useListCategories } from "@workspace/api-client-react";
 import { CATEGORY_GROUPS, CATEGORY_NAMES_AR, getCategoryIcon } from "@/lib/categoryMeta";
 import { useCustomerAuth } from "@/lib/customerAuth";
@@ -66,6 +66,21 @@ export function Navbar() {
 
   const { customer, isAuthenticated, logout } = useCustomerAuth();
   const quickLinks = useNavLinks("header");
+
+  const cartControls = useAnimationControls();
+  const [cartBurst, setCartBurst] = useState(0);
+
+  useEffect(() => {
+    const onBump = () => {
+      void cartControls.start({
+        scale: [1, 1.45, 0.88, 1.18, 1],
+        transition: { duration: 0.6, ease: "easeInOut" },
+      });
+      setCartBurst((b) => b + 1);
+    };
+    window.addEventListener("cart-bump", onBump);
+    return () => window.removeEventListener("cart-bump", onBump);
+  }, [cartControls]);
 
   const openAccount = () => {
     if (accountTimer.current) clearTimeout(accountTimer.current);
@@ -157,8 +172,23 @@ export function Navbar() {
             )}
           </Link>
 
-          <Link href="/cart" className="p-2 text-foreground hover:text-primary transition-colors relative group" aria-label="السلة">
-            <ShoppingCart size={20} className="group-hover:text-primary" />
+          <Link id="nav-cart-icon" href="/cart" className="p-2 text-foreground hover:text-primary transition-colors relative group" aria-label="السلة">
+            <motion.span animate={cartControls} className="inline-block">
+              <ShoppingCart size={20} className="group-hover:text-primary" />
+            </motion.span>
+            <AnimatePresence>
+              {cartBurst > 0 && (
+                <motion.span
+                  key={cartBurst}
+                  initial={{ scale: 0.4, opacity: 0.85 }}
+                  animate={{ scale: 2.4, opacity: 0 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="absolute inset-1 rounded-sm border border-primary pointer-events-none"
+                  style={{ boxShadow: "0 0 14px var(--cyan)" }}
+                />
+              )}
+            </AnimatePresence>
             {cartItemsCount > 0 && (
               <span className="absolute top-0 right-0 w-4 h-4 bg-primary text-primary-foreground text-[10px] font-mono font-bold rounded-sm clip-corner-sm flex items-center justify-center animate-pulse-glow">
                 {cartItemsCount}

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Heart, ShoppingCart, Eye, Star, Zap } from "lucide-react";
 import { Product } from "@workspace/api-client-react";
 import { useCartStore, useWishlistStore } from "@/lib/store";
+import { flyToCart } from "@/lib/flyToCart";
 import { formatPrice } from "@/lib/utils";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -27,6 +28,7 @@ export function ProductCard({ product }: { product: Product }) {
       image: product.image,
       productType: product.productType,
     });
+    flyToCart(product.image, e.currentTarget as HTMLElement);
     toast.success("تمت الإضافة إلى السلة", {
       description: product.nameAr,
       icon: <ShoppingCart className="h-4 w-4" />

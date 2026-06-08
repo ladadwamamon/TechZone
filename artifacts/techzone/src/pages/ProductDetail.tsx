@@ -6,6 +6,7 @@ import { ShoppingCart, Heart, Shield, Truck, RotateCcw, MessageCircle, Zap } fro
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useCartStore, useWishlistStore } from "@/lib/store";
+import { flyToCart } from "@/lib/flyToCart";
 import { formatPrice } from "@/lib/utils";
 import { useSiteSettings } from "@/lib/settings";
 import { toast } from "sonner";
@@ -46,7 +47,7 @@ export default function ProductDetail() {
     ids: JSON.parse(localStorage.getItem("nexus-recent") || "[]").join(",")
   });
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e?: React.MouseEvent) => {
     if (!product) return;
     addItem({
       productId: product.id,
@@ -56,6 +57,7 @@ export default function ProductDetail() {
       image: product.images[0],
       productType: product.productType,
     });
+    if (e?.currentTarget) flyToCart(product.images[0], e.currentTarget as HTMLElement);
     toast.success("تمت الإضافة إلى السلة", { description: product.nameAr });
     window.dispatchEvent(new Event('open-cart'));
   };
