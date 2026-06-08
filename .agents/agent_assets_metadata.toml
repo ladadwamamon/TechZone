@@ -473,3 +473,9 @@ id = "iV3IFPys21Cn8m8Zgz6zl"
 uri = "file://deploy/DEPLOYMENT.md"
 type = "text"
 title = "دليل نشر Nexus Store (Docker + Portainer + Cloudflare)"
+
+[[outputs]]
+id = "i50CMfBaO5LsI1hr43b1d"
+uri = "file://deploy/QA-TEST-PLAN.md"
+type = "text"
+title = "خطة اختبار الجودة (QA) — Nexus Store"

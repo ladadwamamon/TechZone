@@ -20,6 +20,8 @@ import Media from "@/pages/Media";
 import Newsletter from "@/pages/Newsletter";
 import Customers from "@/pages/Customers";
 import Accounts from "@/pages/Accounts";
+import Roles from "@/pages/Roles";
+import Performance from "@/pages/Performance";
 import Settings from "@/pages/Settings";
 import Audit from "@/pages/Audit";
 
@@ -84,6 +86,12 @@ function Router() {
       </Route>
       <Route path="/accounts">
         {(params) => <ProtectedRoute component={Accounts} perm="admins:manage" {...params} />}
+      </Route>
+      <Route path="/roles">
+        {(params) => <ProtectedRoute component={Roles} perm="admins:manage" {...params} />}
+      </Route>
+      <Route path="/performance">
+        {(params) => <ProtectedRoute component={Performance} perm="analytics:read" {...params} />}
       </Route>
       <Route path="/settings">
         {(params) => <ProtectedRoute component={Settings} perm="settings:write" {...params} />}

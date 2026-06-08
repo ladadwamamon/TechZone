@@ -148,7 +148,7 @@ export default function TrackOrder() {
                       </div>
                       <div className="bg-background/50 border border-primary/20 px-4 py-2 clip-corner-sm">
                         <div className="font-mono text-[10px] text-primary/70 uppercase mb-1">{"//"} EST_DELIVERY</div>
-                        <div className="font-mono font-bold text-primary">{new Date(tracking.estimatedDelivery).toLocaleDateString('ar-EG')}</div>
+                        <div className="font-mono font-bold text-primary">{new Date(tracking.estimatedDelivery).toLocaleDateString('ar-EG-u-nu-latn')}</div>
                       </div>
                       {tracking.trackingNumber && (
                         <div className="bg-background/50 border border-primary/20 px-4 py-2 clip-corner-sm">
@@ -173,7 +173,7 @@ export default function TrackOrder() {
                         </div>
                         {step.date && (
                           <div className="font-mono text-sm text-primary/50">
-                            {new Date(step.date).toLocaleString('ar-EG', { dateStyle: 'medium', timeStyle: 'short' })}
+                            {new Date(step.date).toLocaleString('ar-EG-u-nu-latn', { dateStyle: 'medium', timeStyle: 'short' })}
                           </div>
                         )}
                         {!step.completed && !step.date && (

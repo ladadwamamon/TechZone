@@ -74,7 +74,7 @@ export default function BlogPostPage() {
               )}
               <span className="text-foreground">{post.authorName}</span>
             </div>
-            <div className="flex items-center gap-2"><Calendar size={16} /> {new Date(post.date).toLocaleDateString('ar-EG')}</div>
+            <div className="flex items-center gap-2"><Calendar size={16} /> {new Date(post.date).toLocaleDateString('ar-EG-u-nu-latn')}</div>
             <div className="flex items-center gap-2"><Clock size={16} /> {post.readingMinutes} MIN_READ</div>
             <div className="flex items-center gap-2 border border-primary/30 px-2 py-1 clip-corner-sm bg-primary/5">{post.categoryAr}</div>
           </div>

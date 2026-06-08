@@ -7,5 +7,5 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatPrice(price: number): string {
   const n = Number(price)
-  return `${(Number.isFinite(n) ? n : 0).toLocaleString("ar-SA")} ₪`
+  return `${(Number.isFinite(n) ? n : 0).toLocaleString("en-US")} ₪`
 }

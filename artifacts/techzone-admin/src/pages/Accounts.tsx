@@ -4,7 +4,9 @@ import {
   getAdminListAccountsQueryKey,
   useAdminCreateAccount,
   useAdminUpdateAccount,
-  useAdminDeleteAccount
+  useAdminDeleteAccount,
+  useAdminListRoles,
+  getAdminListRolesQueryKey
 } from "@workspace/api-client-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -28,7 +30,7 @@ import * as z from "zod";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const roleMap: Record<string, string> = {
+const fallbackRoleMap: Record<string, string> = {
   super_admin: "مدير عام",
   content_editor: "محرر محتوى",
   order_manager: "مدير طلبات",
@@ -39,7 +41,7 @@ const accountSchema = z.object({
   fullName: z.string().min(1, "الاسم الكامل مطلوب"),
   email: z.string().email("بريد إلكتروني غير صالح").optional().or(z.literal('')),
   password: z.string().min(8, "كلمة المرور يجب أن تكون 8 أحرف على الأقل").optional(),
-  role: z.enum(["super_admin", "content_editor", "order_manager"]),
+  role: z.string().min(1, "الدور مطلوب"),
   isActive: z.boolean().default(true),
 });
 
@@ -50,6 +52,17 @@ export default function Accounts() {
   const { data: accounts, isLoading } = useAdminListAccounts({
     query: { queryKey: getAdminListAccountsQueryKey() }
   });
+
+  const { data: roles } = useAdminListRoles({
+    query: { queryKey: getAdminListRolesQueryKey() }
+  });
+
+  const roleOptions = (roles && roles.length > 0)
+    ? roles.map((r) => ({ key: r.key, name: r.nameAr }))
+    : Object.entries(fallbackRoleMap).map(([key, name]) => ({ key, name }));
+
+  const roleLabel = (key: string) =>
+    roleOptions.find((r) => r.key === key)?.name ?? fallbackRoleMap[key] ?? key;
 
   const queryClient = useQueryClient();
   const { toast } = useToast();
@@ -176,8 +189,8 @@ export default function Accounts() {
                   <Select value={field.value} onValueChange={field.onChange} dir="rtl">
                     <FormControl><SelectTrigger><SelectValue placeholder="اختر الدور" /></SelectTrigger></FormControl>
                     <SelectContent>
-                      {Object.entries(roleMap).map(([k, v]) => (
-                        <SelectItem key={k} value={k}>{v}</SelectItem>
+                      {roleOptions.map((r) => (
+                        <SelectItem key={r.key} value={r.key}>{r.name}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -228,7 +241,7 @@ export default function Accounts() {
                           <div className="text-xs text-muted-foreground font-mono" dir="ltr">@{account.username}</div>
                         </div>
                       </TableCell>
-                      <TableCell>{roleMap[account.role]}</TableCell>
+                      <TableCell>{roleLabel(account.role)}</TableCell>
                       <TableCell>
                         <span className={`px-2 py-1 rounded text-xs ${account.isActive ? 'bg-lime/10 text-lime' : 'bg-destructive/10 text-destructive'}`}>
                           {account.isActive ? 'نشط' : 'معطل'}

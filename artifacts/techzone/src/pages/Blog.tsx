@@ -83,7 +83,7 @@ export default function Blog() {
                     </div>
                     
                     <div className="flex flex-row md:flex-col items-center md:items-end gap-4 text-xs font-mono text-primary/70 shrink-0">
-                      <div className="flex items-center gap-2"><Calendar size={14} /> {new Date(featuredPost.date).toLocaleDateString('ar-EG')}</div>
+                      <div className="flex items-center gap-2"><Calendar size={14} /> {new Date(featuredPost.date).toLocaleDateString('ar-EG-u-nu-latn')}</div>
                       <div className="flex items-center gap-2"><Clock size={14} /> {featuredPost.readingMinutes} MIN_READ</div>
                       <div className="mt-2 text-primary group-hover:text-secondary transition-colors uppercase font-bold flex items-center gap-1">
                         READ_FILE <ArrowLeft size={14} />
@@ -114,7 +114,7 @@ export default function Blog() {
                         <h3 className="font-bold text-lg mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-2">{post.titleAr}</h3>
                         <p className="text-muted-foreground text-sm line-clamp-3 flex-1 mb-4">{post.excerpt}</p>
                         <div className="flex items-center justify-between border-t border-primary/20 pt-3 mt-auto">
-                          <span className="text-[10px] font-mono text-primary/50">{new Date(post.date).toLocaleDateString('ar-EG')}</span>
+                          <span className="text-[10px] font-mono text-primary/50">{new Date(post.date).toLocaleDateString('ar-EG-u-nu-latn')}</span>
                           <span className="text-xs font-mono text-primary group-hover:text-secondary transition-colors uppercase">ACCESS {">"}</span>
                         </div>
                       </div>

@@ -5,7 +5,6 @@
  * Nexus Store Electronics & Gaming Store API
  * OpenAPI spec version: 0.1.0
  */
-import type { AdminAccountInputRole } from './adminAccountInputRole';
 
 export interface AdminAccountInput {
   /** @minLength 3 */
@@ -16,6 +15,6 @@ export interface AdminAccountInput {
   email?: string | null;
   /** @minLength 8 */
   password: string;
-  role: AdminAccountInputRole;
+  role: string;
   isActive?: boolean;
 }

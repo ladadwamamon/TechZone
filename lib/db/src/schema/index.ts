@@ -6,3 +6,4 @@ export * from "./coupons";
 export * from "./customers";
 export * from "./digital";
 export * from "./navigation";
+export * from "./metrics";

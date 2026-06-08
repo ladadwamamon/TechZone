@@ -321,22 +321,13 @@ export interface AdminLoginInput {
   password: string;
 }
 
-export type AdminAccountPublicRole = typeof AdminAccountPublicRole[keyof typeof AdminAccountPublicRole];
-
-
-export const AdminAccountPublicRole = {
-  super_admin: 'super_admin',
-  content_editor: 'content_editor',
-  order_manager: 'order_manager',
-} as const;
-
 export interface AdminAccountPublic {
   id: string;
   username: string;
   fullName: string;
   /** @nullable */
   email?: string | null;
-  role: AdminAccountPublicRole;
+  role: string;
   isActive: boolean;
   /** @nullable */
   lastLoginAt?: string | null;
@@ -348,15 +339,6 @@ export interface AdminMeResponse {
   permissions: string[];
 }
 
-export type AdminAccountInputRole = typeof AdminAccountInputRole[keyof typeof AdminAccountInputRole];
-
-
-export const AdminAccountInputRole = {
-  super_admin: 'super_admin',
-  content_editor: 'content_editor',
-  order_manager: 'order_manager',
-} as const;
-
 export interface AdminAccountInput {
   /** @minLength 3 */
   username: string;
@@ -366,18 +348,9 @@ export interface AdminAccountInput {
   email?: string | null;
   /** @minLength 8 */
   password: string;
-  role: AdminAccountInputRole;
+  role: string;
   isActive?: boolean;
 }
-
-export type AdminAccountUpdateRole = typeof AdminAccountUpdateRole[keyof typeof AdminAccountUpdateRole];
-
-
-export const AdminAccountUpdateRole = {
-  super_admin: 'super_admin',
-  content_editor: 'content_editor',
-  order_manager: 'order_manager',
-} as const;
 
 export interface AdminAccountUpdate {
   fullName?: string;
@@ -385,8 +358,71 @@ export interface AdminAccountUpdate {
   email?: string | null;
   /** @minLength 8 */
   password?: string;
-  role?: AdminAccountUpdateRole;
+  role?: string;
   isActive?: boolean;
+}
+
+export interface Role {
+  id: string;
+  key: string;
+  nameAr: string;
+  permissions: string[];
+  isSystem: boolean;
+  createdAt: string;
+}
+
+export interface RoleInput {
+  /** @minLength 2 */
+  key: string;
+  /** @minLength 1 */
+  nameAr: string;
+  permissions: string[];
+}
+
+export interface RoleUpdate {
+  /** @minLength 1 */
+  nameAr?: string;
+  permissions?: string[];
+}
+
+export type SystemHealthMemory = {
+  rssMb: number;
+  heapUsedMb: number;
+  heapTotalMb: number;
+};
+
+export type SystemHealthRecentErrorsItem = {
+  time: string;
+  method: string;
+  path: string;
+  status: number;
+};
+
+export interface SystemHealth {
+  uptimeSeconds: number;
+  startedAt: string;
+  requestCount: number;
+  errorCount: number;
+  nodeVersion: string;
+  memory: SystemHealthMemory;
+  recentErrors: SystemHealthRecentErrorsItem[];
+  timestamp: string;
+}
+
+export interface WebVitalsSummaryItem {
+  metric: string;
+  avg: number;
+  p75: number;
+  count: number;
+}
+
+export interface WebVitalInput {
+  metric: string;
+  value: number;
+  /** @nullable */
+  rating?: string | null;
+  /** @nullable */
+  path?: string | null;
 }
 
 export type AdminProductProductType = typeof AdminProductProductType[keyof typeof AdminProductProductType];
@@ -1128,6 +1164,10 @@ status?: string;
 search?: string;
 page?: number;
 limit?: number;
+};
+
+export type AdminWebVitalsSummaryParams = {
+days?: number;
 };
 
 export type AdminListMediaParams = {

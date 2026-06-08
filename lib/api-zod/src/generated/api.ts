@@ -536,7 +536,7 @@ export const AdminLoginResponse = zod.object({
   "username": zod.string(),
   "fullName": zod.string(),
   "email": zod.string().nullish(),
-  "role": zod.enum(['super_admin', 'content_editor', 'order_manager']),
+  "role": zod.string(),
   "isActive": zod.boolean(),
   "lastLoginAt": zod.string().nullish(),
   "createdAt": zod.string()
@@ -563,7 +563,7 @@ export const GetCurrentAdminResponse = zod.object({
   "username": zod.string(),
   "fullName": zod.string(),
   "email": zod.string().nullish(),
-  "role": zod.enum(['super_admin', 'content_editor', 'order_manager']),
+  "role": zod.string(),
   "isActive": zod.boolean(),
   "lastLoginAt": zod.string().nullish(),
   "createdAt": zod.string()
@@ -1214,7 +1214,7 @@ export const AdminListAccountsResponseItem = zod.object({
   "username": zod.string(),
   "fullName": zod.string(),
   "email": zod.string().nullish(),
-  "role": zod.enum(['super_admin', 'content_editor', 'order_manager']),
+  "role": zod.string(),
   "isActive": zod.boolean(),
   "lastLoginAt": zod.string().nullish(),
   "createdAt": zod.string()
@@ -1237,7 +1237,7 @@ export const AdminCreateAccountBody = zod.object({
   "fullName": zod.string().min(1),
   "email": zod.string().nullish(),
   "password": zod.string().min(adminCreateAccountBodyPasswordMin),
-  "role": zod.enum(['super_admin', 'content_editor', 'order_manager']),
+  "role": zod.string(),
   "isActive": zod.boolean().optional()
 })
 
@@ -1257,7 +1257,7 @@ export const AdminUpdateAccountBody = zod.object({
   "fullName": zod.string().optional(),
   "email": zod.string().nullish(),
   "password": zod.string().min(adminUpdateAccountBodyPasswordMin).optional(),
-  "role": zod.enum(['super_admin', 'content_editor', 'order_manager']).optional(),
+  "role": zod.string().optional(),
   "isActive": zod.boolean().optional()
 })
 
@@ -1266,7 +1266,7 @@ export const AdminUpdateAccountResponse = zod.object({
   "username": zod.string(),
   "fullName": zod.string(),
   "email": zod.string().nullish(),
-  "role": zod.enum(['super_admin', 'content_editor', 'order_manager']),
+  "role": zod.string(),
   "isActive": zod.boolean(),
   "lastLoginAt": zod.string().nullish(),
   "createdAt": zod.string()
@@ -1281,6 +1281,129 @@ export const AdminDeleteAccountParams = zod.object({
 })
 
 export const AdminDeleteAccountResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary List roles
+ */
+export const AdminListRolesResponseItem = zod.object({
+  "id": zod.string(),
+  "key": zod.string(),
+  "nameAr": zod.string(),
+  "permissions": zod.array(zod.string()),
+  "isSystem": zod.boolean(),
+  "createdAt": zod.string()
+})
+export const AdminListRolesResponse = zod.array(AdminListRolesResponseItem)
+
+
+/**
+ * @summary Create a role
+ */
+export const adminCreateRoleBodyKeyMin = 2;
+
+
+
+
+export const AdminCreateRoleBody = zod.object({
+  "key": zod.string().min(adminCreateRoleBodyKeyMin),
+  "nameAr": zod.string().min(1),
+  "permissions": zod.array(zod.string())
+})
+
+
+/**
+ * @summary Update a role
+ */
+export const AdminUpdateRoleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+
+
+
+export const AdminUpdateRoleBody = zod.object({
+  "nameAr": zod.string().min(1).optional(),
+  "permissions": zod.array(zod.string()).optional()
+})
+
+export const AdminUpdateRoleResponse = zod.object({
+  "id": zod.string(),
+  "key": zod.string(),
+  "nameAr": zod.string(),
+  "permissions": zod.array(zod.string()),
+  "isSystem": zod.boolean(),
+  "createdAt": zod.string()
+})
+
+
+/**
+ * @summary Delete a role
+ */
+export const AdminDeleteRoleParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminDeleteRoleResponse = zod.object({
+  "success": zod.boolean(),
+  "message": zod.string().nullish()
+})
+
+
+/**
+ * @summary System health metrics
+ */
+export const AdminSystemHealthResponse = zod.object({
+  "uptimeSeconds": zod.number(),
+  "startedAt": zod.string(),
+  "requestCount": zod.number(),
+  "errorCount": zod.number(),
+  "nodeVersion": zod.string(),
+  "memory": zod.object({
+  "rssMb": zod.number(),
+  "heapUsedMb": zod.number(),
+  "heapTotalMb": zod.number()
+}),
+  "recentErrors": zod.array(zod.object({
+  "time": zod.string(),
+  "method": zod.string(),
+  "path": zod.string(),
+  "status": zod.number()
+})),
+  "timestamp": zod.string()
+})
+
+
+/**
+ * @summary Web Vitals summary
+ */
+export const AdminWebVitalsSummaryQueryParams = zod.object({
+  "days": zod.coerce.number().optional()
+})
+
+export const AdminWebVitalsSummaryResponseItem = zod.object({
+  "metric": zod.string(),
+  "avg": zod.number(),
+  "p75": zod.number(),
+  "count": zod.number()
+})
+export const AdminWebVitalsSummaryResponse = zod.array(AdminWebVitalsSummaryResponseItem)
+
+
+/**
+ * @summary Report a Web Vitals metric
+ */
+export const ReportWebVitalsBody = zod.object({
+  "metric": zod.string(),
+  "value": zod.number(),
+  "rating": zod.string().nullish(),
+  "path": zod.string().nullish()
+})
+
+export const ReportWebVitalsResponse = zod.object({
   "success": zod.boolean(),
   "message": zod.string().nullish()
 })

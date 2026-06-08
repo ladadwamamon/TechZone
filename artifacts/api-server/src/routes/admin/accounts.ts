@@ -5,6 +5,7 @@ import { adminAccountsTable } from "@workspace/db";
 import { eq, desc, sql } from "drizzle-orm";
 import { AdminCreateAccountBody, AdminUpdateAccountBody } from "@workspace/api-zod";
 import { requireAuth, requirePermission } from "../../middlewares/auth";
+import { roleExists } from "../../lib/rbac";
 import { hashPassword } from "../../lib/password";
 import { destroyAllSessionsForAdmin } from "../../lib/session";
 import { writeAudit } from "../../lib/audit";
@@ -38,6 +39,8 @@ router.post("/admin/accounts", requireAuth, requirePermission("admins:manage"), 
   const dupe = await db.query.adminAccountsTable.findFirst({ where: eq(adminAccountsTable.username, data.username) });
   if (dupe) return res.status(409).json({ error: "اسم المستخدم مستخدم مسبقاً" });
 
+  if (!roleExists(data.role)) return res.status(400).json({ error: "الدور غير موجود" });
+
   const id = randomUUID();
   const passwordHash = await hashPassword(data.password);
   const [created] = await db.insert(adminAccountsTable).values({
@@ -58,6 +61,10 @@ router.put("/admin/accounts/:id", requireAuth, requirePermission("admins:manage"
   if (!parsed.success) return res.status(400).json({ error: "بيانات غير صالحة", details: parsed.error.issues });
   const existing = await db.query.adminAccountsTable.findFirst({ where: eq(adminAccountsTable.id, (req.params.id as string)) });
   if (!existing) return res.status(404).json({ error: "غير موجود" });
+
+  if (parsed.data.role !== undefined && !roleExists(parsed.data.role)) {
+    return res.status(400).json({ error: "الدور غير موجود" });
+  }
 
   // Prevent demoting/deactivating the last active super-admin
   const isLosingSuperAdmin =

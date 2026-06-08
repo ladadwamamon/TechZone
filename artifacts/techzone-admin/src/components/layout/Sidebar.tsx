@@ -24,7 +24,9 @@ import {
   Ticket,
   Menu,
   Settings, 
-  Activity
+  Activity,
+  ShieldCheck,
+  Gauge
 } from "lucide-react";
 
 export function Sidebar() {
@@ -46,8 +48,10 @@ export function Sidebar() {
     { href: "/customers", label: "العملاء", icon: UserRound, perm: "orders:write" },
     { href: "/newsletter", label: "النشرة الإخبارية", icon: Mail, perm: "newsletter:read" },
     { href: "/accounts", label: "الحسابات", icon: Users, perm: "admins:manage" },
+    { href: "/roles", label: "الأدوار والصلاحيات", icon: ShieldCheck, perm: "admins:manage" },
     { href: "/settings", label: "الإعدادات", icon: Settings, perm: "settings:write" },
     { href: "/audit", label: "سجل التدقيق", icon: Activity, perm: "audit:read" },
+    { href: "/performance", label: "الأداء والمراقبة", icon: Gauge, perm: "analytics:read" },
   ];
 
   return (

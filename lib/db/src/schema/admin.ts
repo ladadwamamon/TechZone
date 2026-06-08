@@ -21,6 +21,19 @@ export const insertAdminAccountSchema = createInsertSchema(adminAccountsTable);
 export type InsertAdminAccount = z.infer<typeof insertAdminAccountSchema>;
 export type AdminAccount = typeof adminAccountsTable.$inferSelect;
 
+export const rolesTable = pgTable("roles", {
+  id: text("id").primaryKey(),
+  key: text("key").notNull().unique(),
+  nameAr: text("name_ar").notNull(),
+  permissions: jsonb("permissions").$type<string[]>().notNull().default([]),
+  isSystem: boolean("is_system").notNull().default(false),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertRoleSchema = createInsertSchema(rolesTable);
+export type InsertRole = z.infer<typeof insertRoleSchema>;
+export type Role = typeof rolesTable.$inferSelect;
+
 export const adminSessionsTable = pgTable("admin_sessions", {
   id: text("id").primaryKey(),
   adminId: text("admin_id").notNull().references(() => adminAccountsTable.id, { onDelete: "cascade" }),

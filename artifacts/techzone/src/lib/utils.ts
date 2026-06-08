@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function formatPrice(price: number): string {
-  return `${price.toLocaleString("ar-SA")} ₪`
+  return `${price.toLocaleString("en-US")} ₪`
 }
 
 export function pluralize(n: number, singular: string, plural: string): string {

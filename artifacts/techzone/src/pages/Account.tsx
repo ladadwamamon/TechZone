@@ -280,7 +280,7 @@ export default function Account() {
                         </div>
                         <div className="flex items-center gap-3">
                           <span className="font-mono text-xs text-muted-foreground">
-                            {new Date(order.createdAt).toLocaleDateString("ar-EG")}
+                            {new Date(order.createdAt).toLocaleDateString("ar-EG-u-nu-latn")}
                           </span>
                           <span className="font-mono text-xs font-bold bg-primary/10 border border-primary/30 text-primary px-2 py-1 clip-corner-sm uppercase">
                             {STATUS_LABELS[order.status] ?? order.status}

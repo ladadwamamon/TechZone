@@ -6,12 +6,11 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface AdminAccountUpdate {
-  fullName?: string;
+export interface WebVitalInput {
+  metric: string;
+  value: number;
   /** @nullable */
-  email?: string | null;
-  /** @minLength 8 */
-  password?: string;
-  role?: string;
-  isActive?: boolean;
+  rating?: string | null;
+  /** @nullable */
+  path?: string | null;
 }
