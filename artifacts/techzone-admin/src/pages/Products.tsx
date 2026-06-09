@@ -193,8 +193,8 @@ export default function Products() {
       isExclusive: !!p.isExclusive,
       isFlashDeal: !!p.isFlashDeal,
       isFeatured: !!p.isFeatured,
-      specs: (p.specs ?? []).map((s) => ({ labelAr: s.labelAr, value: s.value })),
-      variants: (p.variants ?? []).map((v) => ({
+      specs: (Array.isArray(p.specs) ? p.specs : []).map((s) => ({ labelAr: s.labelAr, value: s.value })),
+      variants: (Array.isArray(p.variants) ? p.variants : []).map((v) => ({
         id: v.id,
         label: v.label,
         value: v.value,

@@ -2,6 +2,7 @@ import { db } from "@workspace/db";
 import { productsTable, categoriesTable, brandsTable, ordersTable } from "@workspace/db";
 import { eq, sql } from "drizzle-orm";
 import { loadDeliveredCodes } from "../../lib/digital";
+import { normalizeSpecs } from "../../lib/product-specs";
 
 export function mapAdminProduct(p: typeof productsTable.$inferSelect) {
   return {
@@ -33,7 +34,7 @@ export function mapAdminProduct(p: typeof productsTable.$inferSelect) {
     isFlashDeal: p.isFlashDeal,
     isFeatured: p.isFeatured,
     descriptionAr: p.descriptionAr ?? null,
-    specs: (p.specs as Array<{ labelAr: string; value: string }>) ?? [],
+    specs: normalizeSpecs(p.specs),
     variants: (p.variants as Array<{ id: string; label: string; value: string; price: number; inStock: boolean }>) ?? [],
     badges: (p.badges as string[]) ?? [],
     metaTitle: p.metaTitle ?? null,

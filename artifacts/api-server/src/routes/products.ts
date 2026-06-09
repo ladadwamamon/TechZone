@@ -2,6 +2,7 @@ import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { productsTable, productReviewsTable, categoriesTable, brandsTable } from "@workspace/db";
 import { eq, and, gte, lte, ilike, desc, asc, inArray, sql } from "drizzle-orm";
+import { normalizeSpecs } from "../lib/product-specs";
 
 const router: IRouter = Router();
 
@@ -158,7 +159,7 @@ router.get("/products/:id", async (req, res) => {
     deliveryType: product.deliveryType ?? null,
     digitalInstructionsAr: product.digitalInstructionsAr ?? null,
     descriptionAr: product.descriptionAr ?? "",
-    specs: (product.specs as Array<{ labelAr: string; value: string }>) ?? [],
+    specs: normalizeSpecs(product.specs),
     reviews: reviews.map(r => ({ id: r.id, authorName: r.authorName, rating: r.rating, comment: r.comment, date: r.date })),
     variants: (product.variants as Array<{ id: string; label: string; value: string; price: number; inStock: boolean }>) ?? [],
     metaTitle: product.metaTitle ?? null,
