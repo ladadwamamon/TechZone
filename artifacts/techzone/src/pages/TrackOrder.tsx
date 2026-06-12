@@ -5,7 +5,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, Terminal, Package, CheckCircle2, Circle, AlertTriangle, Truck } from "lucide-react";
 
 export default function TrackOrder() {
-  const [orderId, setOrderId] = useState("");
+  const [orderId, setOrderId] = useState(
+    () => new URLSearchParams(window.location.search).get("id") ?? "",
+  );
   const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
@@ -61,7 +63,7 @@ export default function TrackOrder() {
                     value={orderId}
                     onChange={e => { setOrderId(e.target.value); setSubmitted(false); }}
                     className="w-full bg-background/50 border border-primary/30 clip-corner-sm px-4 py-3 font-mono text-foreground focus:border-primary focus:shadow-[0_0_10px_var(--cyan)] focus:outline-none transition-all"
-                    placeholder="مثال: ORD-12345"
+                    placeholder="مثال: NX-123456"
                   />
                 </div>
                 

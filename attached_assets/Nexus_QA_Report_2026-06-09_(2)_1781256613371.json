@@ -1,0 +1,322 @@
+{
+  "session": {
+    "date": "2026-06-08",
+    "tester": "حمدي",
+    "env": "محلي (Local)",
+    "browser": "chrome ",
+    "device": "سطح مكتب (Windows)",
+    "storeUrl": "https://e663ec8c-974d-422c-a593-454bb4b0c76f-00-28yi8ed9g9ma9.sisko.replit.dev/",
+    "adminUrl": "https://e663ec8c-974d-422c-a593-454bb4b0c76f-00-28yi8ed9g9ma9.sisko.replit.dev/admin/"
+  },
+  "tests": {
+    "G1": {
+      "status": "pass",
+      "note": ""
+    },
+    "G2": {
+      "status": "pass",
+      "note": ""
+    },
+    "G3": {
+      "status": "pass",
+      "note": ""
+    },
+    "G4": {
+      "status": "pass",
+      "note": ""
+    },
+    "G5": {
+      "status": "note",
+      "note": "نجح بس لما مثلا اكبس على من نحن ما بطلعنلي عليها بجيبها فوق بس الشاشة بضل تحت ولازم اطلع يدوي "
+    },
+    "G6": {
+      "status": "pass",
+      "note": ""
+    },
+    "G7": {
+      "status": "pass",
+      "note": ""
+    },
+    "G8": {
+      "status": "pass",
+      "note": ""
+    },
+    "S1": {
+      "status": "pass",
+      "note": ""
+    },
+    "S2": {
+      "status": "note",
+      "note": "لا يوجد انتقال تلقائي ل الاعلى "
+    },
+    "S3": {
+      "status": "fail",
+      "note": "الفلتر مش شغال "
+    },
+    "S4": {
+      "status": "pass",
+      "note": ""
+    },
+    "S5": {
+      "status": "pass",
+      "note": ""
+    },
+    "S6": {
+      "status": "note",
+      "note": "المدن مش كاملة وما في الداخل بقترح نعمل اشي زي يحط سعر التوصيل لحال لما يختار ضفة قدس داخل و المدينة يسجلها يدوي "
+    },
+    "S7": {
+      "status": "pass",
+      "note": ""
+    },
+    "S8": {
+      "status": "pass",
+      "note": ""
+    },
+    "S9": {
+      "status": "pass",
+      "note": ""
+    },
+    "S10": {
+      "status": "pass",
+      "note": "لكن بدهم تعديل صور "
+    },
+    "S11": {
+      "status": "pass",
+      "note": ""
+    },
+    "S12": {
+      "status": "note",
+      "note": "شو يعني هاي ؟ "
+    },
+    "S13": {
+      "status": "note",
+      "note": "شو يعني هاي ؟ "
+    },
+    "S14": {
+      "status": "pass",
+      "note": ""
+    },
+    "S15": {
+      "status": "pass",
+      "note": ""
+    },
+    "S16": {
+      "status": "pass",
+      "note": ""
+    },
+    "S17": {
+      "status": "pass",
+      "note": ""
+    },
+    "S18": {
+      "status": "note",
+      "note": "بدنا نضيف رقم تلفون انو يحط رقم تلفونو "
+    },
+    "S19": {
+      "status": "pass",
+      "note": ""
+    },
+    "S20": {
+      "status": "pass",
+      "note": ""
+    },
+    "S21": {
+      "status": "pass",
+      "note": ""
+    },
+    "S22": {
+      "status": "note",
+      "note": "مش عارف شو هاي "
+    },
+    "S23": {
+      "status": "pass",
+      "note": ""
+    },
+    "S24": {
+      "status": "note",
+      "note": "نجج بس لما يجي يسجل كلمة السر بضل فيه اشي ب الخانة لازم تتصفر لما يجي يكتب كلمة السر تبعتو "
+    },
+    "S25": {
+      "status": "note",
+      "note": "نجج بس لما يجي يسجل كلمة السر بضل فيه اشي ب الخانة لازم تتصفر لما يجي يكتب كلمة السر تبعتو "
+    },
+    "S26": {
+      "status": "note",
+      "note": "المفروض لما يعمل تسجيل دخول تتعبى بيانات الزبون تلقائي لما يجي يشتري "
+    },
+    "F1": {
+      "status": "pass",
+      "note": ""
+    },
+    "F2": {
+      "status": "pass",
+      "note": ""
+    },
+    "F3": {
+      "status": "note",
+      "note": "ما بشتغل بس ما بجيب مسج انو الكوبون غير صالح "
+    },
+    "F4": {
+      "status": "note",
+      "note": "الفمروض بوببة الدفع تكون شغالة عشان هاد الخيار ونربط الموقع بموقع ثاني يجيب كواد "
+    },
+    "F5": {
+      "status": "pass",
+      "note": ""
+    },
+    "F6": {
+      "status": "pass",
+      "note": ""
+    },
+    "F7": {
+      "status": "fail",
+      "note": "زبط بس تتبع الطلب فشل "
+    },
+    "F8": {
+      "status": "pass",
+      "note": ""
+    },
+    "A1": {
+      "status": "pass",
+      "note": ""
+    },
+    "A2": {
+      "status": "pass",
+      "note": ""
+    },
+    "A3": {
+      "status": "fail",
+      "note": ""
+    },
+    "A4": {
+      "status": "pass",
+      "note": ""
+    },
+    "A5": {
+      "status": "pass",
+      "note": ""
+    },
+    "A6": {
+      "status": "fail",
+      "note": "بدها تعديل لما نفتح القوائم و في شغلات زي slug ورمز مش فاهمها نشيل موضوع الضمان يكون اختياري مش راضي يضيف صورة  الاسم ب العربي برضو مش دايما بزبط يكونو اختيارين احسن "
+    },
+    "A7": {
+      "status": "pass",
+      "note": ""
+    },
+    "A8": {
+      "status": "pass",
+      "note": ""
+    },
+    "A9": {
+      "status": "pass",
+      "note": ""
+    },
+    "A10": {
+      "status": "pass",
+      "note": ""
+    },
+    "A11": {
+      "status": "fail",
+      "note": ""
+    },
+    "A12": {
+      "status": "fail",
+      "note": "مش زابط اصلا اسجل ب النشرة البريدية "
+    },
+    "A13": {
+      "status": "pass",
+      "note": ""
+    },
+    "A14": {
+      "status": "pass",
+      "note": ""
+    },
+    "A15": {
+      "status": "pass",
+      "note": ""
+    },
+    "A16": {
+      "status": "pass",
+      "note": ""
+    },
+    "A17": {
+      "status": "note",
+      "note": "شيك عليها مش فاهمة"
+    },
+    "A18": {
+      "status": "pass",
+      "note": ""
+    },
+    "A19": {
+      "status": "pass",
+      "note": ""
+    },
+    "R1": {
+      "status": "fail",
+      "note": "فشل في تسجيل الدخول "
+    },
+    "R2": {
+      "status": "fail",
+      "note": "فشل في تسجيل الدخول "
+    },
+    "R3": {
+      "status": "pass",
+      "note": ""
+    },
+    "R4": {
+      "status": "pass",
+      "note": ""
+    },
+    "R5": {
+      "status": "pass",
+      "note": ""
+    },
+    "P1": {
+      "status": "note",
+      "note": "يمكن مامون يفهم احسن مني"
+    },
+    "P2": {
+      "status": "pass",
+      "note": ""
+    },
+    "P3": {
+      "status": "pass",
+      "note": ""
+    },
+    "P4": {
+      "status": "note",
+      "note": "مامون"
+    },
+    "E1": {
+      "status": "pass",
+      "note": ""
+    },
+    "E2": {
+      "status": "pass",
+      "note": "ما را ح يكون عنا كمية"
+    },
+    "E3": {
+      "status": "pass",
+      "note": ""
+    },
+    "E4": {
+      "status": "pass",
+      "note": ""
+    },
+    "E5": {
+      "status": "pass",
+      "note": ""
+    },
+    "E6": {
+      "status": "pass",
+      "note": ""
+    },
+    "E7": {
+      "status": "pass",
+      "note": ""
+    }
+  },
+  "issues": []
+}

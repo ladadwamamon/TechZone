@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useAuth } from "@/lib/auth";
+import { firstAccessiblePath } from "@/lib/access";
 import { useAdminLogin, useSetupFirstAdmin, getGetCurrentAdminQueryKey } from "@workspace/api-client-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,7 +28,7 @@ const setupSchema = z.object({
 export default function Login() {
   const [isSetup, setIsSetup] = useState(false);
   const [, setLocation] = useLocation();
-  const { isAuthenticated, isLoading: isAuthLoading } = useAuth();
+  const { isAuthenticated, isLoading: isAuthLoading, hasPermission } = useAuth();
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
@@ -36,9 +37,9 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      setLocation("/");
+      setLocation(firstAccessiblePath(hasPermission) ?? "/");
     }
-  }, [isAuthenticated, setLocation]);
+  }, [isAuthenticated, hasPermission, setLocation]);
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),

@@ -1,7 +1,7 @@
 import { Router, type IRouter } from "express";
 import { db } from "@workspace/db";
 import { ordersTable, newsletterSubscribersTable } from "@workspace/db";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { CreateOrderBody, SubscribeNewsletterBody } from "@workspace/api-zod";
 import { randomUUID } from "crypto";
 import { couponsTable } from "@workspace/db";
@@ -90,11 +90,14 @@ router.get("/orders/track", async (req, res) => {
   const { orderId, phone } = req.query as Record<string, string>;
   if (!orderId || !phone) return res.status(400).json({ error: "orderId and phone required" });
 
+  const normalizePhone = (p: string) => p.replace(/\D/g, "");
   const order = await db.query.ordersTable.findFirst({
-    where: and(eq(ordersTable.id, orderId), eq(ordersTable.phone, phone)),
+    where: eq(ordersTable.id, orderId.trim()),
   });
 
-  if (!order) return res.status(404).json({ error: "Order not found" });
+  if (!order || normalizePhone(order.phone) !== normalizePhone(phone)) {
+    return res.status(404).json({ error: "Order not found" });
+  }
 
   const statusMap: Record<string, number> = {
     pending: 1,

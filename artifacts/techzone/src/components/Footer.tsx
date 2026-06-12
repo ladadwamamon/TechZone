@@ -1,7 +1,10 @@
 import { Link } from "wouter";
+import { useState } from "react";
 import { Facebook, Twitter, Instagram, Youtube, Monitor, Terminal, Phone, Mail, MapPin } from "lucide-react";
 import { useSiteSettings, getSocialLinks } from "@/lib/settings";
 import { useNavLinks } from "@/lib/nav";
+import { useSubscribeNewsletter } from "@workspace/api-client-react";
+import { toast } from "sonner";
 
 const DEFAULT_SOCIAL_ICONS = [Facebook, Twitter, Instagram, Youtube];
 
@@ -9,6 +12,29 @@ export function Footer() {
   const { social, contact } = useSiteSettings();
   const socialLinks = getSocialLinks(social);
   const footerLinks = useNavLinks("footer");
+
+  const [email, setEmail] = useState("");
+  const subscribeMutation = useSubscribeNewsletter();
+
+  const handleSubscribe = (e: React.FormEvent) => {
+    e.preventDefault();
+    const value = email.trim();
+    if (!value) return;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      toast.error("البريد الإلكتروني غير صالح");
+      return;
+    }
+    subscribeMutation.mutate(
+      { data: { email: value } },
+      {
+        onSuccess: (res) => {
+          toast.success(res.message || "تم الاشتراك بنجاح");
+          setEmail("");
+        },
+        onError: () => toast.error("حدث خطأ أثناء الاشتراك"),
+      },
+    );
+  };
 
   return (
     <footer className="glass-panel border-t border-primary/20 pt-16 pb-8 mt-auto relative overflow-hidden">
@@ -131,17 +157,19 @@ export function Footer() {
             <p className="text-sm text-primary/70 mb-4">
               اشترك في نشرتنا البريدية للحصول على أحدث العروض والخصومات.
             </p>
-            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+            <form className="flex gap-2" onSubmit={handleSubscribe}>
               <div className="relative flex-1 clip-corner-sm">
                 <Terminal className="absolute right-2 top-1/2 -translate-y-1/2 text-primary" size={14} />
                 <input
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   placeholder="البريد الإلكتروني"
                   className="w-full bg-background/50 border border-primary/30 px-8 py-2 text-sm text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary placeholder:text-primary/30 transition-all font-mono"
                 />
               </div>
-              <button type="submit" className="bg-primary/10 border border-primary text-primary px-4 py-2 clip-corner-sm text-sm font-bold hover:bg-primary hover:text-background hover:shadow-[0_0_15px_var(--cyan)] transition-all glow-hover">
-                اشترك
+              <button type="submit" disabled={subscribeMutation.isPending} className="bg-primary/10 border border-primary text-primary px-4 py-2 clip-corner-sm text-sm font-bold hover:bg-primary hover:text-background hover:shadow-[0_0_15px_var(--cyan)] transition-all glow-hover disabled:opacity-50">
+                {subscribeMutation.isPending ? "..." : "اشترك"}
               </button>
             </form>
           </div>

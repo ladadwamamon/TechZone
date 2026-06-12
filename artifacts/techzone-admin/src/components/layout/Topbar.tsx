@@ -1,4 +1,5 @@
 import { useAuth } from "@/lib/auth";
+import { useLocation } from "wouter";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { useAdminLogout } from "@workspace/api-client-react";
@@ -10,12 +11,15 @@ export function Topbar() {
   const { admin } = useAuth();
   const logout = useAdminLogout();
   const queryClient = useQueryClient();
+  const [, setLocation] = useLocation();
 
   const handleLogout = () => {
     logout.mutate(undefined, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetCurrentAdminQueryKey() });
-      }
+      onSettled: () => {
+        queryClient.setQueryData(getGetCurrentAdminQueryKey(), null);
+        queryClient.removeQueries({ queryKey: getGetCurrentAdminQueryKey() });
+        setLocation("/login");
+      },
     });
   };
 

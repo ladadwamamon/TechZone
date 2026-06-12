@@ -14,12 +14,35 @@ export default function CategoryDetail() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showFilters, setShowFilters] = useState(false);
   const [sort, setSort] = useState("newest");
-  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [draftMin, setDraftMin] = useState("");
+  const [draftMax, setDraftMax] = useState("");
+  const [minPrice, setMinPrice] = useState<number | undefined>(undefined);
+  const [maxPrice, setMaxPrice] = useState<number | undefined>(undefined);
+  const [inStock, setInStock] = useState(false);
+
+  const applyPriceRange = () => {
+    const min = draftMin.trim() === "" ? undefined : Number(draftMin);
+    const max = draftMax.trim() === "" ? undefined : Number(draftMax);
+    setMinPrice(min !== undefined && !Number.isNaN(min) ? min : undefined);
+    setMaxPrice(max !== undefined && !Number.isNaN(max) ? max : undefined);
+  };
+
+  const resetFilters = () => {
+    setSort("newest");
+    setDraftMin("");
+    setDraftMax("");
+    setMinPrice(undefined);
+    setMaxPrice(undefined);
+    setInStock(false);
+  };
 
   const { data: productsData, isLoading: productsLoading } = useListProducts({
     category: slug,
     sort: sort as any,
-    limit: 20
+    limit: 20,
+    minPrice,
+    maxPrice,
+    inStock: inStock || undefined,
   });
 
   const helmetTitle = category?.metaTitle || category?.nameAr || "نكسس";
@@ -80,15 +103,19 @@ export default function CategoryDetail() {
                     <input 
                       type="number" 
                       placeholder="MIN" 
+                      value={draftMin}
+                      onChange={(e) => setDraftMin(e.target.value)}
                       className="w-full bg-background/50 border border-primary/30 clip-corner-sm px-3 py-2 text-sm font-mono focus:border-primary focus:outline-none transition-colors"
                     />
                     <input 
                       type="number" 
                       placeholder="MAX" 
+                      value={draftMax}
+                      onChange={(e) => setDraftMax(e.target.value)}
                       className="w-full bg-background/50 border border-primary/30 clip-corner-sm px-3 py-2 text-sm font-mono focus:border-primary focus:outline-none transition-colors"
                     />
                   </div>
-                  <button className="w-full bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground border border-primary clip-corner py-2 text-sm font-bold font-mono transition-all uppercase tracking-widest glow-hover">
+                  <button onClick={applyPriceRange} className="w-full bg-primary/10 hover:bg-primary text-primary hover:text-primary-foreground border border-primary clip-corner py-2 text-sm font-bold font-mono transition-all uppercase tracking-widest glow-hover">
                     Apply_Range
                   </button>
                 </div>
@@ -98,7 +125,7 @@ export default function CategoryDetail() {
               <div className="mb-8 p-4 border border-lime/30 bg-lime/5 clip-corner-sm">
                 <label className="flex items-center gap-3 cursor-pointer group">
                   <div className="relative flex items-center justify-center">
-                    <input type="checkbox" className="peer sr-only" />
+                    <input type="checkbox" className="peer sr-only" checked={inStock} onChange={(e) => setInStock(e.target.checked)} />
                     <div className="w-5 h-5 border-2 border-lime/50 rounded-none peer-checked:bg-lime peer-checked:border-lime transition-colors"></div>
                     <svg className="absolute w-3 h-3 text-background opacity-0 peer-checked:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -170,7 +197,7 @@ export default function CategoryDetail() {
                 <h3 className="text-xl font-bold mb-2 font-mono uppercase neon-text">{">"} NO_RESULTS_FOUND</h3>
                 <p className="text-muted-foreground mb-6 font-mono text-sm">// لم يتم العثور على منتجات تطابق معايير البحث الخاصة بك.</p>
                 <button 
-                  onClick={() => { setSort("newest"); }}
+                  onClick={resetFilters}
                   className="bg-primary text-primary-foreground hover:bg-primary/90 clip-corner font-bold py-3 px-6 transition-all glow-hover uppercase tracking-wide font-mono text-sm"
                 >
                   [ RESET_FILTERS ]

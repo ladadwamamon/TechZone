@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+import { useLocation } from "wouter";
 import { useAuth } from "@/lib/auth";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Sidebar } from "./Sidebar";
@@ -5,6 +7,12 @@ import { Topbar } from "./Topbar";
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
+  const [location] = useLocation();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [location]);
 
   if (isLoading) {
     return (
@@ -31,7 +39,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
         
         <main className="flex-1 flex flex-col relative z-10 w-full">
           <Topbar />
-          <div className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
+          <div ref={scrollRef} className="flex-1 overflow-auto p-4 md:p-6 lg:p-8">
             <div className="max-w-7xl mx-auto w-full h-full">
               {children}
             </div>

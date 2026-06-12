@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { 
   useAdminListMedia, 
   getAdminListMediaQueryKey,
@@ -6,9 +6,10 @@ import {
   useAdminDeleteMedia,
   useAdminUpdateMedia
 } from "@workspace/api-client-react";
+import { useUpload } from "@workspace/object-storage-web";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Image as ImageIcon, Plus, Trash2, ExternalLink, Edit } from "lucide-react";
+import { Image as ImageIcon, Plus, Trash2, ExternalLink, Edit, Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,36 @@ export default function Media() {
   const createMutation = useAdminCreateMedia();
   const updateMutation = useAdminUpdateMedia();
   const deleteMutation = useAdminDeleteMedia();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadFile, isUploading } = useUpload({
+    onError: () => toast({ title: "فشل رفع الملف", variant: "destructive" }),
+  });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    const uploaded = await uploadFile(file);
+    if (!uploaded) return;
+    createMutation.mutate(
+      {
+        data: {
+          url: `/api/storage${uploaded.objectPath}`,
+          filename: file.name,
+          folder: "general",
+          altText: "",
+        },
+      },
+      {
+        onSuccess: () => {
+          toast({ title: "تم رفع الملف بنجاح" });
+          queryClient.invalidateQueries({ queryKey: getAdminListMediaQueryKey() });
+        },
+        onError: () => toast({ title: "فشل تسجيل الملف", variant: "destructive" }),
+      },
+    );
+  };
 
   const form = useForm<z.infer<typeof mediaSchema>>({
     resolver: zodResolver(mediaSchema),
@@ -116,10 +147,27 @@ export default function Media() {
           <ImageIcon className="w-8 h-8" />
           الوسائط
         </h1>
-        <Button onClick={handleOpenDialog} className="glow-hover clip-corner-sm gap-2">
-          <Plus className="h-4 w-4" />
-          إضافة وسائط (رابط)
-        </Button>
+        <div className="flex items-center gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFileChange}
+          />
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+            className="glow-hover clip-corner-sm gap-2"
+          >
+            <Upload className="h-4 w-4" />
+            {isUploading ? "جاري الرفع..." : "رفع من الجهاز"}
+          </Button>
+          <Button onClick={handleOpenDialog} variant="outline" className="clip-corner-sm gap-2">
+            <Plus className="h-4 w-4" />
+            إضافة وسائط (رابط)
+          </Button>
+        </div>
       </div>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

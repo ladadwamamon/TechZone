@@ -1,13 +1,14 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   useAdminListMedia,
   getAdminListMediaQueryKey,
   useAdminCreateMedia,
 } from "@workspace/api-client-react";
+import { useUpload } from "@workspace/object-storage-web";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Image as ImageIcon, Library, Check, Plus } from "lucide-react";
+import { Image as ImageIcon, Library, Check, Plus, Upload } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useToast } from "@/hooks/use-toast";
 
@@ -28,6 +29,32 @@ export function MediaPicker({ value, onChange, placeholder }: MediaPickerProps) 
   const createMutation = useAdminCreateMedia();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const { uploadFile, isUploading } = useUpload({
+    onError: () => toast({ title: "فشل رفع الملف", variant: "destructive" }),
+  });
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    const uploaded = await uploadFile(file);
+    if (!uploaded) return;
+    const url = `/api/storage${uploaded.objectPath}`;
+    createMutation.mutate(
+      { data: { url, filename: file.name, folder: "general", altText: "" } },
+      {
+        onSuccess: (created) => {
+          toast({ title: "تم رفع الصورة للمكتبة" });
+          queryClient.invalidateQueries({ queryKey: getAdminListMediaQueryKey() });
+          onChange(created?.url ?? url);
+          setOpen(false);
+        },
+        onError: () => toast({ title: "فشل تسجيل الصورة", variant: "destructive" }),
+      },
+    );
+  };
 
   const handleRegister = () => {
     const url = newUrl.trim();
@@ -106,6 +133,22 @@ export function MediaPicker({ value, onChange, placeholder }: MediaPickerProps) 
               className="shrink-0 gap-1"
             >
               <Plus className="h-4 w-4" /> أضف
+            </Button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+              className="shrink-0 gap-1 border-primary/40 text-primary hover:bg-primary/10"
+            >
+              <Upload className="h-4 w-4" /> {isUploading ? "جاري الرفع..." : "رفع"}
             </Button>
           </div>
           {isLoading ? (

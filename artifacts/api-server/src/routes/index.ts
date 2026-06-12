@@ -12,10 +12,12 @@ import couponsRouter from "./coupons";
 import navigationRouter from "./navigation";
 import metricsRouter from "./metrics";
 import adminRouter from "./admin";
+import storageRouter from "./storage";
 
 const router: IRouter = Router();
 
 router.use(healthRouter);
+router.use(storageRouter);
 router.use(productsRouter);
 router.use(categoriesRouter);
 router.use(brandsRouter);

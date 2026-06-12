@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { firstAccessiblePath } from "@/lib/access";
 import { Shell } from "@/components/layout/Shell";
 import NotFound from "@/pages/not-found";
 import Login from "@/pages/Login";
@@ -27,12 +28,31 @@ import Audit from "@/pages/Audit";
 
 const queryClient = new QueryClient();
 
+function NoAccess() {
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] text-center gap-4">
+      <h1 className="text-2xl font-bold font-mono text-primary neon-text">لا توجد صلاحيات</h1>
+      <p className="text-muted-foreground font-mono text-sm">
+        حسابك لا يملك صلاحية الوصول لأي قسم. تواصل مع المسؤول.
+      </p>
+    </div>
+  );
+}
+
 function ProtectedRoute({ component: Component, perm, ...rest }: any) {
   const { isAuthenticated, isLoading, hasPermission } = useAuth();
   
   if (isLoading) return null;
   if (!isAuthenticated) return <Redirect to="/login" />;
-  if (perm && !hasPermission(perm)) return <NotFound />;
+  if (perm && !hasPermission(perm)) {
+    const fallback = firstAccessiblePath(hasPermission);
+    if (fallback) return <Redirect to={fallback} />;
+    return (
+      <Shell>
+        <NoAccess />
+      </Shell>
+    );
+  }
   
   return (
     <Shell>
