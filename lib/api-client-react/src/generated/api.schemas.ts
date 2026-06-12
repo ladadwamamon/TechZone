@@ -1004,6 +1004,14 @@ export interface CustomerProfileUpdate {
   address?: string | null;
 }
 
+export interface WishlistResponse {
+  productIds: string[];
+}
+
+export interface WishlistItemInput {
+  productId: string;
+}
+
 export type DigitalCodeStatus = typeof DigitalCodeStatus[keyof typeof DigitalCodeStatus];
 
 

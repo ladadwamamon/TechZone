@@ -122,3 +122,5 @@ export * from './uploadUrlRequest';
 export * from './uploadUrlResponse';
 export * from './webVitalInput';
 export * from './webVitalsSummaryItem';
+export * from './wishlistItemInput';
+export * from './wishlistResponse';

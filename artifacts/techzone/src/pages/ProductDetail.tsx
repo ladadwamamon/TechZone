@@ -92,8 +92,47 @@ export default function ProductDetail() {
   };
 
     const helmetTitle = product?.metaTitle || product?.nameAr || "نكسس";
-  const helmetDesc = product?.metaDescription || product?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من Nexus Store";
+  const helmetDescRaw = product?.metaDescription || product?.descriptionAr || "منتجات إلكترونيات وقطع كمبيوتر وألعاب من Nexus Store";
+  const helmetDesc = helmetDescRaw.replace(/<[^>]*>/g, "").trim();
   const helmetKeywords = product?.metaKeywords || "نكسس, إلكترونيات, كمبيوتر, ألعاب";
+
+  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+  const siteOrigin = typeof window !== "undefined" ? window.location.origin : "";
+  const toAbsolute = (url?: string | null): string | undefined => {
+    if (!url) return undefined;
+    if (/^https?:\/\//.test(url)) return url;
+    return `${siteOrigin}${url.startsWith("/") ? "" : "/"}${url}`;
+  };
+  const ogImage = toAbsolute(product?.images?.[0]);
+
+  const productJsonLd = product
+    ? {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        name: product.nameAr,
+        image: (product.images ?? []).map((img) => toAbsolute(img)).filter(Boolean),
+        description: helmetDesc,
+        sku: product.sku || product.id,
+        brand: { "@type": "Brand", name: product.brandSlug },
+        offers: {
+          "@type": "Offer",
+          url: pageUrl,
+          priceCurrency: "ILS",
+          price: product.price,
+          availability:
+            product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+        },
+        ...(product.reviewCount > 0
+          ? {
+              aggregateRating: {
+                "@type": "AggregateRating",
+                ratingValue: product.rating,
+                reviewCount: product.reviewCount,
+              },
+            }
+          : {}),
+      }
+    : null;
 
   if (isLoading || !product) {
     return (
@@ -152,6 +191,17 @@ export default function ProductDetail() {
           <meta name="keywords" content={helmetKeywords} />
           <meta property="og:title" content={helmetTitle} />
           <meta property="og:description" content={helmetDesc} />
+          <meta property="og:type" content="product" />
+          {pageUrl && <meta property="og:url" content={pageUrl} />}
+          {ogImage && <meta property="og:image" content={ogImage} />}
+          <meta property="product:price:amount" content={String(product.price)} />
+          <meta property="product:price:currency" content="ILS" />
+          <meta name="twitter:title" content={helmetTitle} />
+          <meta name="twitter:description" content={helmetDesc} />
+          {ogImage && <meta name="twitter:image" content={ogImage} />}
+          {productJsonLd && (
+            <script type="application/ld+json">{JSON.stringify(productJsonLd)}</script>
+          )}
         </Helmet>
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row gap-10 mb-16">

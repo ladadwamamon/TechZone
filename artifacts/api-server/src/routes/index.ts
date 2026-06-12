@@ -13,9 +13,11 @@ import navigationRouter from "./navigation";
 import metricsRouter from "./metrics";
 import adminRouter from "./admin";
 import storageRouter from "./storage";
+import seoRouter from "./seo";
 
 const router: IRouter = Router();
 
+router.use(seoRouter);
 router.use(healthRouter);
 router.use(storageRouter);
 router.use(productsRouter);

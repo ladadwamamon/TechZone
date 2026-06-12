@@ -25,7 +25,8 @@ import { useCartStore, useWishlistStore } from "@/lib/store";
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence, useAnimationControls } from "framer-motion";
-import { useListCategories } from "@workspace/api-client-react";
+import { useListCategories, useListProducts, getListProductsQueryKey } from "@workspace/api-client-react";
+import { formatPrice } from "@/lib/utils";
 import { CATEGORY_GROUPS, CATEGORY_NAMES_AR, getCategoryIcon } from "@/lib/categoryMeta";
 import { useCustomerAuth } from "@/lib/customerAuth";
 import { useNavLinks } from "@/lib/nav";
@@ -60,6 +61,8 @@ export function Navbar() {
   const [megaOpen, setMegaOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [searchFocused, setSearchFocused] = useState(false);
   const [, navigate] = useLocation();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const accountTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -113,9 +116,28 @@ export function Navbar() {
     closeTimer.current = setTimeout(() => setMegaOpen(false), 120);
   };
 
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchValue.trim()), 250);
+    return () => clearTimeout(t);
+  }, [searchValue]);
+
+  const suggestParams = { search: debouncedSearch, limit: 6 };
+  const { data: suggestData } = useListProducts(suggestParams, {
+    query: { queryKey: getListProductsQueryKey(suggestParams), enabled: debouncedSearch.length >= 2 },
+  });
+  const suggestions = debouncedSearch.length >= 2 ? suggestData?.products ?? [] : [];
+  const showSuggestions = searchFocused && suggestions.length > 0;
+
+  const goToProduct = (id: string) => {
+    setSearchFocused(false);
+    setSearchValue("");
+    navigate(`/products/${id}`);
+  };
+
   const submitSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const q = searchValue.trim();
+    setSearchFocused(false);
     navigate(q ? `/search?q=${encodeURIComponent(q)}` : "/search");
     setIsMobileMenuOpen(false);
   };
@@ -149,12 +171,41 @@ export function Navbar() {
             type="search"
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setTimeout(() => setSearchFocused(false), 150)}
             placeholder="ابحث في قاعدة البيانات..."
             className="w-full h-10 bg-background/50 border border-primary/30 pl-4 pr-12 text-sm font-mono text-primary focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all placeholder:text-primary/30"
           />
           <button type="submit" aria-label="بحث" className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/50 group-hover:text-primary transition-colors">
             <Search size={18} />
           </button>
+
+          {showSuggestions && (
+            <div className="absolute top-full mt-2 right-0 left-0 z-50 glass-panel border border-primary/30 neon-border clip-corner-sm max-h-96 overflow-auto">
+              <div className="px-3 py-2 text-[10px] font-mono text-primary/40 uppercase border-b border-primary/15">
+                {"//"} نتائج_مطابقة
+              </div>
+              {suggestions.map((p) => (
+                <button
+                  key={p.id}
+                  type="button"
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => goToProduct(p.id)}
+                  className="w-full flex items-center gap-3 px-3 py-2 text-right hover:bg-primary/10 transition-colors border-b border-primary/10 last:border-0"
+                >
+                  <img src={p.image} alt={p.nameAr} className="w-10 h-10 object-cover border border-primary/20 shrink-0" loading="lazy" />
+                  <span className="flex-1 text-xs text-foreground/90 line-clamp-2">{p.nameAr}</span>
+                  <span className="text-xs font-mono text-primary shrink-0">{formatPrice(p.price)}</span>
+                </button>
+              ))}
+              <button
+                type="submit"
+                className="w-full px-3 py-2 text-center text-[11px] font-mono text-primary/70 hover:text-primary hover:bg-primary/10 transition-colors uppercase"
+              >
+                عرض كل النتائج {">"}
+              </button>
+            </div>
+          )}
         </form>
 
         {/* Actions */}

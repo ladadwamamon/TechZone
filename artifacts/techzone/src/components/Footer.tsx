@@ -175,9 +175,24 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-8 border-t border-primary/20 text-center text-sm text-primary/50 flex flex-col md:flex-row items-center justify-between">
-          <p>© {new Date().getFullYear()} NEXUS_OS. ALL_RIGHTS_RESERVED.</p>
-          <p className="mt-2 md:mt-0 animate-pulse">{"//"} SYSTEM_STATUS: ONLINE</p>
+        <div className="pt-8 border-t border-primary/20 flex flex-col gap-4">
+          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-primary/60">
+            <li>
+              <Link href="/privacy-policy" className="hover:text-primary transition-colors">سياسة الخصوصية</Link>
+            </li>
+            <li className="text-primary/20">|</li>
+            <li>
+              <Link href="/terms" className="hover:text-primary transition-colors">الشروط والأحكام</Link>
+            </li>
+            <li className="text-primary/20">|</li>
+            <li>
+              <Link href="/return-policy" className="hover:text-primary transition-colors">سياسة الاسترجاع</Link>
+            </li>
+          </ul>
+          <div className="text-center text-sm text-primary/50 flex flex-col md:flex-row items-center justify-between">
+            <p>© {new Date().getFullYear()} NEXUS_OS. ALL_RIGHTS_RESERVED.</p>
+            <p className="mt-2 md:mt-0 animate-pulse">{"//"} SYSTEM_STATUS: ONLINE</p>
+          </div>
         </div>
       </div>
     </footer>

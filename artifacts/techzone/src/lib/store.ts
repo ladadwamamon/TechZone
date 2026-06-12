@@ -57,6 +57,7 @@ interface WishlistState {
   productIds: string[];
   toggleWishlist: (productId: string) => void;
   isInWishlist: (productId: string) => boolean;
+  setProductIds: (productIds: string[]) => void;
 }
 
 export const useWishlistStore = create<WishlistState>()(
@@ -69,6 +70,7 @@ export const useWishlistStore = create<WishlistState>()(
           : [...state.productIds, productId],
       })),
       isInWishlist: (productId) => get().productIds.includes(productId),
+      setProductIds: (productIds) => set({ productIds: Array.from(new Set(productIds)) }),
     }),
     { name: 'nexus-wishlist' }
   )

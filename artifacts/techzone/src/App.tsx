@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CyberBackground } from "@/components/CyberBackground";
+import { WishlistSync } from "@/components/WishlistSync";
 import { CustomerAuthProvider } from "@/lib/customerAuth";
 
 // Pages
@@ -34,6 +35,9 @@ import Account from "@/pages/Account";
 import GiftCards from "@/pages/GiftCards";
 import SubscriptionPlans from "@/pages/SubscriptionPlans";
 import CustomPage from "@/pages/CustomPage";
+import PrivacyPolicy from "@/pages/PrivacyPolicy";
+import Terms from "@/pages/Terms";
+import ReturnPolicy from "@/pages/ReturnPolicy";
 import NotFound from "@/pages/not-found";
 
 const queryClient = new QueryClient();
@@ -66,6 +70,9 @@ function Router() {
       <Route path="/gift-cards" component={GiftCards} />
       <Route path="/subscriptions" component={SubscriptionPlans} />
       <Route path="/p/:slug" component={CustomPage} />
+      <Route path="/privacy-policy" component={PrivacyPolicy} />
+      <Route path="/terms" component={Terms} />
+      <Route path="/return-policy" component={ReturnPolicy} />
 
       <Route component={NotFound} />
     </Switch>
@@ -80,6 +87,7 @@ function App() {
           <TooltipProvider>
             <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
               <CyberBackground />
+              <WishlistSync />
               <Router />
               <ScrollToTop />
               <CartDrawer />

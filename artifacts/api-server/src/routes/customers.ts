@@ -1,9 +1,9 @@
 import { Router, type IRouter, type Response } from "express";
 import { randomUUID } from "crypto";
 import { db } from "@workspace/db";
-import { customersTable, ordersTable } from "@workspace/db";
-import { eq, desc } from "drizzle-orm";
-import { CustomerRegisterBody, CustomerLoginBody, CustomerUpdateProfileBody } from "@workspace/api-zod";
+import { customersTable, ordersTable, customerWishlistTable, productsTable } from "@workspace/db";
+import { eq, desc, and } from "drizzle-orm";
+import { CustomerRegisterBody, CustomerLoginBody, CustomerUpdateProfileBody, CustomerWishlistAddBody } from "@workspace/api-zod";
 import { hashPassword, verifyPassword } from "../lib/password";
 import {
   createCustomerSession,
@@ -163,6 +163,49 @@ router.get("/customers/orders", requireCustomer, async (req, res) => {
     .where(eq(ordersTable.customerId, req.customer!.id))
     .orderBy(desc(ordersTable.createdAt));
   res.json(await Promise.all(rows.map(mapOrderWithCodes)));
+});
+
+async function listWishlistIds(customerId: string): Promise<string[]> {
+  const rows = await db
+    .select({ productId: customerWishlistTable.productId })
+    .from(customerWishlistTable)
+    .where(eq(customerWishlistTable.customerId, customerId))
+    .orderBy(desc(customerWishlistTable.createdAt));
+  return rows.map((r) => r.productId);
+}
+
+// GET /customers/wishlist
+router.get("/customers/wishlist", requireCustomer, async (req, res) => {
+  res.json({ productIds: await listWishlistIds(req.customer!.id) });
+});
+
+// POST /customers/wishlist
+router.post("/customers/wishlist", requireCustomer, async (req, res) => {
+  const parsed = CustomerWishlistAddBody.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: "بيانات غير صالحة", details: parsed.error.issues });
+
+  const customerId = req.customer!.id;
+  const { productId } = parsed.data;
+
+  const [product] = await db.select({ id: productsTable.id }).from(productsTable).where(eq(productsTable.id, productId));
+  if (!product) return res.status(404).json({ error: "المنتج غير موجود" });
+
+  await db
+    .insert(customerWishlistTable)
+    .values({ id: randomUUID(), customerId, productId })
+    .onConflictDoNothing({ target: [customerWishlistTable.customerId, customerWishlistTable.productId] });
+
+  res.json({ productIds: await listWishlistIds(customerId) });
+});
+
+// DELETE /customers/wishlist/:productId
+router.delete("/customers/wishlist/:productId", requireCustomer, async (req, res) => {
+  const customerId = req.customer!.id;
+  const productId = String(req.params.productId);
+  await db
+    .delete(customerWishlistTable)
+    .where(and(eq(customerWishlistTable.customerId, customerId), eq(customerWishlistTable.productId, productId)));
+  res.json({ productIds: await listWishlistIds(customerId) });
 });
 
 export default router;

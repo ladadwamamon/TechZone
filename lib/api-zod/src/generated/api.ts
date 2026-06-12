@@ -1875,6 +1875,38 @@ export const CustomerOrdersResponse = zod.array(CustomerOrdersResponseItem)
 
 
 /**
+ * @summary Current customer wishlist product ids
+ */
+export const CustomerWishlistResponse = zod.object({
+  "productIds": zod.array(zod.string())
+})
+
+
+/**
+ * @summary Add a product to the wishlist
+ */
+export const CustomerWishlistAddBody = zod.object({
+  "productId": zod.string()
+})
+
+export const CustomerWishlistAddResponse = zod.object({
+  "productIds": zod.array(zod.string())
+})
+
+
+/**
+ * @summary Remove a product from the wishlist
+ */
+export const CustomerWishlistRemoveParams = zod.object({
+  "productId": zod.coerce.string()
+})
+
+export const CustomerWishlistRemoveResponse = zod.object({
+  "productIds": zod.array(zod.string())
+})
+
+
+/**
  * @summary List coupons
  */
 export const AdminListCouponsResponseItem = zod.object({

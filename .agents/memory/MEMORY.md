@@ -2,6 +2,7 @@
 - [Site settings coupling](site-settings-coupling.md) — CMS & storefront share an untyped SettingsMap; mirror key/shape changes in both.
 - [backdrop-filter fixed trap](backdrop-filter-fixed-trap.md) — fixed overlays/drawers inside a blurred panel get confined; portal them to body.
 - [Auth form mount race](auth-form-mount-race.md) — controlled login/setup forms drop keystrokes if mounted before auth bootstrap settles; gate on auth isLoading.
+- [Wishlist shared store cross-account](wishlist-shared-store-cross-account.md) — persisted localStorage stores are shared across accounts; clear on logout + refetch per customer.id before merging to server.
 - [Review moderation](review-moderation.md) — reviews.is_approved defaults true; storefront + rating recalc must filter approved; public submissions should insert false.
 - [object-storage-web source lib](object-storage-web-source-lib.md) — consumed as source (no refs); needs own @types/react; storage upload gated by media:write, /objects/* public.
 - [Role seeding on boot](role-seeding-boot.md) — system roles are insert-only (preserve admin edits); ensureRolesReady awaited before listen.

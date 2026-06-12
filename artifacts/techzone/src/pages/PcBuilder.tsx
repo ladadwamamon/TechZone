@@ -4,8 +4,9 @@ import { useListProducts, Product } from "@workspace/api-client-react";
 import { CATEGORY_ICONS } from "@/lib/categoryMeta";
 import { formatPrice } from "@/lib/utils";
 import { Link } from "wouter";
-import { Trash2, Cpu, HardDrive, Zap, CircuitBoard, Monitor, Plus, Check, ShoppingCart, Info, RotateCcw } from "lucide-react";
+import { Trash2, Cpu, HardDrive, Zap, CircuitBoard, Monitor, Plus, Check, ShoppingCart, Info, RotateCcw, ShieldCheck, AlertTriangle, ShieldAlert } from "lucide-react";
 import { useState, useMemo } from "react";
+import { checkBuildCompatibility } from "@/lib/pcCompat";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "sonner";
@@ -77,6 +78,11 @@ export default function PcBuilder() {
 
   const completedCount = Object.keys(components).length;
   const isComplete = completedCount === BUILDER_SLOTS.length;
+
+  const compat = useMemo(
+    () => checkBuildCompatibility(components as Record<string, Product | undefined>),
+    [components]
+  );
 
   return (
     <Layout>
@@ -206,6 +212,51 @@ export default function PcBuilder() {
                   </div>
                 )}
               </div>
+
+              {completedCount > 0 && (
+                <div className="mb-6 border border-primary/20 clip-corner-sm p-3 font-mono text-xs space-y-2">
+                  <div className="flex items-center gap-2 uppercase text-[10px] text-primary/50 border-b border-primary/15 pb-2">
+                    {compat.issues.length === 0 ? (
+                      <>
+                        <ShieldCheck size={14} className="text-primary" />
+                        <span className="text-primary">COMPAT_CHECK: متوافق</span>
+                      </>
+                    ) : compat.ok ? (
+                      <>
+                        <ShieldAlert size={14} className="text-amber-400" />
+                        <span className="text-amber-400">COMPAT_CHECK: تنبيهات</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShieldAlert size={14} className="text-red-400" />
+                        <span className="text-red-400">COMPAT_CHECK: تعارض</span>
+                      </>
+                    )}
+                  </div>
+                  {compat.issues.length === 0 ? (
+                    <p className="text-primary/70 leading-relaxed">لا توجد مشاكل توافق معروفة بين القطع المحددة.</p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {compat.issues.map((issue, i) => (
+                        <li
+                          key={i}
+                          className={`flex items-start gap-2 leading-relaxed ${issue.level === "error" ? "text-red-400" : "text-amber-400"}`}
+                        >
+                          {issue.level === "error" ? (
+                            <ShieldAlert size={13} className="shrink-0 mt-0.5" />
+                          ) : (
+                            <AlertTriangle size={13} className="shrink-0 mt-0.5" />
+                          )}
+                          <span>{issue.message}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                  <p className="text-primary/30 text-[10px] pt-1 border-t border-primary/10 leading-relaxed">
+                    {"//"} فحص تقديري بناءً على بيانات القطعة، يرجى التأكد من المواصفات قبل الشراء.
+                  </p>
+                </div>
+              )}
 
               <div className="border-t border-secondary/30 pt-4 mb-6">
                 <div className="flex justify-between items-end mb-2">

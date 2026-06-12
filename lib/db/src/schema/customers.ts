@@ -1,4 +1,4 @@
-import { pgTable, text, boolean, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, boolean, timestamp, unique } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod/v4";
 
@@ -31,3 +31,20 @@ export const customerSessionsTable = pgTable("customer_sessions", {
 export const insertCustomerSessionSchema = createInsertSchema(customerSessionsTable);
 export type InsertCustomerSession = z.infer<typeof insertCustomerSessionSchema>;
 export type CustomerSession = typeof customerSessionsTable.$inferSelect;
+
+export const customerWishlistTable = pgTable(
+  "customer_wishlist",
+  {
+    id: text("id").primaryKey(),
+    customerId: text("customer_id")
+      .notNull()
+      .references(() => customersTable.id, { onDelete: "cascade" }),
+    productId: text("product_id").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => [unique("customer_wishlist_customer_product_uq").on(table.customerId, table.productId)],
+);
+
+export const insertCustomerWishlistSchema = createInsertSchema(customerWishlistTable);
+export type InsertCustomerWishlist = z.infer<typeof insertCustomerWishlistSchema>;
+export type CustomerWishlistItem = typeof customerWishlistTable.$inferSelect;
