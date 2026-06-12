@@ -980,7 +980,8 @@ export const AdminListReviewsResponseItem = zod.object({
   "authorName": zod.string(),
   "rating": zod.number(),
   "comment": zod.string(),
-  "date": zod.string()
+  "date": zod.string(),
+  "isApproved": zod.boolean()
 })
 export const AdminListReviewsResponse = zod.array(AdminListReviewsResponseItem)
 
@@ -998,6 +999,28 @@ export const AdminCreateReviewBody = zod.object({
   "rating": zod.number().min(1).max(adminCreateReviewBodyRatingMax),
   "comment": zod.string(),
   "date": zod.string().nullish()
+})
+
+
+/**
+ * @summary Update a review's approval status
+ */
+export const AdminUpdateReviewParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const AdminUpdateReviewBody = zod.object({
+  "isApproved": zod.boolean()
+})
+
+export const AdminUpdateReviewResponse = zod.object({
+  "id": zod.string(),
+  "productId": zod.string(),
+  "authorName": zod.string(),
+  "rating": zod.number(),
+  "comment": zod.string(),
+  "date": zod.string(),
+  "isApproved": zod.boolean()
 })
 
 

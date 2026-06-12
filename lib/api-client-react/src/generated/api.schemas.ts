@@ -693,6 +693,11 @@ export interface AdminReview {
   rating: number;
   comment: string;
   date: string;
+  isApproved: boolean;
+}
+
+export interface AdminReviewUpdateInput {
+  isApproved: boolean;
 }
 
 export interface AdminReviewInput {

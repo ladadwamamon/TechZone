@@ -3,6 +3,7 @@ import {
   useAdminListReviews, 
   getAdminListReviewsQueryKey,
   useAdminCreateReview,
+  useAdminUpdateReview,
   useAdminDeleteReview,
   useAdminListProducts,
   getAdminListProductsQueryKey
@@ -10,7 +11,8 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { MessageSquare, Plus, Trash2, Star } from "lucide-react";
+import { MessageSquare, Plus, Trash2, Star, Check, Clock } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -55,6 +57,7 @@ export default function Reviews() {
   const { toast } = useToast();
 
   const createMutation = useAdminCreateReview();
+  const updateMutation = useAdminUpdateReview();
   const deleteMutation = useAdminDeleteReview();
 
   const form = useForm<z.infer<typeof reviewSchema>>({
@@ -71,6 +74,18 @@ export default function Reviews() {
       },
       onError: () => {
         toast({ title: "فشل إضافة التقييم", variant: "destructive" });
+      }
+    });
+  };
+
+  const handleToggleApprove = (id: string, isApproved: boolean) => {
+    updateMutation.mutate({ id, data: { isApproved: !isApproved } }, {
+      onSuccess: () => {
+        toast({ title: isApproved ? "تم إلغاء اعتماد التقييم" : "تم اعتماد التقييم" });
+        queryClient.invalidateQueries({ queryKey: getAdminListReviewsQueryKey() });
+      },
+      onError: () => {
+        toast({ title: "فشل تحديث حالة التقييم", variant: "destructive" });
       }
     });
   };
@@ -178,6 +193,7 @@ export default function Reviews() {
                     <TableHead className="text-right">الكاتب</TableHead>
                     <TableHead className="text-right">التقييم</TableHead>
                     <TableHead className="text-right w-1/2">التعليق</TableHead>
+                    <TableHead className="text-right">الحالة</TableHead>
                     <TableHead className="text-right">التاريخ</TableHead>
                     <TableHead className="text-left">إجراءات</TableHead>
                   </TableRow>
@@ -194,10 +210,31 @@ export default function Reviews() {
                         </div>
                       </TableCell>
                       <TableCell className="text-sm">{review.comment}</TableCell>
+                      <TableCell>
+                        {review.isApproved ? (
+                          <Badge variant="outline" className="gap-1 border-green-500/40 text-green-400">
+                            <Check className="w-3 h-3" /> معتمد
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="gap-1 border-yellow-500/40 text-yellow-400">
+                            <Clock className="w-3 h-3" /> قيد المراجعة
+                          </Badge>
+                        )}
+                      </TableCell>
                       <TableCell className="font-mono text-sm" dir="ltr">
                         {format(new Date(review.date), "yyyy-MM-dd")}
                       </TableCell>
                       <TableCell className="text-left">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleToggleApprove(review.id, review.isApproved)}
+                          disabled={updateMutation.isPending}
+                          title={review.isApproved ? "إلغاء الاعتماد" : "اعتماد"}
+                          className={`h-8 w-8 ${review.isApproved ? "text-yellow-400 hover:text-yellow-300 hover:bg-yellow-500/10" : "text-green-400 hover:text-green-300 hover:bg-green-500/10"}`}
+                        >
+                          {review.isApproved ? <Clock className="h-4 w-4" /> : <Check className="h-4 w-4" />}
+                        </Button>
                         <Button variant="ghost" size="icon" onClick={() => handleDelete(review.id)} className="h-8 w-8 hover:text-destructive hover:bg-destructive/10">
                           <Trash2 className="h-4 w-4" />
                         </Button>

@@ -40,6 +40,7 @@ export * from './adminProductUpdate';
 export * from './adminProductUpdateProductType';
 export * from './adminReview';
 export * from './adminReviewInput';
+export * from './adminReviewUpdateInput';
 export * from './adminSetupInput';
 export * from './adminWebVitalsSummaryParams';
 export * from './analyticsOverview';

@@ -49,6 +49,7 @@ import type {
   AdminProductUpdate,
   AdminReview,
   AdminReviewInput,
+  AdminReviewUpdateInput,
   AdminSetupInput,
   AdminWebVitalsSummaryParams,
   AnalyticsOverview,
@@ -3008,6 +3009,78 @@ export const useAdminCreateReview = <TError = ErrorType<unknown>,
         TContext
       > => {
       return useMutation(getAdminCreateReviewMutationOptions(options));
+    }
+
+export const getAdminUpdateReviewUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/reviews/${id}`
+}
+
+/**
+ * @summary Update a review's approval status
+ */
+export const adminUpdateReview = async (id: string,
+    adminReviewUpdateInput: AdminReviewUpdateInput, options?: RequestInit): Promise<AdminReview> => {
+
+  return customFetch<AdminReview>(getAdminUpdateReviewUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      adminReviewUpdateInput,)
+  }
+);}
+
+
+
+
+export const getAdminUpdateReviewMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateReview>>, TError,{id: string;data: BodyType<AdminReviewUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof adminUpdateReview>>, TError,{id: string;data: BodyType<AdminReviewUpdateInput>}, TContext> => {
+
+const mutationKey = ['adminUpdateReview'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof adminUpdateReview>>, {id: string;data: BodyType<AdminReviewUpdateInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  adminUpdateReview(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type AdminUpdateReviewMutationResult = NonNullable<Awaited<ReturnType<typeof adminUpdateReview>>>
+    export type AdminUpdateReviewMutationBody = BodyType<AdminReviewUpdateInput>
+    export type AdminUpdateReviewMutationError = ErrorType<unknown>
+
+    /**
+ * @summary Update a review's approval status
+ */
+export const useAdminUpdateReview = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof adminUpdateReview>>, TError,{id: string;data: BodyType<AdminReviewUpdateInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof adminUpdateReview>>,
+        TError,
+        {id: string;data: BodyType<AdminReviewUpdateInput>},
+        TContext
+      > => {
+      return useMutation(getAdminUpdateReviewMutationOptions(options));
     }
 
 export const getAdminDeleteReviewUrl = (id: string,) => {

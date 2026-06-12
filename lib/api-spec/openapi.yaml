@@ -852,6 +852,28 @@ paths:
                 $ref: "#/components/schemas/AdminReview"
 
   /admin/reviews/{id}:
+    patch:
+      operationId: adminUpdateReview
+      tags: [admin-reviews]
+      summary: Update a review's approval status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminReviewUpdateInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminReview"
     delete:
       operationId: adminDeleteReview
       tags: [admin-reviews]
@@ -2644,7 +2666,7 @@ components:
 
     AdminReview:
       type: object
-      required: [id, productId, authorName, rating, comment, date]
+      required: [id, productId, authorName, rating, comment, date, isApproved]
       properties:
         id:         { type: string }
         productId:  { type: string }
@@ -2652,6 +2674,13 @@ components:
         rating:     { type: integer }
         comment:    { type: string }
         date:       { type: string }
+        isApproved: { type: boolean }
+
+    AdminReviewUpdateInput:
+      type: object
+      required: [isApproved]
+      properties:
+        isApproved: { type: boolean }
 
     AdminReviewInput:
       type: object

@@ -2,8 +2,8 @@ import { Router, type IRouter } from "express";
 import { randomUUID } from "crypto";
 import { db } from "@workspace/db";
 import { productReviewsTable, productsTable } from "@workspace/db";
-import { eq, desc, sql } from "drizzle-orm";
-import { AdminCreateReviewBody } from "@workspace/api-zod";
+import { eq, desc, sql, and } from "drizzle-orm";
+import { AdminCreateReviewBody, AdminUpdateReviewBody } from "@workspace/api-zod";
 import { requireAuth, requirePermission } from "../../middlewares/auth";
 import { writeAudit } from "../../lib/audit";
 
@@ -17,6 +17,7 @@ function mapReview(r: typeof productReviewsTable.$inferSelect) {
     rating: r.rating,
     comment: r.comment,
     date: r.date,
+    isApproved: r.isApproved,
   };
 }
 
@@ -24,7 +25,7 @@ async function recalcProductRating(productId: string): Promise<void> {
   const [agg] = await db
     .select({ avg: sql<number>`coalesce(avg(${productReviewsTable.rating}), 0)`, count: sql<number>`count(*)` })
     .from(productReviewsTable)
-    .where(eq(productReviewsTable.productId, productId));
+    .where(and(eq(productReviewsTable.productId, productId), eq(productReviewsTable.isApproved, true)));
   await db.update(productsTable)
     .set({ rating: Number(agg?.avg ?? 0).toFixed(2), reviewCount: Number(agg?.count ?? 0) })
     .where(eq(productsTable.id, productId));
@@ -50,10 +51,25 @@ router.post("/admin/reviews", requireAuth, requirePermission("reviews:write"), a
     rating: data.rating,
     comment: data.comment,
     date: data.date ?? new Date().toISOString().slice(0, 10),
+    isApproved: true,
   }).returning();
   await recalcProductRating(data.productId);
   await writeAudit(req, { action: "create", entityType: "review", entityId: id, details: { productId: data.productId } });
   res.status(201).json(mapReview(created));
+});
+
+router.patch("/admin/reviews/:id", requireAuth, requirePermission("reviews:write"), async (req, res) => {
+  const parsed = AdminUpdateReviewBody.safeParse(req.body);
+  if (!parsed.success) return res.status(400).json({ error: "بيانات غير صالحة", details: parsed.error.issues });
+  const existing = await db.query.productReviewsTable.findFirst({ where: eq(productReviewsTable.id, (req.params.id as string)) });
+  if (!existing) return res.status(404).json({ error: "غير موجود" });
+  const [updated] = await db.update(productReviewsTable)
+    .set({ isApproved: parsed.data.isApproved })
+    .where(eq(productReviewsTable.id, (req.params.id as string)))
+    .returning();
+  await recalcProductRating(existing.productId);
+  await writeAudit(req, { action: "update", entityType: "review", entityId: (req.params.id as string), details: { isApproved: parsed.data.isApproved } });
+  res.json(mapReview(updated));
 });
 
 router.delete("/admin/reviews/:id", requireAuth, requirePermission("reviews:write"), async (req, res) => {

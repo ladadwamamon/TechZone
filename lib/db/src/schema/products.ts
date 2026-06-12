@@ -89,6 +89,7 @@ export const productReviewsTable = pgTable("product_reviews", {
   rating: integer("rating").notNull(),
   comment: text("comment").notNull(),
   date: text("date").notNull(),
+  isApproved: boolean("is_approved").notNull().default(true),
 });
 
 export const insertProductReviewSchema = createInsertSchema(productReviewsTable);

@@ -6,12 +6,6 @@
  * OpenAPI spec version: 0.1.0
  */
 
-export interface AdminReview {
-  id: string;
-  productId: string;
-  authorName: string;
-  rating: number;
-  comment: string;
-  date: string;
+export interface AdminReviewUpdateInput {
   isApproved: boolean;
 }

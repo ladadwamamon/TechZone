@@ -28,6 +28,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RichTextEditor } from "@/components/RichTextEditor";
+import { MediaPicker } from "@/components/MediaPicker";
 
 const blogPostSchema = z.object({
   slug: z.string().min(1, "الرابط (Slug) مطلوب"),
@@ -178,7 +179,7 @@ export default function Blog() {
                 )} />
               </div>
               <FormField control={form.control} name="coverImage" render={({ field }) => (
-                <FormItem><FormLabel>صورة الغلاف (رابط)</FormLabel><FormControl><Input {...field} dir="ltr" /></FormControl><FormMessage /></FormItem>
+                <FormItem><FormLabel>صورة الغلاف</FormLabel><FormControl><MediaPicker value={field.value} onChange={field.onChange} /></FormControl><FormMessage /></FormItem>
               )} />
               <FormField control={form.control} name="excerpt" render={({ field }) => (
                 <FormItem><FormLabel>مقتطف (ملخص)</FormLabel><FormControl><Textarea {...field} className="resize-none" /></FormControl><FormMessage /></FormItem>

@@ -140,7 +140,7 @@ router.get("/products/:id", async (req, res) => {
   if (!product) return res.status(404).json({ error: "Not found" });
 
   const [reviews, category, brand] = await Promise.all([
-    db.select().from(productReviewsTable).where(eq(productReviewsTable.productId, product.id)),
+    db.select().from(productReviewsTable).where(and(eq(productReviewsTable.productId, product.id), eq(productReviewsTable.isApproved, true))),
     db.query.categoriesTable.findFirst({ where: eq(categoriesTable.slug, product.categorySlug) }),
     db.query.brandsTable.findFirst({ where: eq(brandsTable.slug, product.brandSlug) }),
   ]);
